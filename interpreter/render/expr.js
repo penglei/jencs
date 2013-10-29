@@ -9,6 +9,7 @@ function isSymbol(astNode) {
 }
 
 require("./math");
+require("./logic");
 
 ast.AST_Number.proto("calc", function(){
     return new CSValue(CSValue.Number, parseInt(this.literalValue));
@@ -17,8 +18,6 @@ ast.AST_Number.proto("calc", function(){
 ast.AST_String.proto("calc", function(argument) {
     return new CSValue(CSValue.String, this.literalValue);
 });
-
-ast.AST_UnaryExist
 
 ast.AST_VariableAccess.proto("calc", function(opts){//opts可以用来确定究竟是获得什么类型的值，如!号表达式
     var resultVal = this.getSymbolValueNode();
@@ -35,7 +34,10 @@ ast.AST_VariableAccess.proto("calc", function(opts){//opts可以用来确定究�
     }
 });
 
-ast.AST_VariableAccess.proto("getSymbolValueNode", function(){ //opts可以用来确定究竟是获得什么类型的值，如!号表达式
+/**
+ * @return NULL || CSValue || HNode
+ */
+ast.AST_VariableAccess.proto("getSymbolValueNode", function(){
     if (isSymbol(this.target)){
         return this.context.querySymbol(this.target.name);
     } else if (this.target instanceof ast.AST_Prop){
@@ -104,11 +106,13 @@ ast.AST_SubProp.proto("_queryHdfNode", function() {
 //----读写分开实现----
 ast.AST_VariableAccess.proto("getNodeObject", function(){
     if (isSymbol(this.target)){
-        var hdfNode = this.context.querySymbol(this.target.name);
-        if (hdfNode instanceof HNode){
-            return hdfNode;
+        var symbolValue = this.context.querySymbol(this.target.name);
+        if (symbolValue instanceof HNode){
+            return symbolValue;
         } else {
-            return this.context.updateScopeSymbolToNode(this.target.name);
+            var hdfnode = this.context.updateScopeSymbolToNode(this.target.name);
+            hdfnode.setValue(symbolValue.value);
+            return hdfnode;
         }
     } else if (this.target instanceof ast.AST_Prop){
         return this.target._fetchOrCreatehdfNode();//这里还是有可能为空的，比如 foo[empty]
@@ -119,7 +123,7 @@ ast.AST_DotProp.proto("_fetchOrCreatehdfNode", function() {
     var leftValue;
     if (isSymbol(this.left)){
         leftValue = this.context.querySymbol(this.left.name);
-        if (leftValue instanceof CSValue){//只有宏参数为CSValue才会进这个逻辑
+        if (leftValue instanceof CSValue){//宏参数为CSValue会, loop的循环变量
             var newLeftValueNode = this.context.updateScopeSymbolToNode(this.left.name);
             newLeftValueNode.setValue(leftValue.getString());
             leftValue = newLeftValueNode;
@@ -166,6 +170,28 @@ ast.AST_SubProp.proto("_fetchOrCreatehdfNode", function() {
         //don't notice, it will occur after soon.
         return;
     }
-
 });
 
+ast.AST_FunctionCall.proto("calc", function(){
+    var id = this.id;
+
+    var argValue, i, argsList = [];
+
+    for(i = 0; this.args[i]; i++){
+        argValue = this.args[i].getSymbolValueNode();
+        argsList.push(argValue);
+    }
+    //注意这里全部都是传值
+    var id = ""
+    if (this.id instanceof ast.AST_Symbol){
+        id = this.id.name;
+    } else {
+        id = this.id;
+    }
+    var fun = this.context.getExternInterface(id);
+    if (typeof fun == "function") {
+        return fun.apply(null, argsList);
+    } else {
+        return new CSValue(CSValue.Void);
+    }
+});

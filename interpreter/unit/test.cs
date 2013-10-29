@@ -1,7 +1,14 @@
 ================================
-javascript execute for clearsilver engine
+<?cs loop:foo = 0, 3, 1?>
+    1.--------loop(<?cs var:foo?>)--------
+<?cs /loop?>
 
-<?cs var: 1 + 3?>
-<?cs set:a = "33"?>
-<?cs var:a + "44"?>
-<?cs var:a + 44?>
+<?cs loop:foo = 0, 3, 1?>
+    <?cs set:foo = foo + 2?>
+    2.--------loop(<?cs var:foo?>)--------
+<?cs /loop?>
+
+<?cs loop:foo = 0, 3, 1?>
+    3.--------loop(<?cs var:foo?>)--------
+    <?cs set:foo = foo + 2?>
+<?cs /loop?>

@@ -1,8 +1,7 @@
-var path = require("path"),
-    fs = require("fs"),
-    ast = require("../../parse/ast"),
+var ast = require("../../parse/ast"),
     Util = require("./util"),
     CSValue = require("./scope").CSValue,
+    HNode = require("hdf2json").HNode,
     def_execute = require("./executer").def_execute;
 
 
@@ -12,6 +11,7 @@ def_execute(ast.AST_VarStmt, function(print){
 });
 
 def_execute(ast.AST_SetStmt, function(){
+    debugger
     var targetNode = this.left.getNodeObject();
     if (targetNode){
         var rightValue = this.right.calc();
@@ -21,7 +21,20 @@ def_execute(ast.AST_SetStmt, function(){
     }
 });
 
-def_execute(ast.AST_MacroCall, function() {
+def_execute(ast.AST_NameStmt, function(print){
+    var result = this.argument.getSymbolValueNode();
+    if (result) {
+        if (result instanceof HNode){
+            print(result.name);
+        } else {
+            //TODO notice
+        }
+    } else {
+        //TODO notice
+    }
+});
+
+def_execute(ast.AST_MacroCall, function(print) {
     //找到相应的macro
     var macro = this.refMacro;
     var macroParams = macro.parameters;
@@ -38,10 +51,8 @@ def_execute(ast.AST_MacroCall, function() {
         } else {
             argValue = arg.calc();
         }
-        scope_macro.symbolAlias[param.name] = resultVal;
+        macro.symbolAlias[param.name] = resultVal;
     }
 
-    //scope_macro.parent_scope = this.context.currentScope(); //这个时候才能确定macro的父scope
-    macro.execute();
-    //scope_macro.parent_scope = null;
+    macro.execute(print);
 });

@@ -21,7 +21,13 @@ CSValue.prototype.getNumber = function(){
 
 CSValue.prototype.getString = function () {
     return this.value !== undefined ? this.value + "" : "";
-}
+};
+
+CSValue.prototype.isTrue = function(){
+    if (this.type == CSValue.Void) return false;
+    return !!this.value;
+};
+
 
 
 CSValue.Void = 1;
@@ -81,11 +87,8 @@ Context.prototype = {
         }
         return new CSValue(CSValue.Void);
     },
-    "newSymbolNode": function(key){
-        return (this.hdf[key] = new HNode());//直接扔在全局下面
-    },
     "createHNode": function(_parent, key){
-        var hdfNode = new HNode;
+        var hdfNode = new HNode(key);
         _parent.setChild(key, hdfNode);
         return hdfNode;
     },
@@ -97,7 +100,7 @@ Context.prototype = {
                 break;
             }
         }
-        var newNode = new HNode();
+        var newNode = new HNode(key);
         if (_scope){
             _scope.symbolAlias[key] = newNode;
         } else {
@@ -108,13 +111,18 @@ Context.prototype = {
 };
 
 ast.AST_Scope.proto("init_scope", function(){
-    this.parent_scope = null;//父作用域
-    //下面这个字段只在with和macrodef中用到。为了简单，就写在这里了
-    //用来保存当前scope中变量的别名（宏参数调用时传递的hdf节点），一种是Symbol，另一种是Value
+    this.parent_scope = null;//父作用域(没有用)
+    //用来保存当前scope中变量的别名. 一种是CSValue，另一种是HNode
     this.symbolAlias = {};
-    //this.symbolExprArgs = {};
 });
+
+var externInterface = Context.prototype.externInterface = {};
+Context.prototype.getExternInterface = function(id){
+    return this.externInterface[id];
+};
 
 exports.CSValue = CSValue;
 exports.Context= Context;
-        //
+exports.addExternInterface = function(id, fun){
+    externInterface[id] = fun;
+};

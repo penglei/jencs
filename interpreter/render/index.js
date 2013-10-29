@@ -1,8 +1,12 @@
 var Walker = require("./walker").Walker;
 var ast = require("../../parse/ast");
 var Util = require("./util");
-var Context = require("./scope").Context;
+var Scope = require("./scope");
 var Executer = require("./executer");
+
+var Context = Scope.Context;
+
+require("./external");
 
 //放在这里而不是executer里面，是因为executer里的def_execute会被它们用到，这就会形成循环依赖
 require("./block");
@@ -55,6 +59,7 @@ function initScopeLayer(astTree){
     astTree.walk(tree_scope_walker);
 }
 
+
 //处理作用域->为不同的语法节点安装不同的执行函数->从根节点开始执行
 exports.render = function(astInstance, hdfdata, renderListener){
     initScopeLayer(astInstance);//虽然会修改ast，但它是没有什么副作用的.
@@ -63,4 +68,5 @@ exports.render = function(astInstance, hdfdata, renderListener){
     context.initData(hdfdata); //初始化root hdf节点的包装器
     context.setRenderListener(renderListener);
     Executer.run(astInstance, context);
+
 };

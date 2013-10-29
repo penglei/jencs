@@ -261,9 +261,8 @@ var AST_If = exports.AST_If = declare("If", function(consequent, testExpr, alter
     this.alternate = alternate;
 }, AST_Block);
 
-var AST_Alt = exports.AST_Alt = declare("Alt", function(expr, alternate) {
+var AST_Alt = exports.AST_Alt = declare("Alt", function(body, expr) {
     this.expression = expr;
-    this.alternate = alternate;
 }, AST_Block)
 
 var AST_Escape = exports.AST_Escape = declare("Escape", function(body, type){
@@ -277,20 +276,20 @@ var AST_MacroDef = exports.AST_MacroDef = declare("MacroDef", function(body, nam
     this.parameters = defParams;
 }, AST_Scope);
 
-var AST_Each = exports.AST_Each = declare("Each", function(body, variable, expr) {
-    this.variable = variable;
-    this.expression = expr;
-}, AST_Scope);
-
 var AST_With = exports.AST_With = declare("With", function(body, alias, expr) {
     this.alias = alias;//Symbol
     this.expression = expr;
 }, AST_Scope);
 
-var AST_Loop = exports.AST_Loop = declare("Loop", function(body, initVar, endExpr, step){
+var AST_Each = exports.AST_Each = declare("Each", function(body, variable, expr) {
+    this.variable = variable;
+    this.expression = expr;
+}, AST_Scope);
+
+var AST_Loop = exports.AST_Loop = declare("Loop", function(body, initVarSymbol, endExpr, step){
     this.step = step;
     this.endexpr = endExpr;
-    this.initvar = initVar;
+    this.initVarSymbol = initVarSymbol;
 }, AST_Scope);
 
 

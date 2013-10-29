@@ -100,7 +100,7 @@ else_single:
     ;
 
 alt:
-      T_ALT expr inner_statement_list T_END_ALT ->new ast.AST_Alt($2, $3)
+      T_ALT expr inner_statement_list T_END_ALT ->new ast.AST_Alt($3, $2)
     ;
 
 each:
@@ -126,9 +126,10 @@ loop:
       T_LOOP loop_init_expr ',' expr ',' loop_step inner_statement_list T_END_LOOP ->new ast.AST_Loop($7, $2, $4, $6);
     ;
 
+/*官方cs引擎有个bug，可以使用<?cs loop: a.b =1, 5, 1?>，但是在内部却没法取到a.b的值，
+原作者可能没有考虑这样用，因此我们的语法将拒绝这种写法*/
 loop_init_expr:
-      t_variable_one
-    | t_variable_one '=' expr {
+     t_variable_one '=' expr {
         $1.initValue = $3;
         $$ = $1;
       }
