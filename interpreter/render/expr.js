@@ -175,18 +175,18 @@ ast.AST_SubProp.proto("_fetchOrCreatehdfNode", function() {
 ast.AST_FunctionCall.proto("calc", function(){
     var id = this.id;
 
-    var argValue, i, argsList = [];
-
-    for(i = 0; this.args[i]; i++){
-        argValue = this.args[i].getSymbolValueNode();
-        argsList.push(argValue);
-    }
-    //注意这里全部都是传值
     var id = ""
     if (this.id instanceof ast.AST_Symbol){
         id = this.id.name;
     } else {
         id = this.id;
+    }
+
+    var argValue, i, argsList = [];
+
+    for(i = 0; this.args[i]; i++){
+        argValue = this.args[i].getSymbolValueNode();
+        argsList.push(argValue);
     }
     var fun = this.context.getExternInterface(id);
     if (typeof fun == "function") {

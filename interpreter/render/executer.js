@@ -20,7 +20,7 @@ function def_execute(nodeType, executeFun){
     });
 }
 
-//---------------exports-------------------
+//---------------exports-------------------//
 def_execute(ast.AST_Node, function(){});
 
 exports.def_execute = def_execute;
