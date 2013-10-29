@@ -1,1 +1,0 @@
-<span class="c_tx3">上传照片：</span><a class="c_tx" target="_blank" href="http://user.qzone.qq.com/<?cs var:qz_metadata.uin ?>/photo/<?cs var:qz_metadata.albumid ?>/<?cs var:qz_metadata.lloc ?>/"><?cs var:qz_metadata.photoname ?></a>

@@ -1,1 +1,0 @@
-java -jar ../Rhino/js.jar humanMeatInclude.rhino ../ ./ false

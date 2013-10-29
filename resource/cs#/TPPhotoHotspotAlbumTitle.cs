@@ -1,1 +1,0 @@
-<span class="c_tx3">更新相册：</span><a class="c_tx" target="_blank" href="http://user.qzone.qq.com/<?cs var:qz_metadata.uin ?>/photo/<?cs var:qz_metadata.albumid ?>/"><?cs var:qz_metadata.albumname ?></a>

@@ -1,1 +1,0 @@
-在<a href="<?cs var:qz_metadata.forum.url ?>" target="_blank" class="c_tx"><?cs var:qz_metadata.forum.name ?></a>发帖：<a href="<?cs var:qz_metadata.title.url ?>" target="_blank" class="c_tx"><?cs var:qz_metadata.title.text ?></a>

@@ -1,7 +1,0 @@
-<qz_layout_title>
-	<mod name="actionTitle" >
-		<mod name="object" />
-		<mod name="content"/>
-		<mod name="action" />
-	</mod>
-</qz_layout_title>

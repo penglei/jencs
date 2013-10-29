@@ -1,2 +1,0 @@
-上传照片<a class="c_tx" target="_blank" href="<?cs var:qz_metadata.bigurl?>/"><?cs var:qz_metadata.photoname ?></a>
-<span class="ifeeds_origin c_tx3">通过<a class="c_tx" target="_blank" href="http://imgcache.qq.com/qzone/photo/qpai/index.html">Q拍</a></span>
