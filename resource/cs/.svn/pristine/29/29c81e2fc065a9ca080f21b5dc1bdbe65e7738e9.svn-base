@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="<%encode%>" ?>
+   <qzone>
+   <result type="<%type%>" >
+       <message>
+           <![CDATA[<%message%>]]>
+       </message>
+       <data begintime="<%begintime%>" endtime="<%endtime%>" hasmorefeeds="<%hasmorefeeds%>" dayval="<%dayval%>" retnum="<%retnum%>" hopecount="<%hopecount%>">
+           <%$feeds_begin$%>
+           <item qzonestate="<%state%>" >
+              <appid><%appid%></appid>
+              <typeid><%typeid%></typeid>
+              <flag><%flag%></flag>
+              <opuin><%opuin%></opuin>
+              <timestamp><%timestamp%></timestamp> 
+              <nickname>
+                  <![CDATA[<%nickname%> ]]>
+              </nickname>
+              <pubdate>
+                  <![CDATA[<%pubdate%> ]]>
+              </pubdate>              
+              <content><%content%></content>
+              <key><![CDATA[<%key%> ]]></key>
+              <vip><%vip%></vip>
+              <emojiprefix><%emojiprefix%></emojiprefix>
+ 	      <upernum><%upernum%></upernum>
+ 	      <uperlist><%uperlist%></uperlist>
+	      <friendtype><%friendtype%></friendtype>
+	      <xmltype><%xmltype%></xmltype>
+	      <ilike><%ilike%></ilike>
+	      <likecnt><%likecnt%></likecnt>
+        <sharecnt><%sharecnt%></sharecnt>
+        <forwardcnt><%forwardcnt%></forwardcnt>
+        <retweetcnt><%retweetcnt%></retweetcnt>
+        <sharewbcnt><%sharewbcnt%></sharewbcnt>
+        <retweetwbcnt><%retweetwbcnt%></retweetwbcnt>
+        <likecntsrc><%likecntsrc%></likecntsrc>
+        <sharecntsrc><%sharecntsrc%></sharecntsrc>
+        <forwardcntsrc><%forwardcntsrc%></forwardcntsrc>
+        <retweetcntsrc><%retweetcntsrc%></retweetcntsrc>
+        <sharewbcntsrc><%sharewbcntsrc%></sharewbcntsrc>
+        <retweetwbcntsrc><%retweetwbcntsrc%></retweetwbcntsrc>
+          <likeinfo>
+          	<like>
+          		<uin><%likeuinone%></uin>
+          		<nick><![CDATA[<%likenickone%> ]]></nick>
+          	</like>
+          	<like>
+          		<uin><%likeuintwo%></uin>
+          		<nick><![CDATA[<%likenicktwo%> ]]></nick>
+          	</like>
+          	<like>
+          		<uin><%likeuinthree%></uin>
+          		<nick><![CDATA[<%likenickthree%> ]]></nick>
+          	</like>
+          </likeinfo>
+          </item>
+          <%$feeds_end$%>
+      </data>
+  </result>
+  </qzone>
+ 

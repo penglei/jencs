@@ -1,0 +1,35 @@
+{
+	main:{
+		error:'<?cs  var:setting.error ?>'
+	},
+	data:[
+		hide_uins:
+		[
+			<?cs each:item = setting.hide_uin ?>
+			{
+				uin:'<?cs  var:item.uin ?>',
+				nick:'<?cs  var:item.nick ?>'
+			},
+			<?cs /each ?>
+		],
+		hide_pages:
+		[
+			<?cs each:item = setting.hide_page ?>
+			{
+				uin:'<?cs  var:item.uin ?>',
+				nick:'<?cs  var:item.nick ?>'
+			},
+			<?cs /each ?>
+		],
+		hide_apps:
+		[
+			<?cs each:item = setting.hide_app ?>
+			{
+				appid:'<?cs  var:item.appid ?>',
+				typeid:'<?cs  var:item.typeid ?>',
+				appname:'<?cs  var:item.appname ?>'
+			},
+			<?cs /each ?>
+		]
+	]
+}

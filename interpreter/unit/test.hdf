@@ -1,0 +1,51 @@
+Page {
+  Menu {
+      Name = Home
+
+    }
+}
+
+title=hello, world
+
+attr.1=URL
+age.Name = My Index
+Page.URL = /myindex.html
+Page.Menu.0 = Home
+Page.Menu.1 = Preferences
+Page.Menu.2 = Help
+Page.Menu.3 = Support
+
+Page {
+  Menu.xx.yy {
+    0 {
+      Name = Home
+    }
+  }
+  Menu {
+      0 {
+          name = "google"
+          URL =http://www.google.com.hk/
+      }
+  }
+}
+
+Page {
+  Menu {
+    9 {
+      Name = Home
+      URL = /google.com/xx/ff/qq.com
+    }
+    1 {
+      Name = Preferences
+      URL = /prefs
+    } 
+    2 {
+      Name = Help
+      URL = /help.html
+    }
+    3 {
+      Name = Support
+      URL = /feedback/
+    }
+  }
+}

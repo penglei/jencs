@@ -1,0 +1,1 @@
+在照片活动:<a class="c_tx" target="_blank" href="http://rc.qzone.qq.com/photo/activity/<?cs var:qz_metadata.activityid ?>/"><?cs var:qz_metadata.activityname ?></a>中上传了照片

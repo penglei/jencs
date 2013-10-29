@@ -1,0 +1,17 @@
+WUPMAIN_LIB = /usr/local/qzone_v3.0/lib/libwupmain.cs.so
+WUPMAIN_V8_LIB = /usr/local/qzone_v3.0/lib/libwupmain_v8.cs.so
+
+all:
+	./trim_dir.sh 
+	./extinclude ../../wupmain.cs ../ > tmp.t
+	./gendefconf ../../ wupmain.cs 1
+	gawk '{print "./gendefconf ../ "$$2}' tmp.t > rdef.sh
+	chmod 777 rdef.sh
+	./rdef.sh
+	./gencpp ../../ wupmain.cs 1
+	gawk '{print "./gencpp ../ "$$2}' tmp.t > r.sh
+	chmod 777 r.sh
+	./r.sh
+
+clean:
+	rm -f gendir/*.so gendir/*.cpp gendir/*.conf rdef.sh  r.sh  tmp.t

@@ -1,0 +1,21 @@
+<qz_layout_title>
+	<layout_v1>
+		<mod name="actionTitle" >
+			<mod name="action" />
+			<mod name="url"/>
+		</mod>
+	</layout_v1>
+	<layout_v2>
+		<mod name="actionTitle" >
+			<mod name="action" />
+			<mod name="object" />
+			<mod name="url" />
+		</mod>
+	</layout_v2>
+			<layout_v3>
+		<mod name="actionTitle">
+			<mod name="action" />
+			<mod name="content" />
+		</mod>
+	</layout_v3>
+</qz_layout_title>

@@ -1,0 +1,8 @@
+<qz_layout_summary>
+	<mod name="contentBox"></mod>
+	<mod name="opr">
+		<mod name="time"></mod>
+		<mod name="source"></mod>
+		<mod name="btn"></mod>
+	</mod>
+</qz_layout_summary> 

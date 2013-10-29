@@ -1,0 +1,1 @@
+通过Q拍上传：<a class="c_tx" target="_blank"  href="http://user.qzone.qq.com/<?cs var:qz_metadata.uin ?>/photo/<?cs var:qz_metadata.albumid ?>/<?cs var:qz_metadata.picid1 ?>"><?cs if:string.length(qz_metadata.desc)>0 ?><?cs var:qz_metadata.desc ?><?cs else ?>Q拍相册<?cs /if ?></a>

@@ -1,0 +1,18 @@
+<qz_layout_summary>
+	<layout_v1>
+		<mod name="contentBoxLeftBorBg"></mod>
+		<mod name="opr">
+			<mod name="time"></mod>
+			<mod name="source"></mod>
+			<mod name="btn"></mod>
+		</mod>
+	</layout_v1>
+	<layout_v2>
+		<mod name="contentBoxLeftBorBg"></mod>
+		<mod name="opr">
+			<mod name="time"></mod>
+			<mod name="source"></mod>
+			<mod name="btn"></mod>
+		</mod>	
+	</layout_v2>
+</qz_layout_summary> 

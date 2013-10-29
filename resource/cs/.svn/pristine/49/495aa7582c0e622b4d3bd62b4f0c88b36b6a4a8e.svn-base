@@ -1,0 +1,23 @@
+ <qz_layout_summary>
+		 <mod name="quote"></mod>
+				 <mod name="contentBox">
+						 <mod name="locationInfo"></mod>
+						 <mod name="extendInfo" dynamic="on">
+									<dynamic>
+									<max_count>3</max_count>
+									<endword><![CDATA[转发过]]></endword>
+									<isNeedMe>0</isNeedMe>
+									<showmode>1</showmode>
+									<needShowlist>0</needShowlist>
+								</dynamic>
+						 </mod>
+				 </mod>
+				 <mod name="opr">
+				 <mod name="time"></mod>
+				 <mod name="source"></mod>
+				 <mod name="btn" like="on"></mod>
+		</mod>
+		<mod name="comment" like="on">
+				<mod name="isay"></mod>
+		</mod>
+</qz_layout_summary> 

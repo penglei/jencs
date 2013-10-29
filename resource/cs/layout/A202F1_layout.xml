@@ -1,0 +1,63 @@
+<qz_layout_summary>
+	<layout_v1>
+		<mod name="contentBoxLeftBorBg"  with_hr="1" actionText="转" actionPrating=":">
+			<mod name="extendInfo" dynamic="">
+				<text><![CDATA[也转过]]></text>
+			</mod>
+		</mod>
+		<mod name="opr">
+			<mod name="time"></mod>
+			<mod name="source"></mod>
+			<mod name="btn" like="on"></mod>
+		</mod>
+		<mod name="comment" like="on">
+			<mod name="isay"></mod>
+		</mod>
+	</layout_v1>
+	<layout_v2>
+		<source_in_content>true</source_in_content>
+		<mod name="contentBoxLeftBorBg"  with_hr="1" actionText="转" actionPrating=":">
+			<mod name="extendInfo" dynamic="">
+				<text><![CDATA[也转过]]></text>
+			</mod>
+		</mod>
+		<mod name="opr">
+			<mod name="time"></mod>
+			<mod name="source"></mod>
+			<mod name="btn" like="on"></mod>
+		</mod>
+		<mod name="comment" like="on">
+			<mod name="isay"></mod>
+		</mod>
+	</layout_v2>
+	<layout_v5>
+		<mod name="contentBoxLeftBorBg"  with_hr="1" actionText="转" actionPrating=":">
+			<mod name="extendInfo" dynamic="">
+				<text><![CDATA[也转过]]></text>
+			</mod>
+		</mod>
+		<mod name="opr">
+			<mod name="time"></mod>
+			<mod name="source"></mod>
+			<mod name="btn" like="on"></mod>
+		</mod>
+		<mod name="comment" like="on">
+			<mod name="isay"></mod>
+		</mod>
+	</layout_v5>
+	<layout_v6>
+		<mod name="contentBoxLeftBorBg" hidetitle="" with_hr="1" actionText="转" actionPrating=":">
+			<mod name="extendInfo" dynamic="">
+				<text><![CDATA[也转过]]></text>
+			</mod>
+		</mod>
+		<mod name="opr">
+			<mod name="time"></mod>
+			<mod name="source"></mod>
+			<mod name="btn" like="on"></mod>
+		</mod>
+		<mod name="comment" like="on">
+			<mod name="isay"></mod>
+		</mod>
+	</layout_v6>
+</qz_layout_summary>

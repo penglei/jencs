@@ -1,0 +1,1116 @@
+//各业务热点动态模板
+A2T1F0_hotspot_title    TPBlogHotspotTitle
+A2T1F1_hotspot_title    TPBlogHotspotTitle
+A2T1F0_hotspot_summary  TPBlogHotspotSummary
+A2T1F1_hostspot_summary TPBlogHotspotSummary
+A4T1F0_hotspot_title  TPPhotoHotspotPhotoTitle
+A4T1F0_hotspot_summary TPPhotoHotspotSummary
+A4T2F0_hotspot_title TPPhotoHotspotAlbumTitle
+A4T2F0_hotspot_summary TPPhotoHotspotSummary
+A4T3F0_hotspot_title TPPhotoHotspotQPaiTitle
+A4T3F0_hotspot_summary TPPhotoHotspotSummary
+
+//buliding 
+A401T1F1_title lou_feeds2_title 
+A401T1F1_summary  lou_feeds2_summary
+A401T2F0_title lou_feeds1_title   
+A401T2F0_summary  lou_feeds1_summary
+
+//日志模板
+A2T1F0_title 	TPBlogTitle
+A2T1F1_title 	TPBlogTitle
+A2T2F0_title 	TPBlogTitle
+A2T2F1_title 	TPBlogTitle
+A2T3F1_title 	TPBlogTitle	//日志审核feeds
+A2T4F0_title 	TPBlogTitle
+A2T4F1_title 	TPBlogTitle
+A2T5F0_title 	TPBlogTitle
+A2T5F1_title 	TPBlogTitle
+A2T6F0_title    TPBlogTitle
+A2T6F1_title    TPBlogTitle
+A2T7F1_title    TPBlogTitle
+A2T11F1_title   TPBlogTitle
+A2T11F100_title   TPBlogTitle
+A2T7F100_title	  TPBlogTitle
+A2T1F0_summary TPBlog
+A2T1F1_summary TPBlogAc
+A2T2F0_summary TPBlogAc
+A2T2F1_summary TPBlogAc
+A2T3F1_summary TPBlogAc		//日志审核feeds
+A2T4F0_summary TPBlog
+A2T4F1_summary TPBlogAc
+A2T5F0_summary TPBlog
+A2T5F1_summary TPBlogAc
+A2T6F0_summary TPBlog
+A2T6F1_summary TPBlogAc
+A2T7F1_summary  TPBlog
+A2T11F1_summary TPBlogAc
+A2T11F100_summary TPBlogAc
+A2T7F100_summary    TPBlog
+blog_msn_summary blog_msn_summary
+
+//留言板模板
+A334T1F1_title 	msgb_normal
+A334T1F1_summary 	msgb_normal_summary
+A334T2F1_title 	msgb_audit
+A334T2F1_summary 	msgb_audit_summary
+
+//说说模板
+A311T0F0_title      moodTitleT0F0
+A311T13F0_title      moodTitleT0F0
+A311T1F0_title      moodTitleT0F0
+A311T2F1_title      moodTitleT2F1
+A311T2F0_title      moodTitleT2F0
+A311T3F1_title      moodTitleT3F1
+A311T4F1_title      moodTitleT4F1
+A311T4F0_title      moodTitleT4F0
+A311T5F1_title      moodTitleT5F1
+A311T5F0_title      moodTitleT5F0
+A311T7F1_title      moodTitleT7F1
+A311T8F1_title      moodTitleT8F1
+A311T9F1_title      moodTitleT9F1
+A311T10F1_title     moodTitleT10F1
+A311T11F1_title     moodTitleT11F1
+A311T12F1_title     moodTitleT12F1
+mood_msn_summary    mood_msn_summary
+A311T7F100_title    moodTitleT7F1
+A311T8F100_title    moodTitleT8F1
+A311T9F100_title    moodTitleT9F1
+A311T10F100_title   moodTitleT10F1
+A311T11F100_title   moodTitleT11F1
+A311T12F100_title   moodTitleT12F1
+A311T0F0_summary    moodSummaryT0F0
+A311T13F0_title      moodTitleT0F0
+A311T1F0_summary    moodSummaryT0F0
+A311T2F1_summary    moodSummaryT2F1
+A311T2F0_summary    moodSummaryT2F0
+A311T3F1_summary    moodSummaryT3F1
+A311T4F1_summary    moodSummaryT4F1
+A311T4F0_summary    moodSummaryT4F0
+A311T5F1_summary    moodSummaryT5F1
+A311T5F0_summary    moodSummaryT5F0
+//A311T6F1_summary	empty // moodSummaryT6F1
+//A311T6F100_summary  empty // moodSummaryT6F100
+//A311T6F0_summary    empty // moodSummaryT6F0
+A311T7F1_summary    moodSummaryT7F1
+A311T8F1_summary    moodSummaryT8F1
+A311T9F1_summary    moodSummaryT9F1
+A311T10F1_summary   moodSummaryT10F1
+A311T11F1_summary   moodSummaryT11F1
+A311T12F1_summary   moodSummaryT12F1
+A311T7F100_summary    moodSummaryT7F1
+A311T8F100_summary    moodSummaryT8F1
+A311T9F100_summary    moodSummaryT9F1
+A311T10F100_summary   moodSummaryT10F1
+A311T11F100_summary   moodSummaryT11F1
+A311T12F100_summary   moodSummaryT12F1
+A311T16F0_title      moodTitleT0F0
+A311T16F0_summary    moodSummaryT0F0
+
+
+//吃喝玩乐
+A380T2F1_title 	meishi_title_1
+A380T2F1_summary 	meishi_content_1
+
+A371T1F1_title 		meishi_title_1
+A371T1F1_summary 	meishi_content_1
+A371T1F0_title 		meishi_title_2
+A371T1F0_summary 	meishi_content_2	
+A371T2F1_title 		meishi_title_1
+A371T2F1_summary 	meishi_content_1	
+A371T2F0_title 		meishi_title_2
+A371T2F0_summary 	meishi_content_2	
+A371T3F1_title  	meishi_title_1		// 痰?被动
+A371T3F1_summary 	meishi_content_2
+A371T4F1_title      meishi_title_1    
+A371T4F1_summary    meishi_content_2
+
+//相册模板
+A4T0F0_title 	TPPhotoTitleT0	//上传图片
+A4T0F0_summary TPPhotoT0		//上传图片
+A4T3F0_title 	TPPhotoTitleT3	//制作动感影集
+A4T3F0_summary TPPhotoT3		//制作动感影集
+A4T6F0_title 	TPPhotoTitleT6	//个性相册
+A4T6F0_summary TPPhotoT6		//个性相册
+A4T5F0_title 	TPPhotoTitleT5	//转载主动
+A4T5F0_summary TPPhotoT5		//转载主动
+A4T1F0_title 	TPPhotoTitleT1F0//圈圈评论主动
+A4T1F0_summary TPPhotoT1F0	//圈圈评论主动
+A4T1F1_title 	TPPhotoTitleT1F1//评论(圈圈)被动
+A4T1F1_summary TPPhotoT1F1	//评论(圈圈)被动
+A4T4F1_title 	TPPhotoTitleT4F1//影集评论被动
+A4T4F1_summary TPPhotoT4F1	//影集评论被动
+A4T5F1_title 	TPPhotoTitleT5F1//转载被动
+A4T5F1_summary TPPhotoT5F1	//转载被动
+A4T7F1_title 	TPPhotoTitleT7F1//相册评论被动
+A4T7F1_summary TPPhotoT7F1	//相册评论被动
+A4T8F1_title 	TPPhotoTitleT8F1//照片评论审核
+A4T8F1_summary TPPhotoT1F1
+A4T9F1_title 	TPPhotoTitleT7F1//相册评论审核
+A4T9F1_summary TPPhotoT7F1
+A4T10F1_title 	TPPhotoTitleT4F1//动感影集评论审核
+A4T10F1_summary TPPhotoT4F1
+A4T11F0_title 	TPPhotoTitleT11
+A4T11F0_summary TPPhotoT11	
+A4T12F0_title        TPPhotoTitleT12  //12:  主动上传、更新照片[多张]
+A4T12F0_summary  TPPhotoT12	
+A4T14F1_title	TPPhotoTitleT14F1  //14:  被动评论照片[单张]
+A4T14F1_summary   TPPhotoT14F1
+A4T15F1_title TPPhotoTitleT11				//15: 照片与我相关
+A4T15F1_summary TPPhotoT15
+A4T16F1_title  TPPhotoTitleT0			//16: 相册与我相关
+A4T16F1_summary  TPPhotoT16
+A4T15F100_title TPPhotoTitleT11				//15: 照片与我相关
+A4T15F100_summary TPPhotoT15
+A4T16F100_title  TPPhotoTitleT0			//16: 相册与我相关
+A4T16F100_summary  TPPhotoT16
+A4T17F0_title TPPhotoTitleT17				//17:随拍主动
+A4T17F0_summary TPPhotoT17
+A4T18F1_title TPPhotoTitleT18F1			//18:随拍被动
+A4T18F1_summary  TPPhotoT18F1
+
+
+
+//share template    
+A202T1F0_title  qz_share_title
+A202T1F1_title  qz_share_title
+A202T2F0_title  qz_share_title
+A202T2F1_title  qz_share_title
+A202T3F1_title  qz_share_title
+A202T9F1_title  qz_share_title
+A202T9F100_title  qz_share_title
+
+A202T1F0_summary  qz_share_summary_T1F1
+A202T1F1_summary  qz_share_summary_T1F1
+A202T2F0_summary  qz_share_summary_T2F0
+A202T2F1_summary  qz_share_summary_T2F1
+A202T3F1_summary  qz_share_summary_T3F1
+A202T9F1_summary  qz_share_summary_T9F1
+A202T9F100_summary  qz_share_summary_T9F1
+
+//热门feeds
+A5000T3F0_title 	hotshare_title_1
+A5000T3F0_summary 	hotshare_content_1
+
+//elong
+A502T1F0_title 	elong_title_0
+A502T1F0_summary 	elong_content_0	
+A502T2F1_title 	elong_title_1
+A502T2F1_summary 	elong_content_1
+
+// 看电影
+A374T1F0_title 	qzmovie_title_0
+A374T1F0_summary 	qzmovie_content_0
+A374T1F1_title 	qzmovie_title_1
+A374T1F1_summary 	qzmovie_content_1
+
+//2011活动
+A480T1F0_title 	qzone2011_title
+A480T1F0_summary 	qzone2011_summary	
+
+//wenwen feeds模版
+A336T0F0_title 	ww_newask_title
+A336T0F0_summary 	ww_newask_summary
+A336T0F1_title 	ww_newaskforteam_title
+A336T0F1_summary 	ww_newaskforteam_summary		
+A336T1F0_title 	ww_questionsolved_title
+A336T1F0_summary 	ww_questionsolved_summary
+A336T1F1_title 	ww_newasktomyteam_title
+A336T1F1_summary 	ww_newasktomyteam_summary
+A336T4F1_title 	ww_bestanswer_title
+A336T4F1_summary 	ww_bestanswer_summary
+A336T5F1_title 	ww_attentionsolved_title
+A336T5F1_summary 	ww_attentionsolved_summary
+A336T6F0_title 	ww_newanswer_title
+A336T6F0_summary 	ww_newanswer_summary
+A336T6F1_title 	ww_newanswertomyteam_title
+A336T6F1_summary 	ww_newanswertomyteam_summary
+
+//情侣空间
+A360T1F0_title 	TPLoverTitleT1F0
+A360T1F0_summary 	TPLoverT1F0
+A360T2F0_title 	TPLoverTitleT2F0
+A360T2F0_summary 	TPLoverT2F0	
+
+//装扮
+A340T0F0_title 	TP1Title
+A340T0F0_summary 	TP1
+A340T5F0_title  TP1Title
+A340T5F0_summary    TP1     
+A340T2F0_title  TP1Title
+A340T2F0_summary    TP1
+A340T3F0_title  TP1Title
+A340T3F0_summary    TP1
+
+//like
+A217T1F0_title 	like_title_1
+A217T1F0_summary 	like_content_1
+
+//discuz
+A503T1F0_title     discuz_title
+A503T1F0_summary   discuz_summary
+
+A5010T1F0_title     discuz_title
+A5010T1F0_summary   discuz_summary
+
+//城市达人
+A337T1F0_title city_title_0
+A337T2F0_title city_title_0
+A337T3F0_title city_title_0
+A337T4F0_title city_title_0
+
+A337T1F0_summary city_content_0
+A337T2F0_summary city_content_0
+A337T3F0_summary city_content_0
+A337T4F0_summary city_content_0
+
+//微博
+A216T1F0_title  weiboTitleT1F0
+A216T2F0_title  weiboTitleT2F0
+A216T3F1_title  weiboTitleT3F1
+A216T4F1_title  weiboTitleT1F0
+A216T5F1_title  weiboTitleT2F0
+A216T6F1_title  weiboTitleT6F1
+A216T4F100_title  weiboTitleT1F0
+A216T5F100_title  weiboTitleT2F0
+A216T1F0_summary  weiboSummaryT1F0
+A216T2F0_summary  weiboSummaryT2F0
+A216T3F1_summary  weiboSummaryT3F1
+A216T4F1_summary  weiboSummaryT1F0
+A216T5F1_summary  weiboSummaryT2F0
+A216T6F1_summary  weiboSummaryT6F1
+A216T4F100_summary  weiboSummaryT1F0
+A216T5F100_summary  weiboSummaryT2F0
+
+//activities
+A338T8F0_title    active_title_0
+A338T8F0_summary  active_content_0
+A338T11F0_title    active_title_0
+A338T11F0_summary  active_content_0
+A338T12F0_title    active_title_0
+A338T12F0_summary  active_content_0
+
+//站内喜欢
+A217T2F1_title    ilike_title_1
+A217T2F1_summary  ilike_content_1
+
+//QQ互联Feeds
+A6000T1F0_title    connect_title_0
+A6000T1F0_summary  connect_content_0
+
+A51T1F0_title profile_title_0
+A51T2F1_title profile_title_1
+A51T3F1_title profile_title_2
+A51T1F0_summary  profile_content_0
+A51T2F1_summary  profile_content_1
+A51T3F1_summary  profile_content_2
+
+recom_feeds_tmpl recom_feeds 
+feed_merge_tmpl feeds_merge
+feed_tmpl new_default4_feeds
+feed_tmpl_part_main fw_feeds_part1
+feed_tmpl_part_feeds fw_feeds_part2
+feedslist_tmpl feeds_list
+feedslistmodern_tmpl feeds_list_morden
+feedslist_tmpl_qz feeds_list_qz
+feedvisitor_title vistorfeeds_title
+feedvisitor_content vistorfeeds_content
+hs_container hs_container
+hs_summary hs_summary
+
+//new ver feeds
+V1_A2T5F0_title		common_widget_title		A2_title_layout
+V1_A2T5F0_summary	common_widget			A2_layout
+V1_A2T1F1_title		common_widget_title		A2_title_layout
+V1_A2T1F1_summary	common_widget			A2_layout
+V1_A2T1F0_title     common_widget_title     A2_title_layout
+V1_A2T1F0_summary   common_widget           A2_layout
+V1_A2T2F1_title		common_widget_title		A2_title_layout
+V1_A2T2F1_summary	common_widget			A2_layout
+V1_A2T2F0_title     common_widget_title     A2_title_layout
+V1_A2T2F0_summary   common_widget           A2_layout
+
+V1_A2T3F1_title     common_widget_title     A2_title_layout
+V1_A2T3F1_summary   common_widget           A2_layout
+V1_A2T4F1_title     common_widget_title     A2_title_layout
+V1_A2T4F1_summary   common_widget           A2_layout
+V1_A2T6F1_title     common_widget_title     A2_title_layout
+V1_A2T6F1_summary   common_widget           A2_layout
+
+V1_A2T7F1_title     common_widget_title     A2_title_layout
+V1_A2T7F1_summary   common_widget           A2_layout
+V1_A2T11F1_title     common_widget_title     A2_title_layout
+V1_A2T11F1_summary   common_widget           A2_layout
+V1_A2T13F1_title     common_widget_title     A2_title_layout
+V1_A2T13F1_summary   common_widget           A2_layout
+
+V1_A2T7F100_title     common_widget_title     A2_title_layout
+V1_A2T7F100_summary   common_widget           A2_layout
+V1_A2T11F100_title     common_widget_title     A2_title_layout
+V1_A2T11F100_summary   common_widget           A2_layout
+
+V1_A2T9F0_title		common_widget_title		A2_title_layout
+V1_A2T9F0_summary	common_widget			A2_layout
+
+V1_A216T1F0_title       common_widget_title     A216_title_layout
+V1_A216T1F0_summary     common_widget           A216_layout
+V1_A216T2F0_title       common_widget_title     A216_title_layout
+V1_A216T2F0_summary     common_widget           A216T2_layout
+V1_A216T3F1_title       common_widget_title     A216_title_layout_psv
+V1_A216T3F1_summary     common_widget           A216_layout
+V1_A216T4F1_title       common_widget_title     A216_title_layout
+V1_A216T4F1_summary     common_widget           A216_layout
+V1_A216T5F1_title       common_widget_title     A216_title_layout
+V1_A216T5F1_summary     common_widget           A216_layout
+V1_A216T6F1_title       common_widget_title     A216_title_layout_atme
+V1_A216T6F1_summary     common_widget           A216_layout
+V1_A216T4F100_title       common_widget_title     A216_title_layout
+V1_A216T4F100_summary     common_widget           A216_layout
+V1_A216T5F100_title       common_widget_title     A216_title_layout
+V1_A216T5F100_summary     common_widget           A216_layout
+
+V1_A202T2F0_title			common_widget_title		A202_title_layout
+V1_A202T2F0_summary		common_widget			A202_layout
+V1_A202T2F1_title			common_widget_title		A202T2_title_layout_psv
+V1_A202T2F1_summary		common_widget			A202F1_layout 
+V1_A202T7F0_title           common_widget_title     A202_title_layout
+V1_A202T7F0_summary     common_widget           A202_layout
+V1_A202T7F1_title           common_widget_title     A202T2_title_layout_psv
+V1_A202T7F1_summary     common_widget           A202F1_layout 
+V1_A202T1F1_title                       common_widget_title             A202_title_layout_psv
+V1_A202T1F1_summary             common_widget                   A202F1_layout 
+V1_A202T3F1_title                       common_widget_title             A202_title_layout_atme
+V1_A202T3F1_summary             common_widget                   A202F1_layout 
+V1_A202T5F1_title                       common_widget_title             A202_title_layout_psv
+V1_A202T5F1_summary             common_widget                   A202F1_layout 
+V1_A202T9F1_title                       common_widget_title             A202_title_layout
+V1_A202T9F1_summary             common_widget                   A202_layout 
+V1_A202T9F100_title                     common_widget_title             A202_title_layout
+V1_A202T9F100_summary           common_widget                   A202_layout
+V1_A202T10F0_title                      common_widget_title             A202_title_layout
+V1_A202T10F0_summary            common_widget                   A202_layout
+V1_A202T10F1_title                      common_widget_title             A202_title_layout
+V1_A202T10F1_summary            common_widget                   A202_layout 
+V1_A202T10F100_title                    common_widget_title     A202_title_layout
+V1_A202T10F100_summary          common_widget           A202_layout
+V1_A202T11F0_title                      common_widget_title             A202_title_layout
+V1_A202T11F0_summary            common_widget                   A202_layout
+V1_A202T11F1_title                      common_widget_title             A202_title_layout
+V1_A202T11F1_summary            common_widget                   A202_layout
+V1_A202T11F100_title                    common_widget_title     A202_title_layout
+V1_A202T11F100_summary          common_widget           A202_layout
+V1_A202T12F1_title                      common_widget_title             A202_title_layout
+V1_A202T12F1_summary            common_widget                   A202F1_layout 
+V1_A202T13F1_title                      common_widget_title             A202_title_layout
+V1_A202T13F1_summary            common_widget                   A202F1_layout 
+V1_A202T15F1_title                      common_widget_title             A202_title_layout
+V1_A202T15F1_summary            common_widget                   A202F1_layout 
+V1_A202T16F1_title                       common_widget_title             A202_title_layout_atme
+V1_A202T16F1_summary             common_widget                   A202F1_layout 
+V1_A202T21F0_title                      common_widget_title             A202_title_layout
+V1_A202T21F0_summary            common_widget                   A202_layout
+
+
+
+V1_A203T2F0_title               common_widget_title     A202_title_layout
+V1_A203T2F0_summary             common_widget                   A202_layout
+V1_A203T2F1_title       common_widget_title     A202_title_layout_psv
+V1_A203T2F1_summary     common_widget           A202_layout
+V1_A203T1F1_title       common_widget_title     A202_title_layout_psv
+V1_A203T1F1_summary     common_widget           A202_layout
+V1_A203T3F1_title       common_widget_title     A202_title_layout_atme
+V1_A203T3F1_summary     common_widget           A202_layout
+V1_A203T9F1_title       common_widget_title     A202_title_layout
+V1_A203T9F1_summary     common_widget           A202_layout
+
+V1_A311T0F0_title   common_widget_title         A311_title_layout
+V1_A311T0F0_summary	common_widget				A311T0_layout
+V1_A311T17F0_title	common_widget_title			A311T17_title_layout
+V1_A311T17F0_summary	common_widget				A311T0_layout
+V1_A311T21F0_title	common_widget_title			A311_title_layout
+V1_A311T21F0_summary common_widget               A311T0_layout
+V1_A311T13F0_title   common_widget_title         A311_title_layout
+V1_A311T13F0_summary common_widget               A311T13_layout
+V1_A311T1F0_title	common_widget_title			A311T1_title_layout
+V1_A311T1F0_summary	common_widget				A311T1_layout
+V1_A311T5F0_title	common_widget_title			A311_title_layout
+V1_A311T5F0_summary	common_widget				A311_layout
+
+V1_A311T2F1_title		common_widget_title			A311T2_title_layout
+V1_A311T2F1_summary		common_widget				A311_NoBorBg_layout
+V1_A311T14F1_title		common_widget_title			A311T2_title_layout
+V1_A311T14F1_summary		common_widget				A311_NoBorBg_layout
+V1_A311T3F1_title		common_widget_title			A311_title_layout
+V1_A311T3F1_summary		common_widget				A311_NoBorBg_layout
+V1_A311T4F1_title		common_widget_title			A311T4_title_layout
+V1_A311T4F1_summary		common_widget				A311_NoBorBg_layout
+
+V1_A311T7F1_title	common_widget_title			A311_title_layout
+V1_A311T7F1_summary	common_widget				A311_layout
+V1_A311T8F1_title	common_widget_title			A311_title_layout
+V1_A311T8F1_summary	common_widget				A311_layout
+V1_A311T9F1_title	common_widget_title			A311_title_layout
+V1_A311T9F1_summary	common_widget				A311_layout
+V1_A311T10F1_title	common_widget_title			A311_title_layout
+V1_A311T10F1_summary	common_widget			A311_layout
+V1_A311T11F1_title		common_widget_title		A311_title_layout
+V1_A311T11F1_summary	common_widget			A311_layout
+V1_A311T12F1_title		common_widget_title		A311_title_layout
+V1_A311T12F1_summary	common_widget			A311_layout
+V1_A311T7F100_title		common_widget_title		A311_title_layout
+V1_A311T7F100_summary	common_widget			A311_layout
+V1_A311T8F100_title		common_widget_title		A311_title_layout
+V1_A311T8F100_summary	common_widget			A311_layout
+V1_A311T9F100_title		common_widget_title		A311_title_layout
+V1_A311T9F100_summary	common_widget			A311_layout
+V1_A311T10F100_title	common_widget_title		A311_title_layout
+V1_A311T10F100_summary	common_widget			A311_layout
+V1_A311T11F100_title	common_widget_title		A311_title_layout
+V1_A311T11F100_summary	common_widget			A311_layout
+V1_A311T12F100_title	common_widget_title		A311_title_layout
+V1_A311T12F100_summary	common_widget			A311_layout
+V1_A311T16F0_title	common_widget_title			A311_title_layout
+V1_A311T16F0_summary	common_widget				A311T0_layout
+V1_A311T20F1_title       common_widget_title                     A311_title_layout
+V1_A311T20F1_summary     common_widget                           A311_layout
+//语音说说
+V1_A311T22F0_title       common_widget_title                     A311_title_layout
+V1_A311T22F0_summary     common_widget                           A311T22F0_layout
+V1_A311T22F1_title       common_widget_title                     A311_title_layout
+V1_A311T22F1_summary     common_widget                           A311T22F0_layout
+//转发语音说说
+V1_A311T23F0_title       common_widget_title                     A311_title_layout
+V1_A311T23F0_summary     common_widget                           A311_layout
+V1_A311T23F1_title       common_widget_title                     A311_title_layout
+V1_A311T23F1_summary     common_widget                           A311_layout
+V1_A311T24F1_title       common_widget_title                     A352_title_layout
+V1_A311T24F1_summary     common_widget                           A311_layout
+
+V1_A4T0F0_title		common_widget_title			A4_title_layout
+V1_A4T0F0_summary	common_widget				A4_layout
+V1_A4T0F1_title		common_widget_title			A4_title_layout
+V1_A4T0F1_summary	common_widget				A4_layout
+V1_A4T1F1_title		common_widget_title			A4_title_layout
+V1_A4T1F1_summary	common_widget				A4_layout
+V1_A4T1F0_title     common_widget_title         A4_title_layout
+V1_A4T1F0_summary   common_widget               A4_layout
+V1_A4T3F0_title		common_widget_title			A4_title_layout
+V1_A4T3F0_summary	common_widget				A4_layout_T3
+V1_A4T4F1_title		common_widget_title			A4_title_layout
+V1_A4T4F1_summary	common_widget				A4_layout
+V1_A4T5F0_title		common_widget_title			A4_title_layout
+V1_A4T5F0_summary	common_widget				A4_layout
+V1_A4T5F1_title		common_widget_title			A4_title_layout
+V1_A4T5F1_summary	common_widget				A4_layout
+V1_A4T6F0_title		common_widget_title			A4_title_layout
+V1_A4T6F0_summary	common_widget				A4_layout_T3
+V1_A4T7F1_title		common_widget_title			A4_title_layout
+V1_A4T7F1_summary	common_widget				A4_layout
+V1_A4T8F1_title		common_widget_title			A4_title_layout
+V1_A4T8F1_summary	common_widget				A4_layout_T2
+V1_A4T9F1_title		common_widget_title			A4_title_layout
+V1_A4T9F1_summary	common_widget				A4_layout_T2
+V1_A4T10F1_title	common_widget_title			A4_title_layout
+V1_A4T10F1_summary	common_widget				A4_layout_T2
+V1_A4T11F0_title	common_widget_title			A4_title_layout
+V1_A4T11F0_summary	common_widget				A4_layout
+V1_A4T12F0_title	common_widget_title			A4_title_layout
+V1_A4T12F0_summary	common_widget				A4_layout_T3
+V1_A4T14F1_title	common_widget_title			A4_title_layout
+V1_A4T14F1_summary	common_widget				A4_layout
+V1_A4T15F1_title	common_widget_title			A4_title_layout
+V1_A4T15F100_title	common_widget_title			A4_title_layout
+V1_A4T15F1_summary	common_widget				A4_layout
+V1_A4T15F100_summary	common_widget				A4_layout
+V1_A4T16F1_title	common_widget_title			A4_title_layout
+V1_A4T16F100_title	common_widget_title			A4_title_layout
+V1_A4T16F1_summary	common_widget				A4_layout
+V1_A4T16F100_summary	common_widget				A4_layout
+V1_A4T17F0_title	common_widget_title			A4_title_layout
+V1_A4T17F0_summary	common_widget				A4_layout
+V1_A4T18F1_title	common_widget_title			A4_title_layout
+V1_A4T18F1_summary	common_widget				A4_layout
+V1_A4T19F0_title	common_widget_title			A4_title_layout
+V1_A4T19F0_summary	common_widget				A4_layout
+V1_A4T20F1_title	common_widget_title			A4_title_layout
+V1_A4T20F1_summary	common_widget				A4_layout_T2
+V1_A4T21F1_title	common_widget_title			A4_title_layout
+V1_A4T21F1_summary	common_widget				A4_layout_T2
+V1_A4T24F0_title        common_widget_title                     A4_title_layout
+V1_A4T24F0_summary      common_widget                           A4_layout
+V1_A4T25F1_title        common_widget_title                     A4_title_layout
+V1_A4T25F1_summary      common_widget                           A4_layout
+V1_A4T26F1_title        common_widget_title                     A4_title_layout
+V1_A4T26F1_summary      common_widget                           A4_layout
+V1_A4T27F1_title        common_widget_title                     A4_title_layout
+V1_A4T27F1_summary      common_widget                           A4_layout
+V1_A4T28F1_title	common_widget_title			A4_title_layout
+V1_A4T28F1_summary	common_widget				A4_layout_T2
+
+//gift
+V1_A333T3F1_title   common_widget_title     A333_title_layout
+V1_A333T3F1_summary   common_widget               A333_layout
+V1_A333T1F0_title   common_widget_title     A333_title_layout
+V1_A333T1F0_summary   common_widget               A333_layout
+V1_A333T2F0_title   common_widget_title     A333_title_layout
+V1_A333T2F0_summary   common_widget               A333_layout
+V1_A333T4F0_title   common_widget_title     A333_title_layout
+V1_A333T4F0_summary   common_widget               A333_layout
+V1_A333T5F0_title   common_widget_title     A333_title_layout
+V1_A333T5F0_summary   common_widget               A333_layout
+V1_A333T8F0_title   common_widget_title     A333_title_layout
+V1_A333T8F0_summary   common_widget               A333_layout
+V1_A333T11F1_title   common_widget_title    A333_title_layout
+V1_A333T11F1_summary   common_widget              A333_layout
+V1_A333T12F1_title   common_widget_title    A333_title_layout
+V1_A333T12F1_summary   common_widget              A333_layout
+
+//vote
+V1_A201T1F0_title   common_widget_title         A201_title_layout
+V1_A201T1F0_summary common_widget               A201_layout
+V1_A201T2F0_title   common_widget_title         A201_title_layout
+V1_A201T2F0_summary common_widget               A201_layout
+V1_A201T3F1_title   common_widget_title         A201_title_layout
+V1_A201T3F1_summary common_widget               A201_layout
+V1_A201T4F1_title   common_widget_title         A201_title_layout
+V1_A201T4F1_summary common_widget               A201_layout
+V1_A201T4F100_title   common_widget_title         A201_title_layout
+V1_A201T4F100_summary common_widget               A201_layout
+
+
+//shuoshuo game
+V1_A6100T0F0_title   common_widget_title         A311_title_layout
+V1_A6100T0F0_summary common_widget               A311T13_layout
+
+V1_A6100T13F0_title   common_widget_title         A311_title_layout
+V1_A6100T13F0_summary common_widget               A311T13_layout
+V1_A6100T1F0_title	common_widget_title			A311T1_title_layout
+V1_A6100T1F0_summary	common_widget				A311T1_layout
+V1_A6100T5F0_title	common_widget_title			A311_title_layout
+V1_A6100T5F0_summary	common_widget				A311_layout
+
+V1_A6100T2F1_title	common_widget_title			A311T2_title_layout
+V1_A6100T2F1_summary	common_widget				A311_layout
+V1_A6100T14F1_title       common_widget_title                     A311T2_title_layout
+V1_A6100T14F1_summary     common_widget                           A311_layout
+V1_A6100T3F1_title	common_widget_title			A311_title_layout
+V1_A6100T3F1_summary	common_widget				A311_layout
+V1_A6100T4F1_title	common_widget_title			A311T4_title_layout
+V1_A6100T4F1_summary	common_widget				A311_layout
+
+V1_A6100T7F1_title	common_widget_title			A311_title_layout
+V1_A6100T7F1_summary	common_widget				A311_layout
+V1_A6100T8F1_title	common_widget_title			A311_title_layout
+V1_A6100T8F1_summary	common_widget				A311_layout
+V1_A6100T9F1_title	common_widget_title			A311_title_layout
+V1_A6100T9F1_summary	common_widget				A311_layout
+V1_A6100T10F1_title	common_widget_title			A311_title_layout
+V1_A6100T10F1_summary	common_widget			A311_layout
+V1_A6100T11F1_title		common_widget_title		A311_title_layout
+V1_A6100T11F1_summary	common_widget			A311_layout
+V1_A6100T12F1_title		common_widget_title		A311_title_layout
+V1_A6100T12F1_summary	common_widget			A311_layout
+V1_A6100T7F100_title		common_widget_title		A311_title_layout
+V1_A6100T7F100_summary	common_widget			A311_layout
+V1_A6100T8F100_title		common_widget_title		A311_title_layout
+V1_A6100T8F100_summary	common_widget			A311_layout
+V1_A6100T9F100_title		common_widget_title		A311_title_layout
+V1_A6100T9F100_summary	common_widget			A311_layout
+V1_A6100T10F100_title	common_widget_title		A311_title_layout
+V1_A6100T10F100_summary	common_widget			A311_layout
+V1_A6100T11F100_title	common_widget_title		A311_title_layout
+V1_A6100T11F100_summary	common_widget			A311_layout
+V1_A6100T12F100_title	common_widget_title		A311_title_layout
+V1_A6100T12F100_summary	common_widget			A311_layout
+
+
+
+//appstore
+V1_A352T1F0_title    common_widget_title              A352_title_layout
+V1_A352T1F0_summary common_widget               A352_layout
+V1_A352T2F1_title    common_widget_title              A352_title_layout
+V1_A352T2F1_summary common_widget               A352_layout
+V1_A352T3F0_title    common_widget_title              A352_title_layout
+V1_A352T3F0_summary common_widget               A352_layout
+V1_A352T3F1_title    common_widget_title              A352_title_layout
+V1_A352T3F1_summary common_widget               A352_layout
+V1_A352T4F1_title    common_widget_title              A352_title_layout
+V1_A352T4F1_summary common_widget               A352_layout
+V1_A352T4F100_title    common_widget_title              A352_title_layout
+V1_A352T4F100_summary common_widget               A352_layout
+V1_A352T5F1_title    common_widget_title              A352_title_layout
+V1_A352T5F1_summary common_widget               A352T5_layout
+V1_A352T6F1_title    common_widget_title              A352_title_layout
+V1_A352T6F1_summary common_widget               A352T5_layout
+V1_A352T7F0_title    common_widget_title              A352_title_layout
+V1_A352T7F0_summary common_widget               A352_layout
+V1_A352T7F1_title    common_widget_title              A352_title_layout
+V1_A352T7F1_summary common_widget               A352_layout
+V1_A352T8F1_title    common_widget_title              A352_title_layout
+V1_A352T8F1_summary common_widget               A352_layout
+
+//装扮、活动
+V1_A340T2F0_title    common_widget_title              A340_title_layout
+V1_A340T2F0_summary    common_widget             A340_layout
+V1_A340T2F1_title    common_widget_title              A340_title_layout
+V1_A340T2F1_summary    common_widget             A340F1_layout
+V1_A340T3F0_title    common_widget_title              A340_title_layout
+V1_A340T3F0_summary    common_widget              A340_layout
+V1_A340T3F1_title    common_widget_title              A340_title_layout
+V1_A340T3F1_summary    common_widget              A340F1_layout
+V1_A340T5F0_title    common_widget_title              A340_title_layout
+V1_A340T5F0_summary    common_widget             A340_layout
+V1_A340T5F1_title    common_widget_title              A340_title_layout
+V1_A340T5F1_summary    common_widget             A340F1_layout
+V1_A340T6F0_title    common_widget_title              A340_title_layout
+V1_A340T6F0_summary    common_widget             A340_layout
+V1_A340T6F1_title    common_widget_title              A340_title_layout
+V1_A340T6F1_summary    common_widget             A340F1_layout
+V1_A340T7F0_title    common_widget_title              A340_title_layout
+V1_A340T7F0_summary    common_widget             A340T7_layout
+V1_A340T7F1_title    common_widget_title              A340_title_layout
+V1_A340T7F1_summary    common_widget             A340T7F1_layout
+//装扮、活动 - 我参与的
+V1_A340T8F1_title    common_widget_title              A340_title_layout
+V1_A340T8F1_summary    common_widget             A340_layout
+V1_A340T9F1_title    common_widget_title              A340_title_layout
+V1_A340T9F1_summary    common_widget             A340_layout
+V1_A340T8F100_title    common_widget_title              A340_title_layout
+V1_A340T8F100_summary    common_widget             A340_layout
+V1_A340T9F100_title    common_widget_title              A340_title_layout
+V1_A340T9F100_summary    common_widget             A340_layout
+
+V1_A340T10F0_title    common_widget_title              A340_title_layout
+V1_A340T10F0_summary    common_widget             A340_layout
+V1_A340T10F1_title    common_widget_title              A340_title_layout
+V1_A340T10F1_summary    common_widget             A340_layout
+V1_A340T11F1_title    common_widget_title              A340_title_layout
+V1_A340T11F1_summary    common_widget             A340_layout
+V1_A340T10F100_title    common_widget_title              A340_title_layout
+V1_A340T10F100_summary    common_widget             A340_layout
+V1_A340T11F100_title    common_widget_title              A340_title_layout
+V1_A340T11F100_summary    common_widget             A340_layout
+//春节活动
+V1_A340T12F0_title    common_widget_title              A340_title_layout
+V1_A340T12F0_summary    common_widget             A340_layout
+V1_A340T12F1_title    common_widget_title              A340_title_layout
+V1_A340T12F1_summary    common_widget             A340F1_layout
+V1_A340T13F0_title    common_widget_title              A340_title_layout
+V1_A340T13F0_summary    common_widget             A340_layout
+V1_A340T13F1_title    common_widget_title              A340_title_layout
+V1_A340T13F1_summary    common_widget             A340F1_layout
+V1_A340T14F0_title    common_widget_title              A340_title_layout
+V1_A340T14F0_summary    common_widget             A340_layout
+V1_A340T14F1_title    common_widget_title              A340_title_layout
+V1_A340T14F1_summary    common_widget             A340_layout
+V1_A340T15F1_title    common_widget_title              A340_title_layout
+V1_A340T15F1_summary    common_widget             A340_layout
+V1_A340T15F100_title    common_widget_title              A340_title_layout
+V1_A340T15F100_summary    common_widget             A340_layout
+//装扮活动
+V1_A340T16F0_title    common_widget_title              A340_title_layout
+V1_A340T16F0_summary    common_widget             A340_layout
+V1_A340T16F1_title    common_widget_title              A340_title_layout
+V1_A340T16F1_summary    common_widget             A340_layout
+V1_A340T17F1_title    common_widget_title              A340_title_layout
+V1_A340T17F1_summary    common_widget             A340_layout
+V1_A340T17F100_title    common_widget_title              A340_title_layout
+V1_A340T17F100_summary    common_widget             A340_layout
+//戴帽子
+V1_A340T18F0_title    common_widget_title              A340_title_layout
+V1_A340T18F0_summary    common_widget             A340_layout
+V1_A340T18F1_title    common_widget_title              A340_title_layout
+V1_A340T18F1_summary    common_widget             A340_layout
+V1_A340T19F1_title    common_widget_title              A340_title_layout
+V1_A340T19F1_summary    common_widget             A340_layout
+V1_A340T19F100_title    common_widget_title              A340_title_layout
+V1_A340T19F100_summary    common_widget             A340_layout
+
+V1_A340T20F0_title    common_widget_title              A340_title_layout
+V1_A340T20F0_summary    common_widget             A340_layout
+V1_A340T20F1_title    common_widget_title              A340_title_layout
+V1_A340T20F1_summary    common_widget             A340_layout
+V1_A340T21F0_title    common_widget_title              A340_title_layout
+V1_A340T21F0_summary    common_widget             A340_layout
+V1_A340T21F1_title    common_widget_title              A340_title_layout
+V1_A340T21F1_summary    common_widget             A340_layout
+V1_A340T22F0_title    common_widget_title              A340_title_layout
+V1_A340T22F0_summary    common_widget             A340_layout
+V1_A340T22F1_title    common_widget_title              A340_title_layout
+V1_A340T22F1_summary    common_widget             A340_layout
+V1_A340T21F100_title    common_widget_title              A340_title_layout
+V1_A340T21F100_summary    common_widget             A340_layout
+V1_A340T22F100_title    common_widget_title              A340_title_layout
+V1_A340T22F100_summary    common_widget             A340_layout
+//名片
+V1_A340T23F0_title    common_widget_title              A340_title_layout
+V1_A340T23F0_summary    common_widget             A340_layout
+V1_A340T23F1_title    common_widget_title              A340_title_layout
+V1_A340T23F1_summary    common_widget             A340_layout
+V1_A340T24F0_title    common_widget_title              A340_title_layout
+V1_A340T24F0_summary    common_widget             A340_layout
+V1_A340T24F1_title    common_widget_title              A340_title_layout
+V1_A340T24F1_summary    common_widget             A340_layout
+V1_A340T24F100_title    common_widget_title              A340_title_layout
+V1_A340T24F100_summary    common_widget             A340_layout
+
+//七周年
+V1_A340T25F0_title    common_widget_title              A340_title_layout
+V1_A340T25F0_summary    common_widget             A340_layout_leftimg
+V1_A340T25F1_title    common_widget_title              A340_title_layout
+V1_A340T25F1_summary    common_widget             A340_layout_leftimg
+V1_A340T26F0_title    common_widget_title              A340_title_layout
+V1_A340T26F0_summary    common_widget             A340_layout_leftimg
+V1_A340T26F1_title    common_widget_title              A340_title_layout
+V1_A340T26F1_summary    common_widget             A340_layout_leftimg
+V1_A340T26F100_title    common_widget_title              A340_title_layout
+V1_A340T26F100_summary    common_widget           A340_layout_leftimg
+
+//优惠券
+V1_A340T27F0_title    common_widget_title              A340_title_layout
+V1_A340T27F0_summary    common_widget             A340T27_30_layout
+V1_A340T27F1_title    common_widget_title              A340_title_layout
+V1_A340T27F1_summary    common_widget             A340T27_30_layout
+V1_A340T28F1_title    common_widget_title              A340_title_layout
+V1_A340T28F1_summary    common_widget           A340T27_30_layout
+V1_A340T28F100_title    common_widget_title              A340_title_layout
+V1_A340T28F100_summary    common_widget           A340T27_30_layout
+V1_A340T29F0_title    common_widget_title              A340_title_layout
+V1_A340T29F0_summary    common_widget             A340T27_30_layout
+V1_A340T29F1_title    common_widget_title              A340_title_layout
+V1_A340T29F1_summary    common_widget             A340T27_30_layout
+V1_A340T30F1_title    common_widget_title              A340_title_layout
+V1_A340T30F1_summary    common_widget           A340T27_30_layout
+V1_A340T30F100_title    common_widget_title              A340_title_layout
+V1_A340T30F100_summary    common_widget           A340T27_30_layout
+V1_A340T31F0_title    common_widget_title              A340_title_layout
+V1_A340T31F0_summary    common_widget             A340T7_layout
+V1_A340T31F1_title    common_widget_title              A340_title_layout
+V1_A340T31F1_summary    common_widget             A340T7F1_layout
+V1_A340T32F1_title    common_widget_title              A340_title_layout
+V1_A340T32F1_summary    common_widget           A340_layout
+V1_A340T32F100_title    common_widget_title              A340_title_layout
+V1_A340T32F100_summary    common_widget           A340_layout
+//手机QZ推广
+V1_A340T33F1_title    common_widget_title              A352_title_layout
+V1_A340T33F1_summary common_widget               A352_layout
+//贴板
+V1_A340T34F1_title    common_widget_title              A352_title_layout
+V1_A340T34F1_summary common_widget               A352_layout
+
+//情侣空间
+V1_A360T3F0_title   common_widget_title         	A4_title_layout
+V1_A360T3F0_summary	common_widget				A311T0_layout
+V1_A360T4F0_title		common_widget_title			A4_title_layout
+V1_A360T4F0_summary	common_widget				A4_layout
+V1_A360T5F1_title		common_widget_title			A4_title_layout
+V1_A360T5F1_summary	common_widget				A311_NoBorBg_layout
+V1_A360T6F1_title		common_widget_title			A4_title_layout
+V1_A360T6F1_summary	common_widget				A311_NoBorBg_layout
+V1_A360T7F1_title		common_widget_title			A4_title_layout
+V1_A360T7F1_summary	common_widget				A311_NoBorBg_layout
+V1_A360T8F1_title       common_widget_title         A4_title_layout
+V1_A360T8F1_summary common_widget               A311_NoBorBg_layout
+V1_A360T9F1_title       common_widget_title         A4_title_layout
+V1_A360T9F1_summary common_widget               A311_NoBorBg_layout
+
+
+//留言板
+V1_A334T1F1_title		common_widget_title	A334_title_layout
+V1_A334T1F1_summary	common_widget		A334_layout
+V1_A334T2F1_title		common_widget_title	A334_title_layout
+V1_A334T2F1_summary	common_widget		A334_layout
+V1_A334T3F1_title		common_widget_title	A334_title_layout
+V1_A334T3F1_summary	common_widget		A334_layout_at
+
+//个人档 （T1：主动，T2、T3：回复、评论-被动）
+V1_A51T1F0_title		common_widget_title	A51_title_layout
+V1_A51T2F1_title		common_widget_title	A51_title_layout
+V1_A51T3F1_title		common_widget_title	A51_title_layout
+V1_A51T1F0_summary	common_widget		A51_layout
+V1_A51T2F1_summary	common_widget		A51F1_layout
+V1_A51T3F1_summary	common_widget		A51F1_layout
+
+//discuz
+V1_A6000T1F0_title		common_widget_title	A6000_title_layout
+V1_A6000T1F0_summary	common_widget		A6000_layout
+
+//美食
+V1_A371T1F1_title		common_widget_title	A371_title_layout
+V1_A371T1F1_summary 	common_widget		A371_layout
+V1_A371T1F0_title 		common_widget_title	A371_title_layout
+V1_A371T1F0_summary 	common_widget		A371_layout
+V1_A371T2F1_title 		common_widget_title	A371_title_layout
+V1_A371T2F1_summary 	common_widget		A371_layout
+V1_A371T2F0_title		common_widget_title	A371_title_layout
+V1_A371T2F0_summary 	common_widget		A371_layout
+V1_A371T3F1_title		common_widget_title	A371_title_layout
+V1_A371T3F1_summary 	common_widget		A371_layout
+V1_A371T4F1_title		common_widget_title	A371_title_layout
+V1_A371T4F1_summary    common_widget		A371_layout
+
+//认证空间
+V1_A217T1F0_title		common_widget_title	A217_title_layout
+V1_A217T1F0_summary	common_widget		A217_layout
+V1_A217T3F1_title		common_widget_title	A217_title_layout
+V1_A217T3F1_summary	common_widget		A217_layout
+V1_A217T4F1_title		common_widget_title	A217_title_layout
+V1_A217T4F1_summary	common_widget		A217_layout
+
+//群相册被动
+V1_A217T5F1_title		common_widget_title	feedtitle_layout
+V1_A217T5F1_summary	common_widget		A422_layout
+
+//群组feeds
+V1_A420T1F1_title               common_widget_title     feedtitle_layout
+V1_A420T1F1_summary     common_widget           A420_layout
+V1_A420T2F1_title               common_widget_title     feedtitle_layout
+V1_A420T2F1_summary     common_widget           A420_layout
+
+V1_A422T0F0_title		common_widget_title	feedtitle_layout
+V1_A422T0F0_summary	common_widget		A422_layout
+V1_A422T1F1_title		common_widget_title	feedtitle_layout
+V1_A422T1F1_summary	common_widget		A422_layout
+V1_A422T2F1_title		common_widget_title	feedtitle_layout
+V1_A422T2F1_summary	common_widget		A422_layout
+V1_A422T3F1_title		common_widget_title	feedtitle_layout
+V1_A422T3F1_summary	common_widget		A422_layout
+
+V1_A904T1F0_summary	common_widget		A904_layout
+V1_A904T1F0_title		common_widget_title	feedtitle_layout
+V1_A904T2F1_summary common_widget       A904F1_layout
+V1_A904T2F1_title       common_widget_title feedtitle_layout
+V1_A904T4F100_summary common_widget       A904F1_layout
+V1_A904T4F100_title       common_widget_title feedtitle_layout
+V1_A904T5F1_summary common_widget       A904F1_layout
+V1_A904T5F1_title       common_widget_title feedtitle_layout
+
+//手机甩一甩
+V1_A7005T1F1_title   common_widget_title	feedtitle_layout
+V1_A7005T1F1_summary common_widget          A7005_layout
+
+//hotspotv2
+V1_hotspottitle hs_summary 
+V1_hotspotsummary hs_summary 
+V1_more_hotspottitle hs_summary 
+V1_more_hotspotsummary hs_summary
+feed_hotspot_tmpl ob_more_tmpl
+comment_tmpl comment_yy
+feed_common_tmpl feeds_item
+NewWupCS wupmain
+NewWupCSV8 wupmain_v8
+NewWupCSQqtab qqtab_wupmain
+feed_hotspot_tmpl_v3 original_broadcaster_v3
+
+//qqtab
+im_specialcare_suggest im_specialcare_suggest
+im_specialcare_data im_specialcare_data
+qqtab_feeds_list qqtab_feeds_list
+qqtab_feed_item qqtab_feed_item
+A4_qqtab_feeds_title     qqtab_feedTitle  A4_title_layout
+A4_qqtab_feeds_content   qqtab_feedSummary        A4_layout
+A202_qqtab_feeds_title   qqtab_feedTitle  A202_title_layout
+A202_qqtab_feeds_content qqtab_feedSummary        A202_layout
+A311_qqtab_feeds_title   qqtab_feedTitle  A311_title_layout
+A311_qqtab_feeds_content qqtab_feedSummary        A311_layout
+A2_qqtab_feeds_title     qqtab_feedTitle  A2_title_layout
+A2_qqtab_feeds_content   qqtab_feedSummary        A2_layout
+A333_qqtab_feeds_title   qqtab_feedTitle  A333_title_layout
+A333_qqtab_feeds_content qqtab_feedSummary        A333_layout
+A4_qqtab2_feeds_title    qqtab_feedTitle  A4_title_layout
+A4_qqtab2_feeds_content   qqtab_feedSummary        A4_layout_T3
+
+Vqqtab_A2T5F0_title		qqtab_feedTitle		A2_title_layout
+Vqqtab_A2T5F0_summary	qqtab_feedSummary			A2_layout
+Vqqtab_A2T1F1_title		qqtab_feedTitle		A2_title_layout
+Vqqtab_A2T1F1_summary	qqtab_feedSummary			A2_layout
+Vqqtab_A2T1F0_title     qqtab_feedTitle     A2_title_layout
+Vqqtab_A2T1F0_summary   qqtab_feedSummary           A2_layout
+Vqqtab_A2T2F1_title		qqtab_feedTitle		A2_title_layout
+Vqqtab_A2T2F1_summary	qqtab_feedSummary			A2_layout
+Vqqtab_A2T2F0_title     qqtab_feedTitle     A2_title_layout
+Vqqtab_A2T2F0_summary   qqtab_feedSummary           A2_layout
+
+Vqqtab_A2T3F1_title     qqtab_feedTitle     A2_title_layout
+Vqqtab_A2T3F1_summary   qqtab_feedSummary           A2_layout
+Vqqtab_A2T4F1_title     qqtab_feedTitle     A2_title_layout
+Vqqtab_A2T4F1_summary   qqtab_feedSummary           A2_layout
+Vqqtab_A2T6F1_title     qqtab_feedTitle     A2_title_layout
+Vqqtab_A2T6F1_summary   qqtab_feedSummary           A2_layout
+
+Vqqtab_A2T7F1_title     qqtab_feedTitle     A2_title_layout
+Vqqtab_A2T7F1_summary   qqtab_feedSummary           A2_layout
+Vqqtab_A2T11F1_title     qqtab_feedTitle     A2_title_layout
+Vqqtab_A2T11F1_summary   qqtab_feedSummary           A2_layout
+Vqqtab_A2T13F1_title     qqtab_feedTitle     A2_title_layout
+Vqqtab_A2T13F1_summary   qqtab_feedSummary           A2_layout
+
+Vqqtab_A2T7F100_title     qqtab_feedTitle     A2_title_layout
+Vqqtab_A2T7F100_summary   qqtab_feedSummary           A2_layout
+Vqqtab_A2T11F100_title     qqtab_feedTitle     A2_title_layout
+Vqqtab_A2T11F100_summary   qqtab_feedSummary           A2_layout
+
+Vqqtab_A2T9F0_title		qqtab_feedTitle		A2_title_layout
+Vqqtab_A2T9F0_summary	qqtab_feedSummary			A2_layout
+
+Vqqtab_A202T2F0_title			qqtab_feedTitle		A202_title_layout
+//在qqtab页里面的musicbox(单曲?)没有外框
+Vqqtab_A202T2F0_summary		qqtab_feedSummary			A202_im_layout
+Vqqtab_A202T2F1_title			qqtab_feedTitle		A202T2_title_layout_psv
+Vqqtab_A202T2F1_summary		qqtab_feedSummary			A202F1_layout 
+Vqqtab_A202T7F0_title           qqtab_feedTitle     A202_title_layout
+Vqqtab_A202T7F0_summary     qqtab_feedSummary           A202_layout
+Vqqtab_A202T7F1_title           qqtab_feedTitle     A202T2_title_layout_psv
+Vqqtab_A202T7F1_summary     qqtab_feedSummary           A202F1_layout 
+Vqqtab_A202T1F1_title                       qqtab_feedTitle             A202_title_layout_psv
+Vqqtab_A202T1F1_summary             qqtab_feedSummary                   A202F1_layout 
+Vqqtab_A202T3F1_title                       qqtab_feedTitle             A202_title_layout_atme
+Vqqtab_A202T3F1_summary             qqtab_feedSummary                   A202F1_layout 
+Vqqtab_A202T5F1_title                       qqtab_feedTitle             A202_title_layout_psv
+Vqqtab_A202T5F1_summary             qqtab_feedSummary                   A202F1_layout 
+Vqqtab_A202T9F1_title                       qqtab_feedTitle             A202_title_layout
+Vqqtab_A202T9F1_summary             qqtab_feedSummary                   A202_layout 
+Vqqtab_A202T9F100_title                     qqtab_feedTitle             A202_title_layout
+Vqqtab_A202T9F100_summary           qqtab_feedSummary                   A202_layout
+Vqqtab_A202T10F0_title                      qqtab_feedTitle             A202_title_layout
+Vqqtab_A202T10F0_summary            qqtab_feedSummary                   A202_layout
+Vqqtab_A202T10F1_title                      qqtab_feedTitle             A202_title_layout
+Vqqtab_A202T10F1_summary            qqtab_feedSummary                   A202_layout 
+Vqqtab_A202T10F100_title                    qqtab_feedTitle     A202_title_layout
+Vqqtab_A202T10F100_summary          qqtab_feedSummary           A202_layout
+Vqqtab_A202T11F0_title                      qqtab_feedTitle             A202_title_layout
+//在qqtab页里面的musicbox没有外框
+Vqqtab_A202T11F0_summary            qqtab_feedSummary                   A202_im_layout
+Vqqtab_A202T11F1_title                      qqtab_feedTitle             A202_title_layout
+Vqqtab_A202T11F1_summary            qqtab_feedSummary                   A202_layout
+Vqqtab_A202T11F100_title                    qqtab_feedTitle     A202_title_layout
+Vqqtab_A202T11F100_summary          qqtab_feedSummary           A202_layout
+Vqqtab_A202T12F1_title                      qqtab_feedTitle             A202_title_layout
+Vqqtab_A202T12F1_summary            qqtab_feedSummary                   A202F1_layout 
+Vqqtab_A202T13F1_title                      qqtab_feedTitle             A202_title_layout
+Vqqtab_A202T13F1_summary            qqtab_feedSummary                   A202F1_layout 
+Vqqtab_A202T15F1_title                      qqtab_feedTitle             A202_title_layout
+Vqqtab_A202T15F1_summary            qqtab_feedSummary                   A202F1_layout 
+Vqqtab_A202T16F1_title                       qqtab_feedTitle             A202_title_layout_atme
+Vqqtab_A202T16F1_summary             qqtab_feedSummary                   A202F1_layout 
+Vqqtab_A202T21F0_title                      qqtab_feedTitle             A202_title_layout
+Vqqtab_A202T21F0_summary            qqtab_feedSummary                   A202_layout
+
+Vqqtab_A311T0F0_title   qqtab_feedTitle         A311_title_layout
+Vqqtab_A311T0F0_summary	qqtab_feedSummary				A311T0_layout
+Vqqtab_A311T17F0_title	qqtab_feedTitle			A311T17_title_layout
+Vqqtab_A311T17F0_summary	qqtab_feedSummary				A311T0_layout
+Vqqtab_A311T21F0_title	qqtab_feedTitle			A311_title_layout
+Vqqtab_A311T21F0_summary qqtab_feedSummary               A311T0_layout
+Vqqtab_A311T13F0_title   qqtab_feedTitle         A311_title_layout
+Vqqtab_A311T13F0_summary qqtab_feedSummary               A311T13_layout
+Vqqtab_A311T1F0_title	qqtab_feedTitle			A311T1_title_layout
+Vqqtab_A311T1F0_summary	qqtab_feedSummary				A311T1_layout
+Vqqtab_A311T5F0_title	qqtab_feedTitle			A311_title_layout
+Vqqtab_A311T5F0_summary	qqtab_feedSummary				A311_layout
+
+Vqqtab_A311T2F1_title		qqtab_feedTitle			A311T2_title_layout
+Vqqtab_A311T2F1_summary		qqtab_feedSummary				A311_NoBorBg_layout
+Vqqtab_A311T14F1_title		qqtab_feedTitle			A311T2_title_layout
+Vqqtab_A311T14F1_summary		qqtab_feedSummary				A311_NoBorBg_layout
+Vqqtab_A311T3F1_title		qqtab_feedTitle			A311_title_layout
+Vqqtab_A311T3F1_summary		qqtab_feedSummary				A311_NoBorBg_layout
+Vqqtab_A311T4F1_title		qqtab_feedTitle			A311T4_title_layout
+Vqqtab_A311T4F1_summary		qqtab_feedSummary				A311_NoBorBg_layout
+
+Vqqtab_A311T7F1_title	qqtab_feedTitle			A311_title_layout
+Vqqtab_A311T7F1_summary	qqtab_feedSummary				A311_layout
+Vqqtab_A311T8F1_title	qqtab_feedTitle			A311_title_layout
+Vqqtab_A311T8F1_summary	qqtab_feedSummary				A311_layout
+Vqqtab_A311T9F1_title	qqtab_feedTitle			A311_title_layout
+Vqqtab_A311T9F1_summary	qqtab_feedSummary				A311_layout
+Vqqtab_A311T10F1_title	qqtab_feedTitle			A311_title_layout
+Vqqtab_A311T10F1_summary	qqtab_feedSummary			A311_layout
+Vqqtab_A311T11F1_title		qqtab_feedTitle		A311_title_layout
+Vqqtab_A311T11F1_summary	qqtab_feedSummary			A311_layout
+Vqqtab_A311T12F1_title		qqtab_feedTitle		A311_title_layout
+Vqqtab_A311T12F1_summary	qqtab_feedSummary			A311_layout
+Vqqtab_A311T7F100_title		qqtab_feedTitle		A311_title_layout
+Vqqtab_A311T7F100_summary	qqtab_feedSummary			A311_layout
+Vqqtab_A311T8F100_title		qqtab_feedTitle		A311_title_layout
+Vqqtab_A311T8F100_summary	qqtab_feedSummary			A311_layout
+Vqqtab_A311T9F100_title		qqtab_feedTitle		A311_title_layout
+Vqqtab_A311T9F100_summary	qqtab_feedSummary			A311_layout
+Vqqtab_A311T10F100_title	qqtab_feedTitle		A311_title_layout
+Vqqtab_A311T10F100_summary	qqtab_feedSummary			A311_layout
+Vqqtab_A311T11F100_title	qqtab_feedTitle		A311_title_layout
+Vqqtab_A311T11F100_summary	qqtab_feedSummary			A311_layout
+Vqqtab_A311T12F100_title	qqtab_feedTitle		A311_title_layout
+Vqqtab_A311T12F100_summary	qqtab_feedSummary			A311_layout
+Vqqtab_A311T16F0_title	qqtab_feedTitle			A311_title_layout
+Vqqtab_A311T16F0_summary	qqtab_feedSummary				A311T0_layout
+Vqqtab_A311T20F1_title       qqtab_feedTitle                     A311_title_layout
+Vqqtab_A311T20F1_summary     qqtab_feedSummary                           A311_layout
+//语音说说
+Vqqtab_A311T22F0_title       qqtab_feedTitle                     A311_title_layout
+Vqqtab_A311T22F0_summary     qqtab_feedSummary                           A311T22F0_layout
+Vqqtab_A311T22F1_title       qqtab_feedTitle                     A311_title_layout
+Vqqtab_A311T22F1_summary     qqtab_feedSummary                           A311T22F0_layout
+//转发语音说说
+Vqqtab_A311T23F0_title       qqtab_feedTitle                     A311_title_layout
+Vqqtab_A311T23F0_summary     qqtab_feedSummary                           A311_layout
+Vqqtab_A311T23F1_title       qqtab_feedTitle                     A311_title_layout
+Vqqtab_A311T23F1_summary     qqtab_feedSummary                           A311_layout
+
+Vqqtab_A4T0F0_title		qqtab_feedTitle			A4_title_layout
+Vqqtab_A4T0F0_summary	qqtab_feedSummary				A4_layout
+Vqqtab_A4T0F1_title		qqtab_feedTitle			A4_title_layout
+Vqqtab_A4T0F1_summary	qqtab_feedSummary				A4_layout
+Vqqtab_A4T1F1_title		qqtab_feedTitle			A4_title_layout
+Vqqtab_A4T1F1_summary	qqtab_feedSummary				A4_layout
+Vqqtab_A4T1F0_title     qqtab_feedTitle         A4_title_layout
+Vqqtab_A4T1F0_summary   qqtab_feedSummary               A4_layout
+Vqqtab_A4T3F0_title		qqtab_feedTitle			A4_title_layout
+Vqqtab_A4T3F0_summary	qqtab_feedSummary				A4_layout_T3
+Vqqtab_A4T4F1_title		qqtab_feedTitle			A4_title_layout
+Vqqtab_A4T4F1_summary	qqtab_feedSummary				A4_layout
+Vqqtab_A4T5F0_title		qqtab_feedTitle			A4_title_layout
+Vqqtab_A4T5F0_summary	qqtab_feedSummary				A4_layout
+Vqqtab_A4T5F1_title		qqtab_feedTitle			A4_title_layout
+Vqqtab_A4T5F1_summary	qqtab_feedSummary				A4_layout
+Vqqtab_A4T6F0_title		qqtab_feedTitle			A4_title_layout
+Vqqtab_A4T6F0_summary	qqtab_feedSummary				A4_layout_T3
+Vqqtab_A4T7F1_title		qqtab_feedTitle			A4_title_layout
+Vqqtab_A4T7F1_summary	qqtab_feedSummary				A4_layout
+Vqqtab_A4T8F1_title		qqtab_feedTitle			A4_title_layout
+Vqqtab_A4T8F1_summary	qqtab_feedSummary				A4_layout_T2
+Vqqtab_A4T9F1_title		qqtab_feedTitle			A4_title_layout
+Vqqtab_A4T9F1_summary	qqtab_feedSummary				A4_layout_T2
+Vqqtab_A4T10F1_title	qqtab_feedTitle			A4_title_layout
+Vqqtab_A4T10F1_summary	qqtab_feedSummary				A4_layout_T2
+Vqqtab_A4T11F0_title	qqtab_feedTitle			A4_title_layout
+Vqqtab_A4T11F0_summary	qqtab_feedSummary				A4_layout
+Vqqtab_A4T12F0_title	qqtab_feedTitle			A4_title_layout
+Vqqtab_A4T12F0_summary	qqtab_feedSummary				A4_layout_T3
+Vqqtab_A4T14F1_title	qqtab_feedTitle			A4_title_layout
+Vqqtab_A4T14F1_summary	qqtab_feedSummary				A4_layout
+Vqqtab_A4T15F1_title	qqtab_feedTitle			A4_title_layout
+Vqqtab_A4T15F100_title	qqtab_feedTitle			A4_title_layout
+Vqqtab_A4T15F1_summary	qqtab_feedSummary				A4_layout
+Vqqtab_A4T15F100_summary	qqtab_feedSummary				A4_layout
+Vqqtab_A4T16F1_title	qqtab_feedTitle			A4_title_layout
+Vqqtab_A4T16F100_title	qqtab_feedTitle			A4_title_layout
+Vqqtab_A4T16F1_summary	qqtab_feedSummary				A4_layout
+Vqqtab_A4T16F100_summary	qqtab_feedSummary				A4_layout
+Vqqtab_A4T17F0_title	qqtab_feedTitle			A4_title_layout
+Vqqtab_A4T17F0_summary	qqtab_feedSummary				A4_layout
+Vqqtab_A4T18F1_title	qqtab_feedTitle			A4_title_layout
+Vqqtab_A4T18F1_summary	qqtab_feedSummary				A4_layout
+Vqqtab_A4T19F0_title	qqtab_feedTitle			A4_title_layout
+Vqqtab_A4T19F0_summary	qqtab_feedSummary				A4_layout
+Vqqtab_A4T20F1_title	qqtab_feedTitle			A4_title_layout
+Vqqtab_A4T20F1_summary	qqtab_feedSummary				A4_layout_T2
+Vqqtab_A4T21F1_title	qqtab_feedTitle			A4_title_layout
+Vqqtab_A4T21F1_summary	qqtab_feedSummary				A4_layout_T2
+Vqqtab_A4T24F0_title        qqtab_feedTitle                     A4_title_layout
+Vqqtab_A4T24F0_summary      qqtab_feedSummary                           A4_layout
+Vqqtab_A4T25F1_title        qqtab_feedTitle                     A4_title_layout
+Vqqtab_A4T25F1_summary      qqtab_feedSummary                           A4_layout
+Vqqtab_A4T26F1_title        qqtab_feedTitle                     A4_title_layout
+Vqqtab_A4T26F1_summary      qqtab_feedSummary                           A4_layout
+

@@ -1,0 +1,1 @@
+<?cs if:qz_metadata.actid==1 ?>回复留言<?cs elif:qz_metadata.actid==0 ?>给我留言<?cs /if ?>

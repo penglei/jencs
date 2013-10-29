@@ -1,0 +1,13 @@
+CXX = g++
+INC = -I../csinclude/
+BINARY = $(patsubst %.cpp,%,$(wildcard *.cpp))
+
+all:$(BINARY)
+
+%:%.cpp
+	    @echo -e "Make $(GREEN)$@$(RESET) begin......\c"
+		    $(CXX) $(INC) $< -shared -o $@.so $(CFLAGS)  
+			    @echo -e $(RED)"ok."$(RESET)
+
+clean:
+	    rm *.so

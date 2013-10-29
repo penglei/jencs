@@ -1,0 +1,63 @@
+[Merge Type]:merge
+[../common_widget.cs] in process  --------------------
+>> qz_static_summary.cs     loaded... 5422 byte.
+>> macro.cs     loaded... 597 byte.
+>> writeUserName.cs     loaded... 252 byte.
+>> user_icon.cs     loaded... 2449 byte.
+>> user_link.cs     loaded... 1054 byte.
+>> voice_cnt.cs     loaded... 1667 byte.
+>> gradestar.cs     loaded... 703 byte.
+>> cmt_user_link.cs     loaded... 1053 byte.
+>> rich_content.cs     loaded... 1452 byte.
+>> opr.cs     loaded... 19536 byte.
+>> sub_title.cs     loaded... 1945 byte.
+>> quote.cs     loaded... 350 byte.
+>> vote_viewer.cs     loaded... 2464 byte.
+>> coupon.cs     loaded... 672 byte.
+>> clock_viewer.cs     loaded... 1313 byte.
+>> music.cs     loaded... 2143 byte.
+>> game.cs     loaded... 2282 byte.
+>> profile_viewer.cs     loaded... 1643 byte.
+>> magicemotion.cs     loaded... 455 byte.
+>> location_info.cs     loaded... 1038 byte.
+>> attach_info.cs     loaded... 2230 byte.
+>> timeline.cs     loaded... 1144 byte.
+>> markPhotoInfo.cs     loaded... 582 byte.
+>> extend_info.cs     loaded... 10914 byte.
+>> attach.cs     loaded... 718 byte.
+>> content_box.cs     loaded... 45151 byte.
+>> comment.cs     loaded... 16768 byte.
+>> qz_data.cs     loaded... 633 byte.
+>> main_summary.cs     loaded... 1435 byte.
+>> mod_layout.cs     loaded... 1076 byte.
+>> summary_start.cs     loaded... 2212 byte.
+
+merge target files...
+
+min target file...
+Write file for release... done.  File length: 134281 byte.
+
+[../common_widget.cs] success --------------------
+
+
+[../common_widget_title.cs] in process  --------------------
+>> writeUserName.cs     loaded... 252 byte.
+>> user_link.cs     loaded... 1054 byte.
+>> rich_content_title.cs     loaded... 1707 byte.
+>> rich_title.cs     loaded... 3986 byte.
+>> feed_title.cs     loaded... 283 byte.
+>> checkin.cs     loaded... 822 byte.
+>> qz_static_title.cs     loaded... 5616 byte.
+>> action_title.cs     loaded... 4316 byte.
+>> main_title.cs     loaded... 756 byte.
+>> mod_layout.cs     loaded... 1076 byte.
+>> title_start.cs     loaded... 114 byte.
+
+merge target files...
+
+min target file...
+Write file for release... done.  File length: 21036 byte.
+
+[../common_widget_title.cs] success --------------------
+
+

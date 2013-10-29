@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="<%encode%>" ?>
+<qzone>
+<result type="<%type%>" >
+    <message>
+		<![CDATA[<%message%>]]>		
+    </message>
+	<data totalnum="<%totalnum%>" hasmorefeeds="<%hasmorefeeds%>"  daylist="<%daylist%>" retnum="<%retnum%>" offset="<%offset%>" nextoffset="<%nextoffset%>" hopecount="<%hopecount%>" lasttime="<%lasttime%>" >
+		<%$feeds_begin$%>
+		<item>
+			<appid><%appid%></appid>
+			<typeid><%typeid%></typeid>
+			<key><![CDATA[<%key%>]]></key>
+			<time><%time%></time>
+			<privacy><%privacy%></privacy>
+			<source><![CDATA[<%source%>]]></source>
+			<ugcurl><![CDATA[<%ugcurl%>]]></ugcurl>
+			<ugctitle><![CDATA[<%ugctitle%>]]></ugctitle>
+			<picture>
+				<url><![CDATA[<%picurl%>]]></url>
+			</picture>
+			<orgcontent><![CDATA[<%orgcontent%>]]></orgcontent>
+			<uinkey><![CDATA[<%uinkey%>]]></uinkey>
+			<curkey><![CDATA[<%curkey%>]]></curkey>
+			<commentUrl><![CDATA[<%commentUrl%>]]></commentUrl>
+			<commentParam><![CDATA[<%commentParam%>]]></commentParam>
+			<isliked><![CDATA[<%isliked%>]]></isliked>
+			<hostnick><![CDATA[<%hostnick%>]]></hostnick>
+			<hostuin><![CDATA[<%hostuin%>]]></hostuin>
+		</item>
+		<%$feeds_end$%>
+	</data>
+</result>
+</qzone>
+

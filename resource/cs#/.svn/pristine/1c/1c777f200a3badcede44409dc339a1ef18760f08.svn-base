@@ -1,0 +1,14 @@
+       <qz_layout_summary>
+           <mod name="quote"></mod>
+               <mod name="contentBox" contentHide="1">
+                   <mod name="extendInfo"></mod>
+               </mod>
+          <mod name="opr">
+				<mod name="time"></mod>
+               <mod name="source"></mod>
+               <mod name="btn"></mod>
+          </mod>
+          <mod name="comment">
+              <mod name="isay"></mod>
+          </mod>
+      </qz_layout_summary> 

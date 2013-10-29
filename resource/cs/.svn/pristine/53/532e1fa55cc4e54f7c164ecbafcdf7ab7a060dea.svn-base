@@ -1,0 +1,383 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-cn" lang="zh-cn" xmlns:qz="http://qzone.qq.com/">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<meta http-equiv="Content-Language" content="zh-cn" />
+<title>个人中心feeds</title>
+<base href="http://<?cs var:imgd ?>" />
+<script type="text/javascript">
+//<![CDATA[
+	//document.domain="qq.com";
+	//	siDomain = G_Param.siDomain || "qzonestyle.gtimg.cn";
+	var _re = document.referrer,
+    exp = /^http:\/\/([\d\w-]+)(?:\.s\d\d?)?\.(qzone|pengyou)\.qq\.com/i;
+	exp2 =  /^http:\/\/([a-zA-Z0-9\-]+)?\.?(qzs|pengyou)\.qq\.com[\/]*#?/i;
+	//debugger;
+	var 
+		G_Param,
+		g_sid,
+		g_imgd,
+		g_wd,
+		g_rd,
+		g_V;
+	if(exp.test(_re)||exp2.test(_re)){
+		document.domain="qq.com";
+		g_sid = parent.siDomain || parent.parent.siDomain || "qzonestyle.gtimg.cn";
+		g_sid = g_sid.replace("http://",""); 
+		g_imgd = parent.imgcacheDomain || parent.parent.siDomain || "imgcache.qq.com";
+		
+		g_DPrefix = parent.g_DPrefix || parent.parent.g_DPrefix || "";
+		g_rd = "r."+g_DPrefix+"qzone.qq.com";
+		g_wd = "w."+g_DPrefix+"qzone.qq.com";
+		g_imgd = g_imgd.replace("http://","");
+		g_V = parent.g_V || parent.parent.g_V || {
+			"qz":"_2.0.7.8"
+		};
+	}else{
+		window.OUTSIDE_DOMAIN = true;
+		g_sid = "qzonestyle.gtimg.cn";
+		g_imgd = "imgcache.qq.com";
+		g_rd = "r.qzone.qq.com";
+		g_wd = "w.qzone.qq.com";
+		g_V = {
+			"qz":"_2.0.7.8"
+		};
+	}
+	function commonDictionarySplit(s, esp, vq, eq) {
+			var res = {};
+			if(!s || typeof(s) != "string"){
+				return res;
+			}
+			if (typeof(esp) != 'string') {
+				esp = "&";
+			}
+			if (typeof(vq) != 'string') {
+				vq = "";
+			}
+			if (typeof(eq) != 'string') {
+				eq = "=";
+			}
+
+			var l = s.split(vq + esp),
+				len = l.length,
+				tmp,
+				t = eq + vq,
+				p;
+
+			if(vq){
+				tmp = l[len - 1].split(vq);
+				l[len - 1] = tmp.slice(0, tmp.length - 1).join(vq);
+			}
+
+			for (var i = 0, len; i < len; i++) {
+				if(eq){
+					tmp = l[i].split(t);
+					if (tmp.length > 1) {
+						res[tmp[0]] = tmp.slice(1).join(t);
+						continue;
+					}
+				}
+				res[l[i]] = true;
+			}
+			return res;
+		}
+
+
+	
+		var _jsBegin='<script type="text/javascript" charset="utf-8" src="',
+		_jsEnd='.js"><\/script>',
+		cssBegin = '<link rel="stylesheet" rev="stylesheet" href="',
+		cssEnd = '" type="text/css" media="screen"/>';
+
+		G_Param = commonDictionarySplit(location.search.substring(1),"&");
+		//debugger;
+		if(!G_Param){
+			G_Param = frameElement.G_Param || {};
+		}
+		if(typeof(G_Param.hideExtend)=="string"){
+			G_Param.hideExtend = (G_Param.hideExtend != "false");
+		}
+
+		if(typeof(G_Param.mode)=="undefined"||isNaN(parseInt(G_Param.mode,10))){
+			G_Param.mode = 1;
+		}
+
+		if(typeof(G_Param.style)=="undefined"||isNaN(parseInt(G_Param.style,10))){
+			G_Param.style = 100;
+		}
+
+		G_Param.CSSQueue = [];
+		var G_sExp = /[\<|\>|!|-|\(|\)]/ig;
+		if(typeof(G_Param.specialCSS)!="undefined"&&!G_sExp.test(G_Param.specialCSS)){
+			G_Param.CSSQueue.push(([cssBegin,decodeURIComponent(G_Param.specialCSS),cssEnd]).join(""));
+		}else{
+			if(G_Param.style==100){//这个样式只在独立版用
+				G_Param.CSSQueue.push(([cssBegin,"http://",g_sid,'/qzonestyle/qzone_icenter_v1/css/ihome_v2.css',cssEnd]).join(""));
+			}else{
+				G_Param.CSSQueue.push(([cssBegin,"http://",g_sid,'/qzonestyle/qzone_client_v5/css/',G_Param.style,'/color_out.css',cssEnd]).join(""));
+			}
+		}
+		if(typeof(G_Param.DEFAULT_FEEDS_CGI)=="undefined"){
+			G_Param.DEFAULT_FEEDS_CGI = "http://"+g_rd+"/cgi-bin/feeds/feeds_ic_unaided_xml";
+			//G_Param.DEFAULT_FEEDS_CGI = "http://ic.qzone.qq.com/cgi-bin/feeds/feeds_ic_interactive_xml";
+		}
+		if(typeof(G_Param.MORE_FEEDS_CGI)=="undefined"){
+			G_Param.MORE_FEEDS_CGI = "http://ic.qzone.qq.com/cgi-bin/feeds/feeds_ic_more_mix";
+			//G_Param.DEFAULT_FEEDS_CGI = "http://ic.qzone.qq.com/cgi-bin/feeds/feeds_ic_interactive_xml";
+		}
+		if(typeof(G_Param.i_uin)=="undefined"){
+			G_Param.i_uin = window.OUTSIDE_DOMAIN?0:(parent.g_iUin||parent.parent.g_iUin||0);
+		}
+		if(typeof(G_Param.i_login_uin)=="undefined"){
+			G_Param.i_login_uin =  window.OUTSIDE_DOMAIN?0:(parent.g_iLoginUin||parent.parent.g_iLoginUin||0);
+		}
+		if(typeof(G_Param.mode)=="undefined"){
+			G_Param.mode = 3;
+		}
+		if(typeof(G_Param.needDelOpr)=="string"){
+			G_Param.needDelOpr = (G_Param.needDelOpr != "false");
+		}
+		if(typeof(G_Param.noOpr)=="undefined"){
+			G_Param.noOpr = 1;
+		}
+		if(typeof(G_Param.view)=="undefined"){
+			G_Param.view = 1;
+		}
+		if(typeof(G_Param.scope)=="undefined"){
+			G_Param.scope = 0;
+		}
+		if(typeof(G_Param.filter)=="undefined"){
+			G_Param.filter = "all";
+		}
+		if(typeof(G_Param.max)=="undefined"){
+			G_Param.max = -1;
+		}
+		if(typeof(G_Param.heightHack)!="undefined"){//fix iframe高度
+			G_Param.heightHack = parseInt(G_Param.heightHack,10);
+		}
+		if(typeof(G_Param.errmsg)=="undefined"){
+			G_Param.errmsg = "主人最近比较忙，没有公开的空间更新。";
+		}
+		
+		if(typeof(G_Param.PV_ACT_DOMAIN)=="undefined"){
+			G_Param.PV_ACT_DOMAIN = "ic2act";
+		}
+		if(typeof(G_Param.PV_DOMAIN)=="undefined"){
+			G_Param.PV_DOMAIN = "ic2";
+		}
+		
+
+
+		
+		var tmp_begin = '<li class="f_single imgBlock bor2"><div class="f_aside imgBlock_img"><qz:user param=\'<%userHome%>|<%logimg%>|<%namecardLink%>|<%info_user_name%>||<%vip%>|<%type%>|<%uin%>|<%ouin%>|<%otherflag%>\' nick=\'<%nickname%>\'></qz:user></div><div class="f_wrap imgBlock_ct">',
+			tmp_end = '</div></li>',
+			host_tmp = '<div link="0" class="f_item <%lastFeedBor%>" id="feed_<%uin%>_<%appid%>_<%typeid%>_<%abstime%>_<%feedno%>_<%scope%>_<%ver%>" ><div class="f_info"><a target="_blank" href="<%userHome%>" class="nickname q_namecard c_tx q_des ui_mr5" link="nameCard_<%uin%> des_<%uin%>"><%nickname%></a><%famouslogo%><%title%></div><div class="qz_summary" id="hex_<%appid%>_<%abstime%>_<%uin%>_<%scope%>"><%summary%></div><div class="f_op" id="opr_<%uin%>_<%appid%>_<%typeid%>_<%abstime%>_<%feedno%>"><qz:fo class="<%foldFeed%>" title="<%foldFeedTitle%>" param="<%appid%>|<%abstime%>|<%ouin%>|<%typeid%>|<%feedno%>|<%feedstime%>|<%showEbtn%>|<%scope%>|<%oprType%>|<%key%>|<%otherflag%>|<%rightflag%>"></qz:fo></div></div>',
+			friend_tmp = '<div link="1" class="f_item <%lastFeedBor%>" id="feed_<%uin%>_<%appid%>_<%typeid%>_<%abstime%>_<%feedno%>_<%scope%>_<%ver%>" ><div class="f_info"><a target="_blank" href="http://user.qzone.qq.com/<%uin%>/profile" class="nickname q_namecard c_tx q_des ui_mr5" link="nameCard_<%uin%> des_<%uin%>"><%nickname%></a><%famouslogo%><%title%></div><div class="qz_summary" id="hex_<%appid%>_<%abstime%>_<%uin%>_<%scope%>"><%summary%></div><div class="f_op"  '+(G_Param.hideExtend?'style="display:none"':'')+' id="opr_<%uin%>_<%appid%>_<%typeid%>_<%abstime%>_<%feedno%>"><qz:fo class="<%foldFeed%>" title="<%foldFeedTitle%>" param="<%appid%>|<%abstime%>|<%uin%>|<%typeid%>|<%feedno%>|<%feedstime%>|<%showEbtn%>|<%scope%>|<%oprType%>|<%key%>|<%otherflag%>|<%rightflag%>"></qz:fo></div></div>';
+					
+
+		var coreCSSQueue = [
+			cssBegin,"http://",g_sid,'/qzonestyle/qzone_client_v5/css/ifeeds_template.css',cssEnd,
+			cssBegin,"http://",g_sid,'/qzone_v5/app/app_icon.css',cssEnd,
+			cssBegin,"http://",g_sid,'/qzone_v6/feed.css',cssEnd
+		];
+		coreCSSQueue = coreCSSQueue.concat(G_Param.CSSQueue);
+		document.write(coreCSSQueue.join(''));
+var _csfeedsdata = {
+	result:'<?cs  var:feeds.type ?>',
+	message:'<?cs  var:feeds.message ?>',
+	main:{
+		needFold:'<?cs  var:feeds.needFold ?>',
+		icServerTime:'<?cs  var:feeds.icServerTime ?>',
+		icView:'<?cs  var:feeds.icView ?>',
+		daylist:'<?cs  var:feeds.g_daylist ?>',
+		uinlist:'<?cs  var:feeds.g_uinlist ?>',
+		hasMoreFeeds_0:<?cs  var:feeds.hasMoreFeeds_0 ?>,
+		hasMoreFeeds_1:<?cs  var:feeds.hasMoreFeeds_1 ?>,
+		hasMoreFeeds_100:<?cs  var:feeds.hasMoreFeeds_100 ?>,
+		foldAllHostBTNClass:'<?cs  var:feeds.foldAllHostBTNClass ?>',
+		foldAllHostBTNTitle:'<?cs  var:feeds.foldAllHostBTNTitle ?>',
+		foldAllHostFeedDisplay:'<?cs  var:feeds.foldAllHostFeedDisplay ?>',
+		friend_more:'<?cs  var:feeds.friend_more ?>',
+		host_more:'<?cs  var:feeds.host_more ?>',
+		aboutHostFeeds_new_cnt:'<?cs  var:feeds.aboutHostFeeds_new_cnt ?>',
+		replyHostFeeds_new_cnt:'<?cs  var:feeds.replyHostFeeds_new_cnt ?>',
+		myFeeds_new_cnt:'<?cs  var:feeds.myFeeds_new_cnt ?>',
+		friendFeeds_new_cnt:'<?cs  var:feeds.friendFeeds_new_cnt ?>',
+		newfeeds_uinlist:'<?cs  var:feeds.newfeeds_uinlist ?>',
+		newfeeds_uinlist_more:'<?cs  var:feeds.newfeeds_uinlist_more ?>',
+		newfeeds_special_cnt:'<?cs  var:feeds.newfeeds_special_cnt ?>',
+		newfeeds_friend_cnt:'<?cs  var:feeds.newfeeds_friend_cnt ?>',
+		newfeeds_follow_cnt:'<?cs  var:feeds.newfeeds_follow_cnt ?>',
+		newfeeds_group_cnt:'<?cs  var:feeds.newfeeds_group_cnt ?>',
+		tips:'<?cs  var:feeds.tips ?>',
+		feedstips:'<?cs  var:feeds.feedstips ?>',
+		js_showtips:'<?cs  var:feeds.js_showtips ?>',
+		lastaccesstime:'<?cs  var:feeds.lastaccesstime ?>',
+		lastAccessRelateTime:'<?cs  var:feeds.lastAccessRelateTime ?>',
+		QzoneFeedsKey:'<?cs  var:feeds.QzoneFeedsKey ?>'
+	},
+	host_data:[
+        <?cs each:item = feeds.host_data ?>
+		{
+			ver:'<?cs  var:item.ver ?>',
+			appid:'<?cs  var:item.appid ?>',
+			typeid:'<?cs  var:item.typeid ?>',
+			key:'<?cs  var:item.key ?>',
+			flag:'<?cs  var:item.flag ?>',
+			dataonly:'<?cs var:item.dataonly ?>',
+			titleTemp:'<?cs  var:item.titleTemp ?>',
+			summaryTemp:'<?cs  var:item.summaryTemp ?>',
+			feedno:'<?cs  var:item.feedno ?>',
+			title:'<?cs  var:item.title ?>',
+			summary:'<?cs  var:item.summary ?>',
+			appiconid:'<?cs  var:item.appiconid ?>',
+			clscFold:'<?cs  var:item.clscFold ?>',
+			abstime:'<?cs  var:item.abstime ?>',
+			feedstime:'<?cs  var:item.feedstime ?>',
+			userHome:'<?cs  var:item.userHome ?>',
+			namecardLink:'<?cs  var:item.namecardLink ?>',
+			ouin:'<?cs  var:item.ouin ?>',
+			uin:'<?cs  var:item.uin ?>',
+			foldFeed:'<?cs  var:item.foldFeed ?>',
+			foldFeedTitle:'<?cs  var:item.foldFeedTitle ?>',
+			showEbtn:'<?cs  var:item.showEbtn ?>',
+			scope:'1',
+			hideExtend:'<?cs  var:item.hideExtend ?>',
+			nickname:'<?cs  var:item.nickname ?>',
+			remark:'<?cs  var:item.remark ?>',
+			type:'<?cs  var:item.type ?>',
+			vip:'<?cs  var:item.vip ?>',
+			info_user_name:'<?cs  var:item.info_user_name ?>',
+			logimg:'<?cs  var:item.logimg ?>',
+			bor:'<?cs  var:item.bor ?>',
+			lastFeedBor:'<?cs  var:item.lastFeedBor ?>',
+			list_bor2:'<?cs  var:item.list_bor2 ?>',
+			info_user_display:'<?cs  var:item.info_user_display ?>',
+			oprType:'<?cs  var:item.oprType ?>',
+			otherflag:'<?cs  var:item.otherflag ?>',
+			rightflag:'<?cs  var:item.rightflag ?>',
+			unread:<?cs  var:item.unread ?>
+		},
+        <?cs /each ?>
+		undefined
+	],
+	about_host_data:[
+        <?cs each:item = feeds.about_host_data ?>
+		{
+			ver:'<?cs  var:item.ver ?>',
+			appid:'<?cs  var:item.appid ?>',
+			typeid:'<?cs  var:item.typeid ?>',
+			key:'<?cs  var:item.key ?>',
+			flag:'<?cs  var:item.flag ?>',
+			dataonly:'<?cs var:item.dataonly ?>',
+			titleTemp:'<?cs  var:item.titleTemp ?>',
+			summaryTemp:'<?cs  var:item.summaryTemp ?>',
+			feedno:'<?cs  var:item.feedno ?>',
+			title:'<?cs  var:item.title ?>',
+			summary:'<?cs  var:item.summary ?>',
+			appiconid:'<?cs  var:item.appiconid ?>',
+			clscFold:'<?cs  var:item.clscFold ?>',
+			abstime:'<?cs  var:item.abstime ?>',
+			feedstime:'<?cs  var:item.feedstime ?>',
+			userHome:'<?cs  var:item.userHome ?>',
+			namecardLink:'<?cs  var:item.namecardLink ?>',
+			ouin:'<?cs  var:item.ouin ?>',
+			uin:'<?cs  var:item.uin ?>',
+			foldFeed:'<?cs  var:item.foldFeed ?>',
+			foldFeedTitle:'<?cs  var:item.foldFeedTitle ?>',
+			showEbtn:'<?cs  var:item.showEbtn ?>',
+			scope:'100',
+			hideExtend:'<?cs  var:item.hideExtend ?>',
+			nickname:'<?cs  var:item.nickname ?>',
+			remark:'<?cs  var:item.remark ?>',
+			type:'<?cs  var:item.type ?>',
+			vip:'<?cs  var:item.vip ?>',
+			info_user_name:'<?cs  var:item.info_user_name ?>',
+			logimg:'<?cs  var:item.logimg ?>',
+			bor:'<?cs  var:item.bor ?>',
+			lastFeedBor:'<?cs  var:item.lastFeedBor ?>',
+			list_bor2:'<?cs  var:item.list_bor2 ?>',
+			info_user_display:'<?cs  var:item.info_user_display ?>',
+			oprType:'<?cs  var:item.oprType ?>',
+			otherflag:'<?cs  var:item.otherflag ?>',
+			rightflag:'<?cs  var:item.rightflag ?>',
+			unread:<?cs  var:item.unread ?>
+		},
+        <?cs /each ?>
+		undefined
+	],
+	friend_data:[
+		<?cs each:item = feeds.friend_data ?>
+		{
+			ver:'<?cs  var:item.ver ?>',
+			appid:'<?cs  var:item.appid ?>',
+			typeid:'<?cs  var:item.typeid ?>',
+			key:'<?cs  var:item.key ?>',
+			flag:'<?cs  var:item.flag ?>',
+			dataonly:'0',
+			feedno:'<?cs  var:item.feedno ?>',
+			title:'<?cs  var:item.title ?>',
+			summary:'<?cs  var:item.summary ?>',
+			appiconid:'<?cs  var:item.appiconid ?>',
+			clscFold:'<?cs  var:item.clscFold ?>',
+			abstime:'<?cs  var:item.abstime ?>',
+			feedstime:'<?cs  var:item.feedstime ?>',
+			userHome:'<?cs  var:item.userHome ?>',
+			namecardLink:'<?cs  var:item.namecardLink ?>',
+			ouin:'<?cs  var:item.ouin ?>',
+			uin:'<?cs  var:item.uin ?>',
+			foldFeed:'<?cs  var:item.foldFeed ?>',
+			foldFeedTitle:'<?cs  var:item.foldFeedTitle ?>',
+			showEbtn:'<?cs  var:item.showEbtn ?>',
+			scope:'0',
+			hideExtend:'<?cs  var:item.hideExtend ?>',
+			nickname:'<?cs  var:item.nickname ?>',
+			remark:'<?cs  var:item.remark ?>',
+			type:'<?cs  var:item.type ?>',
+			vip:'<?cs  var:item.vip ?>',
+			info_user_name:'<?cs  var:item.info_user_name ?>',
+			logimg:'<?cs  var:item.logimg ?>',
+			bor:'<?cs  var:item.bor ?>',
+			lastFeedBor:'<?cs  var:item.lastFeedBor ?>',
+			list_bor2:'<?cs  var:item.list_bor2 ?>',
+			info_user_display:'<?cs  var:item.info_user_display ?>',
+			upernum:'<?cs  var:item.upernum ?>',
+			oprType:'<?cs  var:item.oprType ?>',
+			moreflag:'<?cs  var:item.moreflag ?>',
+			otherflag:'<?cs  var:item.otherflag ?>',
+			sameuser:{<?cs  var:item.sameuser ?>},
+			uper_isfriend:[<?cs var:item.uper_isfriend ?>],
+			uperlist:[<?cs  var:item.uperlist ?>]
+		},
+		<?cs /each ?>
+		undefined
+	]
+};
+ //]]>
+</script>
+</head>
+<body class="ifeeds_body">
+<div id="GRZOPTParserContainer" style="display:none"></div>
+<div class="ifeeds feed" id="ifeedsContainer"></div>
+<script type="text/javascript" id="icFeedsDataLoader"></script>
+<script type="text/javascript">
+(function(){
+	var sc = [
+	_jsBegin,'/ac/qzone/qzfl/qzfl',g_V.qz,_jsEnd,
+	_jsBegin,'/ac/qzfl/appclientlib',_jsEnd,
+	_jsBegin,'http://'+g_sid+'/qzone/v5/owner2/ic/ic_core_v2.1',_jsEnd,
+	_jsBegin,'http://'+g_sid+'/qzone/v5/owner2/ic/ic_extend_v2.1',_jsEnd,
+	_jsBegin,'http://'+g_sid+'/qzone/v5/owner2/ic/ic_trigger_v2.1',_jsEnd
+	];
+	document.write(sc.join(""));
+	try{
+		var t = parent.TCISD;
+		if(t){
+			var tstat = t.createTimeStat("ownerFrontPage", [175, 51, 2]);
+			tstat.mark(11);
+		}
+	}catch(e){}
+})()
+</script>
+</body>
+</html>

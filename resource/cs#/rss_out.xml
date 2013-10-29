@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="http://feeds.qzone.qq.com/rss.xsl" version="1.0"?>
+<rss version="2.0" xmlns:qz="http://qzone.qq.com">
+<channel>
+<title><![CDATA[<?cs  var:feeds.title ?>]]></title>
+<description><![CDATA[<?cs  var:feeds.description ?>]]></description>
+<link><?cs  var:feeds.link ?></link>
+<lastBuildDate><?cs  var:feeds.lastBuildDate ?></lastBuildDate>
+<generator>Qzone</generator>
+<language>zh-cn</language>
+<copyright>Copyright (C), 2005-2008, Tencent Tech. Co., Ltd.</copyright>
+<pubDate><?cs  var:feeds.pubDate ?></pubDate>
+<?cs each:item = feeds.friend_data ?>
+<item>
+<title><![CDATA[<?cs  var:item.item_title ?>]]></title>
+<link><?cs  var:item.item_link ?></link>
+<description><![CDATA[<?cs  var:item.item_description ?>]]></description>
+<category><![CDATA[<?cs  var:item.item_category ?>]]></category>
+<author><![CDATA[<?cs  var:item.item_author ?>]]></author>
+<pubDate><?cs  var:item.item_pubDate ?></pubDate>
+<guid><?cs  var:item.item_guid ?></guid>
+</item>
+<?cs /each ?>
+</channel>
+</rss>
+
