@@ -1,0 +1,5 @@
+<?cs def:foo(welcomestr)?>
+<?cs /def?>
+
+<?cs set:a = ""?>
+<?cs call:foo(a.b)?>
