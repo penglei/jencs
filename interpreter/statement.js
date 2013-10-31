@@ -37,7 +37,8 @@ def_execute(ast.AST_MacroCall, function(context) {
     //找到相应的macro
     var macro = this.refMacro;
     var macroParams = macro.parameters;
-    if (macro.id == "data_comments_inputbox") debugger
+
+    if (macro.id == "qfv") debugger
     var _symbolAlias = {};//通过这个东西传递参数
     //处理宏调用的实参
     for (var i = 0; i < this.args.length; i++) {

@@ -107,7 +107,6 @@ ast.AST_SubProp.proto("_queryHdfNode", function() {
 ast.AST_VariableAccess.proto("getNodeObject", function(){
     if (isSymbol(this.target)){
         var symbolValue = this.context.querySymbol(this.target.name);
-        if (!symbolValue) debugger
         if (symbolValue instanceof HNode){
             return symbolValue;
         } else {
@@ -147,7 +146,7 @@ ast.AST_SubProp.proto("_fetchOrCreatehdfNode", function() {
     var leftValue;
     if (isSymbol(this.left)) { //先取左节点
         leftValue = this.context.querySymbol(this.left.name);
-        if (leftValue instanceof CSValue){//只有宏参数为CSValue才会进这个逻辑
+        if (leftValue instanceof CSValue){
             var newLeftValueNode = this.context.updateScopeSymbolToNode(this.left.name);
             newLeftValueNode.setValue(leftValue.getString());
             leftValue = newLeftValueNode;
@@ -167,7 +166,7 @@ ast.AST_SubProp.proto("_fetchOrCreatehdfNode", function() {
         var pathkeyArr = path.split(".");
         var node = null, key;
         for (var i = 0; i < pathkeyArr.length; i++){
-            key = !!pathkeyArr[i];
+            key = pathkeyArr[i];
             if (key != "") {
                 node = leftValue.getChild(key);
                 if (!node) node = this.context.createHNode(leftValue, key);

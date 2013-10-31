@@ -104,6 +104,7 @@ exports.Engine = Engine;
 exports.CSValue = Scope.CSValue;
 exports.parseHDFString = HDF.parse;
 exports.HNode = HDF.HNode;
+exports.AST = AST;
 
 /**
  * 一個默認的解析器
