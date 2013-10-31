@@ -7,11 +7,6 @@
         return (str + "").replace(r_ltrim, "").replace(r_rtrim, "");
     }
 
-    function parseInclude(filename){
-        if (exports.OnInclude){
-            exports.OnInclude(filename);
-        }
-    }
 %}
 
 %x ST_CS_START ST_CS ST_END_BRACKET ST_END_VARIABEL ST_VARIABLE_PROP ST_CS_MACRO_SYMBOL ST_CS_INCLUDE
@@ -72,9 +67,14 @@ COMMANDS ("var"|"evar"|"lvar"|"set"|"name"|"include"|"if"|"elif"|"alt"|"each"|"l
 }
 
 <ST_CS_INCLUDE>(['"]).*\1 {
-    //jison不能很好第支持include，这需要修改它
-    parseInclude(yytext.substring(1, yytext.length - 1));
+    //jison不能很好第支持include，这需要修改它（使用一个修改过的jison)
     this.popState();
+    yytext = yytext.substring(1, yytext.length - 1);
+
+    if (typeof this.include == "function") {
+        this.include(yytext);
+    }
+    return "T_INCLUDE";
 }
 
 <ST_CS_MACRO_SYMBOL>{MACRO_CHAR}+(?:\.{MACRO_CHAR}+)*\s*(?=\() {

@@ -63,10 +63,11 @@ inner_statement_list:
 
 if:
       T_IF expr inner_statement_list elif_list else_single T_END_IF {
+        //console.log('if:' + $2.left.target.name);
+        //console.log(!1);
         var ifRootAlternate;
         if ($4){
-            /*如果有elif*/
-            /*error: $4.alternate = $5*/
+            //else是最后被归约出来的，要放到最末尾的AST_If中
             var elifstmt = $4;
             while (elifstmt.alternate){
                 elifstmt = elifstmt.alternate;
@@ -83,9 +84,17 @@ if:
 
 elif_list:
       elif_list T_ELIF expr inner_statement_list {
+        //console.log('elif:' + $3.left.target.name);
+        //console.log($1);
         var alternate = new ast.AST_If($4, $3);
         if ($1){
-            $1.alternate = alternate;
+            //遍历AST_If找到最下面的alternate，把当前归约出的elif放到末尾
+            //归约的顺序跟书顺序是一样的
+            var curBranch = $1;
+            while(curBranch.alternate){
+                curBranch = curBranch.alternate
+            }
+            curBranch.alternate = alternate;
             $$ = $1;
         } else {
             $$ = alternate;
@@ -168,10 +177,6 @@ def_formal_parameter:
     ;
 */
 
-macro_call:
-      T_CALL T_MACRO_NAME '(' parameter_list ')' ->new ast.AST_MacroCall($2, $4);
-    ;
-
 /*单句表达式*/
 single_stmt:
       content
@@ -179,6 +184,7 @@ single_stmt:
     | var_stmt
     | name_stmt
     | macro_call
+    | include_stmt
     ;
 
 content:
@@ -199,6 +205,22 @@ var_stmt:
 
 name_stmt:
       T_NAME base_variable  ->new ast.AST_NameStmt($2);
+    ;
+
+macro_call:
+      T_CALL T_MACRO_NAME '(' parameter_list ')' ->new ast.AST_MacroCall($2, $4);
+    ;
+
+include_stmt:
+      T_INCLUDE {
+        if (yy.getSubAst){
+            //这个时候子模板的方法分析肯定已经完成了..TODO 递归怎么办?
+            var subast = yy.getSubAst($1);
+            $$ = new ast.AST_Include($1, subast);
+        } else {
+            $$ = new ast.AST_Include($1)
+        }
+    }
     ;
 
 /**

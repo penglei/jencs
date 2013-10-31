@@ -242,6 +242,23 @@ var AST_SetStmt = exports.AST_SetStmt = declare("Set", {
     }
 }, AST_Statement);
 
+var AST_Include = exports.AST_Include = declare("include", {
+    initialize: function(name, subast){
+        this.name = name;
+        this.subast = subast;
+    },
+    walk: function(visitor){
+        visitor.visit(this, function(){
+            if (this.subast){
+                //this.subast.walk(visitor);不要访问自己，因为这个时候subast是一个ast.AST_Program
+                this.subast.body.forEach(function(item) {
+                    item.walk(visitor);
+                });
+            }
+        });
+    }
+}, AST_Node);
+
 var AST_Block = exports.AST_Block = declare("Block", {
     initialize: function(body) {
         this.body = body;
@@ -255,10 +272,20 @@ var AST_Block = exports.AST_Block = declare("Block", {
     }
 }, AST_Statement);
 
-var AST_If = exports.AST_If = declare("If", function(consequent, testExpr, alternate) {
-    this.test = testExpr;
-    //this.consequent = consequent;//replace by body
-    this.alternate = alternate;
+var AST_If = exports.AST_If = declare("If", {
+    initialize: function(consequent, testExpr, alternate) {
+        this.test = testExpr;
+        //this.consequent = consequent;//replace by body
+        this.alternate = alternate;
+    },
+    walk: function (visitor) {
+        visitor.visit(this, function(){
+            this.body.forEach(function(item) {
+                item.walk(visitor);
+            });
+            if(this.alternate) this.alternate.walk(visitor);
+        });
+    }
 }, AST_Block);
 
 var AST_Alt = exports.AST_Alt = declare("Alt", function(body, expr) {
