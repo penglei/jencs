@@ -197,6 +197,9 @@ ast.AST_FunctionCall.proto("calc", function(){
     for(i = 0; this.args[i]; i++){
         if (this.args[i] instanceof ast.AST_VariableAccess){
             argValue = this.args[i].getSymbolValueNode();
+            if (!argValue){
+                argValue = new CSValue(CSValue.Void);
+            }
         } else {
             argValue = this.args[i].calc();
         }

@@ -12,9 +12,18 @@ function subcount(arg){
 }
 
 function name(hdfnode){
+    if (hdfnode instanceof HNode){
+        return new CSValue(CSValue.String, HNode.name);
+    }
+    return new CSValue(CSValue.String, "");
 }
 
-function string_length(arg){
+function string_length(str) {
+    if (str instanceof HNode){
+        return CSValue(CSValue.Number, (str.getValue() + "").length);
+    } else {
+        return new CSValue(CSValue.Number, str.getString().length);
+    }
 }
 
 function string_slice(arg){
@@ -110,3 +119,6 @@ function string_firstwords_replace(){
 Scope.addExternInterface("subcount", subcount);
 Scope.addExternInterface("len", subcount);
 Scope.addExternInterface("bitmap_value_ex", bitmap_value_ex);
+Scope.addExternInterface("name", name);
+Scope.addExternInterface("string_length", string_length);
+
