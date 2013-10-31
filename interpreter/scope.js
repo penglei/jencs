@@ -210,3 +210,7 @@ exports.addExternInterface = function(id, fun){
 exports.initScopeLayer = initScopeLayer;
 exports.CSValue = CSValue;
 exports.Context= Context;
+
+exports.jsonEncode = internalJsFilter;
+exports.htmlEncode = internalHtmlFilter;
+exports.urlEncode = internalUrlFilter;

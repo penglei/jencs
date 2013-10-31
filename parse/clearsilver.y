@@ -194,7 +194,10 @@ content:
     ;
 
 set_stmt:
-      T_SET base_variable '=' expr ->new ast.AST_SetStmt($2, $4)
+      T_SET base_variable '=' expr {
+        $$ = new ast.AST_SetStmt($2, $4)
+        $$.pos = @1;
+    }
     ;
 
 var_stmt:

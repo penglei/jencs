@@ -11,6 +11,7 @@ def_execute(ast.AST_VarStmt, function(context){
 });
 
 def_execute(ast.AST_SetStmt, function(){
+    if (this.left.target.name == "_comments_has_count") debugger
     var targetNode = this.left.getOrCreateNodeObject();
     if (targetNode){
         var rightValue = this.right.calc();
@@ -37,6 +38,8 @@ def_execute(ast.AST_MacroCall, function(context) {
     //找到相应的macro
     var macro = this.refMacro;
     var macroParams = macro.parameters;
+
+    //if (macro.id== "data_comments") debugger
 
     var _symbolAlias = {};//通过这个东西传递参数
     //处理宏调用的实参

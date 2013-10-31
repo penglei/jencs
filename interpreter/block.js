@@ -8,15 +8,25 @@ def_execute(ast.AST_Block, function(context){
 });
 
 ast.AST_Block.proto("gen_body", function(context) {
+    for(var i = 0; i < this.body.length; i++){
+        if (this.body[i] instanceof ast.AST_MacroDef){
+        } else {
+            this.body[i].execute(context);
+        }
+    }
+
+    /*
     this.body.forEach(function(stmt) {
         if (!(stmt instanceof ast.AST_MacroDef)) {
             stmt.execute(context);
         }
     }, this);
+    */
 });
 
 def_execute(ast.AST_If, function(context){
-    if (this.test.calc().isTrue()){
+    var testExpr = this.test.calc();
+    if (testExpr.isTrue()){
         this.gen_body(context);
     } else if (this.alternate) {//alternate is ast.AST_Block
         this.alternate.execute(context);
