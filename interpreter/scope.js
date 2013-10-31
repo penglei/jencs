@@ -125,11 +125,16 @@ Context.prototype = {
         if (this.hdfData[key]){
             return this.hdfData[key];//HNode
         }
-        return new CSValue(CSValue.Void);
+        //return new CSValue(CSValue.Void);
     },
     "createHNode": function(_parent, key){
         var hdfNode = new HNode(key);
         _parent.setChild(key, hdfNode);
+        return hdfNode;
+    },
+    "createGlobalNode": function (key) {
+        var hdfNode = new HNode(key);
+        this.hdfData[key] = hdfNode;
         return hdfNode;
     },
     "updateScopeSymbolToNode": function (key) {

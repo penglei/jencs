@@ -11,7 +11,7 @@ def_execute(ast.AST_VarStmt, function(context){
 });
 
 def_execute(ast.AST_SetStmt, function(){
-    var targetNode = this.left.getNodeObject();
+    var targetNode = this.left.getOrCreateNodeObject();
     if (targetNode){
         var rightValue = this.right.calc();
         targetNode.setValue(rightValue.getString());
@@ -38,7 +38,6 @@ def_execute(ast.AST_MacroCall, function(context) {
     var macro = this.refMacro;
     var macroParams = macro.parameters;
 
-    if (macro.id == "qfv") debugger
     var _symbolAlias = {};//通过这个东西传递参数
     //处理宏调用的实参
     for (var i = 0; i < this.args.length; i++) {

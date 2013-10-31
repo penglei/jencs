@@ -109,7 +109,7 @@ def_execute(ast.AST_Loop, function(context){
         } else if (symbolValue instanceof HNode){
             symbolValue.setValue(start);
         } else {
-            //XXX throw new Error("运行时内部错误");
+            throw new Error("运行时内部错误。循环变量: " + name + " 意外为空");
         }
         //但是，这是一个有歧义的语法，这样做与官方解析引擎是不同的.详见loop测试3
     }

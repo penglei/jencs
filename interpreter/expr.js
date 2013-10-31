@@ -43,8 +43,6 @@ ast.AST_VariableAccess.proto("getSymbolValueNode", function(){
     } else if (this.target instanceof ast.AST_Prop){
         var hdfNode = this.target._queryHdfNode();
         return hdfNode;
-    } else {
-        throw new Error("runtime error: unkonw hdf variable access");
     }
 });
 
@@ -71,7 +69,6 @@ ast.AST_DotProp.proto("_queryHdfNode", function() {
     }
 });
 
-//VariableAccess只生成访问hdf节点的代码，不会去取节点的值
 ast.AST_SubProp.proto("_queryHdfNode", function() {
     var leftValue;
     if (isSymbol(this.left)) { //先取左节点
@@ -103,16 +100,18 @@ ast.AST_SubProp.proto("_queryHdfNode", function() {
 
 });
 
-//----读写分开实现----
-ast.AST_VariableAccess.proto("getNodeObject", function(){
+//----写变量分开实现----
+ast.AST_VariableAccess.proto("getOrCreateNodeObject", function(){
     if (isSymbol(this.target)){
         var symbolValue = this.context.querySymbol(this.target.name);
         if (symbolValue instanceof HNode){
             return symbolValue;
-        } else {
+        } else if (symbolValue instanceof CSValue) {
             var hdfnode = this.context.updateScopeSymbolToNode(this.target.name);
             hdfnode.setValue(symbolValue.value);
             return hdfnode;
+        } else {//undefined, so create it
+            return this.context.createGlobalNode(this.target.name);
         }
     } else if (this.target instanceof ast.AST_Prop){
         return this.target._fetchOrCreatehdfNode();//这里还是有可能为空的，比如 foo[empty]
@@ -123,7 +122,9 @@ ast.AST_DotProp.proto("_fetchOrCreatehdfNode", function() {
     var leftValue;
     if (isSymbol(this.left)){
         leftValue = this.context.querySymbol(this.left.name);
-        if (leftValue instanceof CSValue){//宏参数为CSValue会, loop的循环变量
+        if (!leftValue) {//这种情况是新建hdf节点，必然是根节点
+            leftValue = this.context.createGlobalNode(this.left.name);
+        } else if (leftValue instanceof CSValue){//宏参数为CSValue会, loop的循环变量也是CSValue
             var newLeftValueNode = this.context.updateScopeSymbolToNode(this.left.name);
             newLeftValueNode.setValue(leftValue.getString());
             leftValue = newLeftValueNode;
@@ -146,7 +147,9 @@ ast.AST_SubProp.proto("_fetchOrCreatehdfNode", function() {
     var leftValue;
     if (isSymbol(this.left)) { //先取左节点
         leftValue = this.context.querySymbol(this.left.name);
-        if (leftValue instanceof CSValue){
+        if (!leftValue){//这种情况是新建hdf节点，必然是根节点
+            leftValue = this.context.createGlobalNode(this.left.name);
+        } else if (leftValue instanceof CSValue){
             var newLeftValueNode = this.context.updateScopeSymbolToNode(this.left.name);
             newLeftValueNode.setValue(leftValue.getString());
             leftValue = newLeftValueNode;
