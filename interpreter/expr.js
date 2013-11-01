@@ -126,7 +126,7 @@ ast.AST_DotProp.proto("_fetchOrCreatehdfNode", function() {
             leftValue = this.context.createGlobalNode(this.left.name);
         } else if (leftValue instanceof CSValue){//宏参数为CSValue会, loop的循环变量也是CSValue
             var newLeftValueNode = this.context.updateScopeSymbolToNode(this.left.name);
-            newLeftValueNode.setValue(leftValue.getString());
+            newLeftValueNode.setValue(leftValue.value);
             leftValue = newLeftValueNode;
         }
     } else {
@@ -151,7 +151,7 @@ ast.AST_SubProp.proto("_fetchOrCreatehdfNode", function() {
             leftValue = this.context.createGlobalNode(this.left.name);
         } else if (leftValue instanceof CSValue){
             var newLeftValueNode = this.context.updateScopeSymbolToNode(this.left.name);
-            newLeftValueNode.setValue(leftValue.getString());
+            newLeftValueNode.setValue(leftValue.value);
             leftValue = newLeftValueNode;
         }
     } else {

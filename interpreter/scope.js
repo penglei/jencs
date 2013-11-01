@@ -41,7 +41,7 @@ CSValue.prototype.getString = function () {
 
 CSValue.prototype.isTrue = function(){
     if (this.type == CSValue.Void) return false;
-    return !!this.value;
+    return ~~this.value;
 };
 
 
@@ -67,6 +67,23 @@ Context.prototype = {
     },
     "initHDFData": function(hdfdata){
         this.hdfData = hdfdata;
+    },
+    "_getData": function(path){
+        var pathkeyArr = path.split(".");
+        var node = this.querySymbol(pathkeyArr[0]), key;
+        if (!node) return null;
+
+        for (var i = 1; i < pathkeyArr.length; i++){
+            key = pathkeyArr[i];
+            if (key == "") return null;
+            if (node instanceof CSValue){
+                return null;
+            } else if (node instanceof HNode){
+                node = node.getChild(key);
+            }
+
+        }
+        return node;
     },
     "setRenderListener": function(cb){
         if (typeof cb == "function") this._renderSinppetsCallback = cb;

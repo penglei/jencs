@@ -15,7 +15,7 @@ def_execute(ast.AST_SetStmt, function(){
     //if (this.left.target.name == "g_qz_is_auth") debugger;
     if (targetNode){
         var rightValue = this.right.calc();
-        targetNode.setValue(rightValue.getString());
+        targetNode.setValue(rightValue.value);
     } else {
         //TODO notice
     }
