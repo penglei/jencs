@@ -68,5 +68,5 @@ def_execute(ast.AST_Include, function(context){
 });
 
 def_execute(ast.AST_CSDebugger, function(context){
-    debugger
+    //debugger
 });

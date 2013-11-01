@@ -186,12 +186,8 @@ ast.AST_SubProp.proto("_fetchOrCreatehdfNode", function() {
 ast.AST_FunctionCall.proto("calc", function(){
 
     var id = this.id;
-
-    var id = ""
     if (this.id instanceof ast.AST_Symbol){
         id = this.id.name;
-    } else {
-        id = this.id;
     }
 
     var argValue, i, argsList = [];

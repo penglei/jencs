@@ -92,7 +92,6 @@ Engine.prototype.execute = function(hdfData, render){
         self._renderListener.apply(self, Array.prototype.slice.call(arguments, 0));
     });
     Executer.run(this.astInstance, this.context);
-    this.context = null;
     return this._result;
 };
 Engine.prototype.addOutputFilter = function(filter){

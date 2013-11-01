@@ -173,8 +173,15 @@ Context.prototype = {
 };
 
 function initScopeLayer(astTree){
-    var scope = astTree.parent_scope = null, macros = {};
+    var scope = astTree.parent_scope = null, macros = {}, result = {"functionsCallList":{}};
     var tree_scope_walker = new Walker(function(node, descend){
+        if (node instanceof ast.AST_FunctionCall){
+            if (node.id instanceof ast.AST_Symbol){
+                result.functionsCallList[node.id.name] = 1;
+            } else {
+                result.functionsCallList[node.id] = 1;
+            }
+        }
         if (node instanceof ast.AST_Scope){
             var saved_scope = scope;
             if (!(node instanceof ast.AST_MacroDef)){
@@ -214,6 +221,7 @@ function initScopeLayer(astTree){
         }
     });
     astTree.walk(tree_scope_walker);
+    return result;
 }
 
 Context.prototype.externInterface = {};

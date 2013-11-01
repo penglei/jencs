@@ -9,7 +9,7 @@ function getStringCSValue(obj){
         obj.type = CSValue.String;
         return obj;
     } else {
-        return new CSValue(CSValue.String, obj.getValue());
+        return new CSValue(CSValue.String, obj.getValue());//Void也这样处理吧
     }
 }
 
@@ -42,16 +42,17 @@ function name(hdfnode){
 }
 
 function string_length(str) {
-    if (str instanceof HNode){
-        return CSValue(CSValue.Number, (str.getValue() + "").length);
-    } else {
-        return new CSValue(CSValue.Number, str.getString().length);
-    }
+    str = getStringCSValue(str);
+    return new CSValue(CSValue.Number, str.value.length);
 }
 
-function string_slice(obj, start, len){
+function string_slice(obj, start, end){
     obj = getStringCSValue(obj);
-    obj.value = obj.value.splice(start, len);
+
+    start = getNumberCSValue(start);
+    end = getNumberCSValue(end);
+
+    obj.value = obj.value.substring(start.value, end.value);
     return obj;
 }
 
@@ -63,7 +64,6 @@ function string_find(obj, pattern){
 }
 
 function string_crc(obj){
-    //TODO
     return obj;
 }
 
@@ -74,6 +74,9 @@ function last(csvalue){
 }
 
 function abs(csvalue){
+    var r = getNumberCSValue(csvalue);
+    r.value = Math.abs(r.value);
+    return r;
 }
 
 function max(foo, bar){
@@ -177,7 +180,8 @@ function json_decode(obj, type){
 }
 
 function html_encode(obj, type){
-    if (type == 1){//表示utf-8
+    type = getNumberCSValue(type);
+    if (type.value == 1){//表示utf-8
         obj = getStringCSValue(obj);
         obj.value = Scope.htmlEncode(obj.value);
         return obj;
@@ -207,7 +211,7 @@ function string_firstwords_replace(url, srcKey, replaceKey){
     srcKey = getStringCSValue(srcKey);
     replaceKey = getStringCSValue(replaceKey);
     if (url.value.indexOf(srcKey.value) == 0){
-        url.value.replaceKey(srcKey.value, replaceKey.value);
+        url.value = url.value.replace(srcKey.value, replaceKey.value);
     }
     return url;
 }
@@ -215,13 +219,15 @@ function string_firstwords_replace(url, srcKey, replaceKey){
 Scope.addExternInterface("subcount", subcount);
 Scope.addExternInterface("len", subcount);
 Scope.addExternInterface("name", name);
-Scope.addExternInterface("string_slice", string_slice);
-Scope.addExternInterface("string_find", string_find);
+Scope.addExternInterface("string.slice", string_slice);
+Scope.addExternInterface("string.find", string_find);
+Scope.addExternInterface("string.length", string_length);
 Scope.addExternInterface("max", max);
 Scope.addExternInterface("min", min);
+Scope.addExternInterface("abs", abs);
 Scope.addExternInterface("bitmap_value_ex", bitmap_value_ex);
 Scope.addExternInterface("json_encode", json_encode);
 Scope.addExternInterface("html_encode", html_encode);
-Scope.addExternInterface("url_encode", uri_encode);
+Scope.addExternInterface("uri_encode", uri_encode);
 Scope.addExternInterface("string_firstwords_replace", string_firstwords_replace);
 //Scope.addExternInterface("", );
