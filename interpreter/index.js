@@ -14,9 +14,9 @@ require("./external");
 
 function Engine(csString){
     this.csparser = new ClearSilverParser();
-    if (typeof csString == 'string') this.setEntrySource(csString);
+    if (typeof csString == 'string') this.initEntrySource(csString);
 
-    this.entryName = "[main]";
+    this.csparser.yy.name = "[main]";
 
     this.subAsts = {};
 
@@ -43,6 +43,7 @@ Engine.prototype._lexInclude = function(includeName) {
         csSubParser.yy.getSubAst = function(name){
             return self.subAsts[name];
         };
+        csSubParser.yy.name = includeName;
         var subAsts = csSubParser.parse(source);
         this.subAsts[includeName] = subAsts;
     } else {
@@ -56,10 +57,10 @@ Engine.prototype._renderListener = function(snippets) {
     //console.log(snippets);
 };
 
-Engine.prototype.setEntrySource = function(csString, name){
+Engine.prototype.initEntrySource = function(csString, name){
+    if (name !== undefined) this.csparser.yy.name = name;
     this.astInstance = this.csparser.parse(csString);
     Scope.initScopeLayer(this.astInstance);//XXX 虽然会修改ast，但它是没有什么副作用的.但最好还是用一份clone的ast来运行最好
-    if (name !== undefined) this.entryName = name;
 };
 
 //設定一個Include處理器，用於返回include的源碼
@@ -71,7 +72,7 @@ Engine.prototype.setConfig = function(opts){
     opts = opts || {};
 
     if (opts.entryName){
-        this.entryName = opts.entryName;
+        this.csparser.yy.name = opts.entryName;
     }
     if (opts.lexerIncludeFun){
         this._lexIncludeSource = opts.lexerIncludeFun;

@@ -9,7 +9,7 @@
 
 %}
 
-%x ST_CS_START ST_CS ST_END_BRACKET ST_END_VARIABEL ST_VARIABLE_PROP ST_CS_MACRO_SYMBOL ST_CS_INCLUDE
+%x ST_CS_START ST_CS ST_END_BRACKET ST_END_VARIABEL ST_VARIABLE_PROP ST_CS_MACRO_SYMBOL ST_CS_INCLUDE ST_IGNORE
 
 %options flex
 
@@ -33,7 +33,17 @@ COMMANDS ("var"|"evar"|"lvar"|"set"|"name"|"include"|"if"|"elif"|"alt"|"each"|"l
     this.begin("ST_CS_START");
 }
 
-<ST_CS_START>\#{ANY_CHAR}*?\?\> {
+<ST_CS_START>"#debugger" {
+    this.popState();
+    this.begin("ST_IGNORE");
+    return "T_DEBUGGER";
+}
+
+<ST_IGNORE>{ANY_CHAR}*?\?\> {
+    this.popState();
+}
+
+<ST_CS_START>\#(?!debugger\s*){ANY_CHAR}*?\?\> {
     //都是注释
     this.popState();
 }

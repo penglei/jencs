@@ -243,8 +243,8 @@ var AST_SetStmt = exports.AST_SetStmt = declare("Set", {
 }, AST_Statement);
 
 var AST_Include = exports.AST_Include = declare("include", {
-    initialize: function(name, subast){
-        this.name = name;
+    initialize: function(targetName, subast){
+        this.targetName = targetName;
         this.subast = subast;
     },
     walk: function(visitor){
@@ -258,6 +258,9 @@ var AST_Include = exports.AST_Include = declare("include", {
         });
     }
 }, AST_Node);
+
+//以后可以扩展更多语法
+var AST_CSDebugger = exports.AST_CSDebugger = declare("csdebugger", null , AST_Statement);
 
 var AST_Block = exports.AST_Block = declare("Block", {
     initialize: function(body) {

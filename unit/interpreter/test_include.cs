@@ -1,1 +1,2 @@
-<?cs include:"test_includeandcall.cs"?>
+<?cs #include:"test_includeandcall.cs"?>
+<?cs var:abc?>

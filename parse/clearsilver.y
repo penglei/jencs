@@ -8,6 +8,16 @@
     function debug(_){
         console.log(_);
     }
+    function pos($pos, yy){
+        var _p = {};
+        for(var i in $pos){
+            if ($pos.hasOwnProperty(i)){
+                _p[i] = $pos[i]
+            }
+        }
+        _p.name = yy.name;//自定义的，这是文件名
+        return _p;
+    }
 %}
 
 
@@ -79,6 +89,7 @@ if:
             ifRootAlternate = $5
         }
         $$ = new ast.AST_If($3, $2, ifRootAlternate);
+        $$.pos = pos(@1, yy);
       }
     ;
 
@@ -99,31 +110,45 @@ elif_list:
         } else {
             $$ = alternate;
         }
+        $$.pos = pos(@1, yy);
       }
     | /* empty */
     ;
 
 else_single:
       /* empty */
-    | T_ELSE inner_statement_list -> new ast.AST_Block($2)
+    | T_ELSE inner_statement_list {
+        $$ = new ast.AST_Block($2);
+        $$.pos = pos(@1, yy);
+    }
     ;
 
 alt:
-      T_ALT expr inner_statement_list T_END_ALT ->new ast.AST_Alt($3, $2)
+      T_ALT expr inner_statement_list T_END_ALT {
+        $$ = new ast.AST_Alt($3, $2);
+        $$.pos = pos(@1, yy);
+    }
     ;
 
 each:
-      T_EACH t_variable_one '=' expr inner_statement_list T_END_EACH ->new ast.AST_Each($5, $2, $4)
+      T_EACH t_variable_one '=' expr inner_statement_list T_END_EACH {
+        $$ = new ast.AST_Each($5, $2, $4);
+        $$.pos = pos(@1, yy);
+    }
     ;
 
 with:
-      T_WITH t_variable_one '=' base_variable inner_statement_list T_END_WITH ->new ast.AST_With($5, $2, $4)
+      T_WITH t_variable_one '=' base_variable inner_statement_list T_END_WITH {
+        $$ = new ast.AST_With($5, $2, $4);
+        $$.pos = pos(@1, yy);
+    }
     ;
 
 escape:
       T_ESCAPE STRING inner_statement_list escape_end {
         //check surpport 'html' and 'js' , 'url'
         $$ = new ast.AST_Escape($3, $2);
+        $$.pos = pos(@1, yy);
       }
     ;
 escape_end:
@@ -132,7 +157,10 @@ escape_end:
     ;
 
 loop:
-      T_LOOP loop_init_expr ',' expr ',' loop_step inner_statement_list T_END_LOOP ->new ast.AST_Loop($7, $2, $4, $6);
+      T_LOOP loop_init_expr ',' expr ',' loop_step inner_statement_list T_END_LOOP {
+        $$ = new ast.AST_Loop($7, $2, $4, $6);
+        $$.pos = pos(@1, yy);
+    }
     ;
 
 /*官方cs引擎有个bug，可以使用<?cs loop: a.b =1, 5, 1?>，但是在内部却没法取到a.b的值，
@@ -152,6 +180,7 @@ loop_step:
 macro_def:
       T_DEF T_MACRO_NAME '(' def_formal_parameters ')' inner_statement_list T_END_MACRO_DEF {
         $$ = new ast.AST_MacroDef($6, $2, $4);
+        $$.pos = pos(@1, yy);
       }
     ;
 
@@ -185,33 +214,42 @@ single_stmt:
     | name_stmt
     | macro_call
     | include_stmt
+    | cs_debugger
     ;
 
 content:
       CONTENT {
         $$ = new ast.AST_Content($1)
+        $$.pos = pos(@1, yy);
     }
     ;
 
 set_stmt:
       T_SET base_variable '=' expr {
         $$ = new ast.AST_SetStmt($2, $4)
-        $$.pos = @1;
+        $$.pos = pos(@1, yy);
     }
     ;
 
 var_stmt:
       T_VAR expr {
         $$ = new ast.AST_VarStmt($2)
+        $$.pos = pos(@1, yy);
       }
     ;
 
 name_stmt:
-      T_NAME base_variable  ->new ast.AST_NameStmt($2);
+      T_NAME base_variable  {
+        $$ = new ast.AST_NameStmt($2);
+        $$.pos = pos(@1, yy);
+    }
     ;
 
 macro_call:
-      T_CALL T_MACRO_NAME '(' parameter_list ')' ->new ast.AST_MacroCall($2, $4);
+      T_CALL T_MACRO_NAME '(' parameter_list ')' {
+        $$ = new ast.AST_MacroCall($2, $4);
+        $$.pos = pos(@1, yy);
+    }
     ;
 
 include_stmt:
@@ -223,6 +261,14 @@ include_stmt:
         } else {
             $$ = new ast.AST_Include($1)
         }
+        $$.pos = pos(@1, yy);
+    }
+    ;
+
+cs_debugger:
+      T_DEBUGGER {
+        $$ = new ast.AST_CSDebugger();
+        $$.pos = pos(@1, yy);
     }
     ;
 
