@@ -14,14 +14,6 @@ ast.AST_Block.proto("gen_body", function(context) {
             this.body[i].execute(context);
         }
     }
-
-    /*
-    this.body.forEach(function(stmt) {
-        if (!(stmt instanceof ast.AST_MacroDef)) {
-            stmt.execute(context);
-        }
-    }, this);
-    */
 });
 
 def_execute(ast.AST_If, function(context){
@@ -48,9 +40,9 @@ def_execute(ast.AST_With, function(context) {
     var resultVal = this.expression.getSymbolValueNode();
     //如果表达式对就的节点不存在。(或者没有值，这与标准和cs解析引擎行为会有差异）
     if (resultVal){
-        context.enterScope(this); //必须先进入scope，才可以使用symbolAlias
+        var scope = context.enterScope(this); //必须先进入scope，才可以使用symbolAlias
 
-        this.symbolAlias[this.alias.name] = resultVal;
+        scope.symbolAlias[this.alias.name] = resultVal;
 
         this.gen_body(context);
 
@@ -63,14 +55,29 @@ def_execute(ast.AST_With, function(context) {
 def_execute(ast.AST_Each, function(context){
     var resultVal = this.expression.getSymbolValueNode();
     if (resultVal && resultVal instanceof HNode){
-        context.enterScope(this);
+        var scope = context.enterScope(this), itemName = this.variable.name;
 
-        for(var i = 0; i < resultVal.children.length; i++){
-            this.symbolAlias[this.variable.name] = resultVal.children[i];
+        scope.loopVarName = itemName;
+
+        var firsted = false;
+        scope.isLoopFirst = true;
+        scope.isLoopLast = false;
+
+        var i = 1, end = resultVal.childrenSize();
+        resultVal.eachChild(function(prop){
+            scope.symbolAlias[itemName] = prop;
+
+            if (i++ == end) scope.isLoopLast = true;
+
+            if (!firsted) firsted = true;
+            else scope.isLoopFirst = false;
+
             this.gen_body(context);
-        }
+        }, this);
 
         context.leaveScope();
+    } else {
+        //TODO 警告在一个值上面进行遍历
     }
 });
 
@@ -86,31 +93,49 @@ def_execute(ast.AST_Loop, function(context){
     var name = this.initVarSymbol.name;
     var aliasSymbolValue = new CSValue(CSValue.Number, start);
 
-    context.enterScope(this);
+    var scope = context.enterScope(this);
 
-    this.symbolAlias[name] = aliasSymbolValue;//setSymbolInCurrentScope
+    scope.symbolAlias[name] = aliasSymbolValue;//setSymbolInCurrentScope
+    scope.loopVarName = name;
 
     var checkFun;
     //循环次数是固定的
     if (step > 0){
         //start <= end
         checkFun = function(){
-            return start <= end
+            return start <= end;
         }
     } else if (step < 0) {
         //start >= end
         checkFun = function(){
-            return start >= end
+            return start >= end;
         }
     } else {
         //TODO notice 不要执行
     }
 
-    if (step != 0)
-    while (checkFun()) {
-        start += step;
+    var firsted = false;
+    scope.isLoopFirst = true;
+    scope.isLoopLast = false;
+    if (step != 0) while (checkFun()) {
+        //为第一次循环打一个标记，留给first函数使用
+        if (!firsted) firsted = true;
+        else scope.isLoopFirst = false;//以后每次循环要置为false
+
+        var next = start + step;
+        if (step > 0){
+            if (next > end) {
+                scope.isLoopLast = true;
+            }
+        } else {
+            if (next < end){
+                scope.isLoopLast = true;
+            }
+        }
+
         this.gen_body(context);
 
+        start += step;
         //同时要更新aliasSymbolValue的值
         //为什么要这样更新，详见loop测试用例
         var symbolValue = context.querySymbol(name);
@@ -121,7 +146,7 @@ def_execute(ast.AST_Loop, function(context){
         } else {
             throw new Error("运行时内部错误。循环变量: " + name + " 意外为空");
         }
-        //但是，这是一个有歧义的语法，这样做与官方解析引擎是不同的.详见loop测试3
+        //循环亦是不支持写，否则这是一个有歧义的语法，这样做与官方解析引擎是不同的.详见loop测试3
     }
 
 
@@ -129,12 +154,17 @@ def_execute(ast.AST_Loop, function(context){
 });
 
 def_execute(ast.AST_MacroDef, function(context, _symbolAlias) {
-    context.enterScope(this);
+    var scope = context.enterScope(this);
 
     //初始化实参
     for(var name in _symbolAlias){
         if (_symbolAlias.hasOwnProperty(name)){
-            this.symbolAlias[name] = _symbolAlias[name];
+            if (_symbolAlias[name] instanceof ast.AST_Node){
+                scope.symbolAlias[name] = null;
+                scope.nonExistParams[name] = _symbolAlias[name];
+            } else {
+                scope.symbolAlias[name] = _symbolAlias[name];
+            }
         }
     }
     this.gen_body(context);

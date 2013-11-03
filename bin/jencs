@@ -1,0 +1,30 @@
+#!/usr/bin/env node
+
+var fs = require('fs');
+var path = require('path');
+
+var CSInterpreter = require('../interpreter');
+
+var Engine = CSInterpreter.Engine;
+
+var dataHdfFile;
+var entryCsFile;
+
+process.argv.forEach(function (val, index, array) {
+    if (/\.cs$/.test(val)){
+        entryCsFile = val;
+    } else if (/\.hdf$/.test(val)){
+        dataHdfFile = val;
+    }
+});
+
+
+var mainCsSource = fs.readFileSync(entryCsFile, "utf8");
+var dataSource = fs.readFileSync(dataHdfFile, "utf8");
+
+var TestCSEngine = new Engine();
+TestCSEngine.initEntrySource(mainCsSource);
+var hdfData = CSInterpreter.parseHDFString(dataSource);
+var result = TestCSEngine.execute(hdfData);
+process.stdout.write(result);
+//console.log(result);

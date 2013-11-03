@@ -12,7 +12,6 @@ def_execute(ast.AST_VarStmt, function(context){
 
 def_execute(ast.AST_SetStmt, function(){
     var targetNode = this.left.getOrCreateNodeObject();
-    //if (this.left.target.name == "g_qz_is_auth") debugger;
     if (targetNode){
         var rightValue = this.right.calc();
         targetNode.setValue(rightValue.value);
@@ -46,7 +45,7 @@ def_execute(ast.AST_MacroCall, function(context) {
         var arg = this.args[i], argValue;
         if (arg instanceof ast.AST_VariableAccess){
             argValue = arg.getSymbolValueNode();
-            if (!argValue) argValue = new CSValue(CSValue.Void);//用一个临时的CSValue作为实参(注意这个实参是CSValue,而不是HNode)
+            if (!argValue) argValue = arg; //没有就把ast节点传过去，都是为了那个macro set功能
         } else {
             argValue = arg.calc();
         }
@@ -68,5 +67,5 @@ def_execute(ast.AST_Include, function(context){
 });
 
 def_execute(ast.AST_CSDebugger, function(context){
-    //debugger
+    debugger
 });

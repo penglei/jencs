@@ -3,26 +3,44 @@ var Walker = require("./walker").Walker;
 var Util = require("./util");
 var HNode = require("./hdf").HNode;
 
+//{internal function
+function subcount(arg){
+    if (arg instanceof HNode){
+        return new CSValue(CSValue.Number, arg.childrenSize());
+    } else {
+        return new CSValue(CSValue.Number, 0);
+    }
+}
+
+function name(hdfnode){
+    if (hdfnode instanceof HNode){
+        return new CSValue(CSValue.String, hdfnode.name);
+    }
+    return new CSValue(CSValue.String, "");
+}
+
+//internal function}
+
 function  internalHtmlFilter(str){
-    return str.replace(/&/g,'&amp;').replace(/>/g,'&gt;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+    return str.replace(/&/g,'&amp;').replace(/>/g,'&gt;').replace(/</g,'&lt;').replace(/"/g,'&quot;').replace(/'/g, '&#39;');
 }
 
 function internalJsFilter(str){
-    return encodeURIComponent(str);
+    return str.replace(/&/g, '\\x26').replace(/\\/g, "\\0x5C").replace(/"/g, "\\x22").replace(/'/g, "\\x27")
+            .replace(/;/g, "\\x3B").replace(/</g, "\\x3C").replace(/\//g, "\\x2F")
 }
 
 function internalUrlFilter(str){
-    return str.replace(/\\/, "\\\\").replace(/"/g, '\\"').replace(/'/g, "\\'");
+    return encodeURIComponent(str);
 }
 
-CSValue.Void = 1;
-CSValue.String = 2;
-CSValue.Number = 3;
+CSValue.String = 1;
+CSValue.Number = 2;
 
 function Empty(){}
 
 function CSValue(type, value){
-    this.type = type || CSValue.Void;
+    this.type = type || CSValue.String;
     this.value = (value !== undefined ? value : "");//默认用空字符串比较方便处理
 }
 
@@ -32,16 +50,22 @@ CSValue.prototype.getNumber = function(){
         var v = parseInt(this.value);
         return isNaN(v) ? 0 : v;
     }
-    if (this.type == CSValue.Void) return 0;
 };
 
+CSValue.prototype._r_num_ = /^\d+$/;
 CSValue.prototype.getString = function () {
     return this.value !== undefined ? this.value + "" : "";
 };
 
 CSValue.prototype.isTrue = function(){
-    if (this.type == CSValue.Void) return false;
-    return ~~this.value;
+    if (this.type == CSValue.Number) return this.value != 0;
+    else {
+        //我们要看value是不是全由数字组成的，如果是，就转换为数字
+        //并且，转换的时候只考虑值为10进制的情况
+        //这是原版cs引擎的逻辑
+        if (this._r_num_.test(this.value)) return parseInt(this.value);
+        return this.value.length != 0;//只需要看看是不是空串
+    }
 };
 
 
@@ -55,12 +79,22 @@ function Context(){
 
 Context.prototype = {
     constructor: Context,
-    "enterScope": function(scope){
-        scope.symbolAlias = {};
+    "enterScope": function(astNode){
+        var scope = {
+            "astNode": astNode,
+            "nonExistParams":{},
+            "symbolAlias": {}
+        };
         this._scopeStack.push(scope);
+        return scope;
     },
     "leaveScope": function(){
         this._scopeStack.pop();
+    },
+    "eachReverseScope": function(handler, that){
+        for(var i = this._scopeStack.length - 1; this._scopeStack[i]; i--){
+            if (handler.call(that, this._scopeStack[i])) break;
+        }
     },
     "currentScope": function(){
         return this._scopeStack[this._scopeStack.length - 1];
@@ -107,7 +141,7 @@ Context.prototype = {
         else if (type == "js") this._escapeFilters.push(internalJsFilter);
         else if (type == "url") this._escapeFilters.push(internalUrlFilter);
         else {
-            //XXX notice
+            //什么都不做，这也支持了escape:none
         }
     },
     "popEscapeFilter": function(){
@@ -123,26 +157,39 @@ Context.prototype = {
         //再执行内部的escape filters
         for(i = this._escapeFilters.length - 1; this._escapeFilters[i]; i--){
             filter = this._escapeFilters[i];
-            str = filter(str, astNode);
+            if (astNode instanceof ast.AST_Content){
+            } else {
+                str = filter(str, astNode);
+            }
         }
         return str;
     },
 
     /**
-     * @return HNode || CSValue 符号对应的变量(两种类型)
+     * @return NULL || HNode || CSValue  符号对应的变量(两种类型)
      */
     "querySymbol": function(key){
         var _scope = null;
         for(var i = this._scopeStack.length - 1; this._scopeStack[i]; i--){
             _scope = this._scopeStack[i];
             if (key in _scope.symbolAlias) {
-                return _scope.symbolAlias[key];//这里有可能返回CSValue，也有可能返回HNode(宏参数)
+                //这里有可能返回CSValue，也有可能返回HNode(宏参数是已经存在的hdf节点), 也有可能是null
+                return _scope.symbolAlias[key];
             }
         }
         if (this.hdfData[key]){
             return this.hdfData[key];//HNode
         }
-        //return new CSValue(CSValue.Void);
+    },
+    "getParamSymbolNonExistAst": function(name){
+        var dotAccessAst;
+        this.eachReverseScope(function(_scope){
+            if (_scope.nonExistParams[name]) {
+                dotAccessAst = _scope.nonExistParams[name];
+                return true
+            }
+        }, this);
+        return dotAccessAst;
     },
     "createHNode": function(_parent, key){
         var hdfNode = new HNode(key);
@@ -154,6 +201,7 @@ Context.prototype = {
         this.hdfData[key] = hdfNode;
         return hdfNode;
     },
+    //把一个局部参数由CSValue转成局部HNode
     "updateScopeSymbolToNode": function (key) {
         var _scope = null;
         for(var i = this._scopeStack.length - 1; this._scopeStack[i]; i--){
@@ -205,7 +253,7 @@ function initScopeLayer(astTree){
             var macro = macros[node.id];
             if (macro){
                 if (macro === scope){
-                    var errMsg = "不允许宏进行递归调用,在宏:\"" + node.id + "\"中";
+                    //var errMsg = "不允许宏进行递归调用,在宏:\"" + node.id + "\"中";
                     //throw new Error(errMsg);
                 }
                 if (node.args.length != macro.parameters.length){
@@ -224,10 +272,43 @@ function initScopeLayer(astTree){
     return result;
 }
 
-Context.prototype.externInterface = {};
+Context.prototype._getLoopScopeByIterSymbol = function(symbol){
+    if (symbol instanceof ast.AST_VariableAccess && symbol.target instanceof ast.AST_Symbol) {
+        var i = this._scopeStack.length - 1;
+        for (; this._scopeStack[i]; i--) {
+            if (this._scopeStack[i].loopVarName == symbol.target.name) return this._scopeStack[i];
+        }
+    }
+};
+
+Context.prototype.first = function JudgeLoopFirst(symbol){
+    var _scope = this._getLoopScopeByIterSymbol(symbol);
+    if (_scope && _scope.isLoopFirst) {
+        return new CSValue(CSValue.Number, 1);
+    } else {
+        return new CSValue(CSValue.Number, 0);
+    }
+};
+
+Context.prototype.last = function JudgeLoopLast(symbol){
+    var _scope = this._getLoopScopeByIterSymbol(symbol);
+    if (_scope && _scope.isLoopLast) {
+        return new CSValue(CSValue.Number, 1);
+    } else {
+        return new CSValue(CSValue.Number, 0);
+    }
+};
+
+Context.prototype.externInterface = {
+    "subcount": subcount,
+    "len": subcount,
+    "name": name
+};
+
 Context.prototype.getExternInterface = function(id){
     return this.externInterface[id];
 };
+
 exports.addExternInterface = function(id, fun){
     Context.prototype.externInterface[id] = fun;
 };

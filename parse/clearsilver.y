@@ -94,7 +94,7 @@ if:
     ;
 
 elif_list:
-      elif_list T_ELIF expr inner_statement_list {
+      elif_list t_elif_tokens expr inner_statement_list {
         //console.log('elif:' + $3.left.target.name);
         //console.log($1);
         var alternate = new ast.AST_If($4, $3);
@@ -113,6 +113,11 @@ elif_list:
         $$.pos = pos(@1, yy);
       }
     | /* empty */
+    ;
+
+t_elif_tokens:
+      T_ELIF
+    | T_ELSEIF
     ;
 
 else_single:
@@ -157,8 +162,8 @@ escape_end:
     ;
 
 loop:
-      T_LOOP loop_init_expr ',' expr ',' loop_step inner_statement_list T_END_LOOP {
-        $$ = new ast.AST_Loop($7, $2, $4, $6);
+      T_LOOP loop_init_expr ',' expr loop_step inner_statement_list T_END_LOOP {
+        $$ = new ast.AST_Loop($6, $2, $4, $5);
         $$.pos = pos(@1, yy);
     }
     ;
@@ -174,7 +179,8 @@ loop_init_expr:
 
 /*step其实是可以为表达式的*/
 loop_step:
-     expr
+     ',' expr ->$2
+    | ->new ast.AST_Number(1) //默认步进为1
     ;
 
 macro_def:
@@ -291,17 +297,15 @@ expr:
 
 variable:
      base_variable   /* 这是hdf访问语法（VariabelAccess） */
+   | '#' base_variable  ->new ast.AST_UnaryForceNum($1, $2)  /*强制数字表达式*/
    | const_variable  /* Number or String */
    | function_call
    ;
 
 expr_basic:
       '!' expr      ->new ast.AST_UnaryNot($1, $2)  /*非表达式*/
-    | '?' expr      ->new ast.AST_UnaryExist($1, $2)    /*是否存在*/
-    | '#' expr      ->new ast.AST_UnaryForceNum($1, $2)  /*强制数字表达式*/
-    | '$' expr      ->new ast.AST_Unary($1, $2)  /*TODO 不知道这个操作符的意义*/
-    | '-' expr %prec UMINUS ->new ast.AST_UnaryNegative($1, $2) /*负数表达式*/
-    | '+' expr %prec UMINUS ->new ast.AST_UnaryPositive($1, $2) /*正数表达式*/
+    | '?' expr      ->new ast.AST_UnaryExist($1, $2) /*是否存在，TODO，不应该有这种语法，应该限定为 ?foo.bar 这种*/
+    | '$' expr      ->new ast.AST_Unary($1, $2)  /*比如，对于 foo + $3, 其中的3是一个key，而不是数字*/
     | expr T_BOOLEAN_OR expr            -> new ast.AST_BinLogicExpr($2, $1, $3)
     | expr T_BOOLEAN_AND expr           -> new ast.AST_BinLogicExpr($2, $1, $3)
     | expr T_IS_EQUAL expr              -> new ast.AST_BinLogicExpr($2, $1, $3)
@@ -384,18 +388,29 @@ t_property:
 
 t_label:
       t_variable_one    ->$1
-    | NUMBER        ->new ast.AST_Number($1)
+    | PROP_NUMBER        ->new ast.AST_Symbol($1) /*这个不要综合到t_variable_one里面去*/
     ;
 
 t_variable_one:
       T_VARIABLE    ->new ast.AST_Symbol($1)
     ;
 
+/*'+' expr %prec UMINUS ->new ast.AST_UnaryPositive($1, $2) 正数表达式*/
+/*'-' expr %prec UMINUS ->new ast.AST_UnaryNegative($1, $2) 正数表达式*/
 const_variable:
       STRING        ->new ast.AST_String($1)      /*字面字符串*/
-    | NUMBER        ->new ast.AST_Number($1)
+    | '#' t_math_number    ->$2  /*这其实是官方cs引擎的一个bug，它不支持 #"111" */
+    | '#' '-' t_math_number ->new ast.AST_UnaryNegative($2, $3) /*负数表达式*/
+    | '-' t_math_number     ->new ast.AST_UnaryNegative($1, $2)
+    | '#' '+' t_math_number  ->$3
+    | '+' t_math_number  ->$2
+    | t_math_number
     ;
 
+t_math_number:
+      NUMBER        ->new ast.AST_Number($1)
+    | NUMBER_HEX    ->new ast.AST_HexNumber($1)
+    ;
 /*函数名需要扩展支持 string.length这种有dot分隔的形式*/
 /*这里使用简单的词法分析解决dot问题*/
 function_call:

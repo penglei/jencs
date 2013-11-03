@@ -18,13 +18,13 @@ LNUM	[0-9]+
 HNUM	"0x"[0-9a-fA-F]+
 LABEL	[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*
 WHITESPACE [ \n\r\t]+
-TOKENS [\#,.\[\]()+-/\*=%!<>?]
+TOKENS [\#,.\[\]()+-/\*=%!<>?$]
 ANY_CHAR [^]
 NEWLINE ("\r"|"\n"|"\r\n")
 MACRO_CHAR = [\w\d\-_\+\/\*%!@\$]
 CS_TAG_START "<?cs"
 CS_TAG_END "?>"
-COMMANDS ("var"|"evar"|"lvar"|"set"|"name"|"include"|"if"|"elif"|"alt"|"each"|"loop"|"with"|"def"|"call"|"escape"|"/escape")
+COMMANDS ("var"|"evar"|"lvar"|"set"|"name"|"include"|"if"|"elif"|"elseif"|"alt"|"each"|"loop"|"with"|"def"|"call"|"escape"|"/escape")
 
 %%
 
@@ -156,7 +156,7 @@ COMMANDS ("var"|"evar"|"lvar"|"set"|"name"|"include"|"if"|"elif"|"alt"|"each"|"l
 <ST_VARIABLE_PROP>{LNUM} {
     this.popState();//弹掉状态,表示处理完属性
     this.begin("ST_END_VARIABEL");//当前属性是新的variable
-    return "NUMBER"
+    return "PROP_NUMBER"
 }
 
 <ST_VARIABLE_PROP>[^0-9a-zA-Z_\x7f-\xff] {
@@ -166,51 +166,58 @@ COMMANDS ("var"|"evar"|"lvar"|"set"|"name"|"include"|"if"|"elif"|"alt"|"each"|"l
 }
 /*}支持数字属性*/
 
+<ST_CS>{HNUM} {
+    return "NUMBER_HEX"
+}
+
 /*{数字分析*/
 <ST_CS>{DNUM}|{LNUM} {
     print(yytext);
     return "NUMBER";
 }
 
-/*
-<ST_CS>{LNUM} {
-    return "NUMBER";
-}
-*/
-
-/*
-//简单的词法分析是无法完成一元负和减法运算的区分的
-<ST_CS>\-(?:{LNUM}|{DNUM}) {
-    return "NUMBER";
-}
-*/
-
-/*
 //把#号当成运算符，留在语法分析时进一步处理
-<ST_CS>\#\-?(?:{LNUM}|{DNUM}) {
-    yytext = yytext.substring(1);
-    return "NUMBER";
-}
-*/
+//简单的词法分析是无法完成一元负和减法运算的区分的
 
 /*}数字分析*/
 
 <ST_CS>\B['"] {
     var quote = yytext;
     yytext = "";//扔掉引号
-    while(true){
-        var ch = this._input[0];
-        if (ch == "\\"){
-            this.input();//跳过 "\\"，取后面的转义字符
-            yytext += this.input();
-        } else if (ch == quote){
-            this.input();//字符串结束
-            yytext = yytext.substring(0, yytext.length - 1);
-            break;
-        } else if (ch !== undefined) {
-            this.input();
-        } else {
-            break;
+    if (this.enableEscapedString){//原cs引擎不支持\\,\",\'，所以留个开关
+        while(true){
+            var ch = this._input[0];
+            if (ch == "\\"){
+                this.input();
+                yytext = yytext.substring(0, yytext.length - 1);//跳过 "\\"，取后面的转义字符
+                this.input();
+            } else if (ch == quote){
+                this.input();//字符串结束
+                yytext = yytext.substring(0, yytext.length - 1);//吃进来的字符串要丢掉
+                break;
+            } else if (ch !== undefined) {
+                this.input();
+            } else {
+                //到文件末尾，留给语法分析出错
+                break;
+            }
+        }
+    } else {
+        while(true){
+            var ch = this._input[0];
+            /*
+            if (ch == "\\"){
+                this.showPosition();
+                throw new Error("不支持转义字符");
+            } else */if (ch == quote){
+                this.input();//字符串结束
+                yytext = yytext.substring(0, yytext.length - 1);//吃进来的字符串要丢掉
+                break;
+            } else if (ch !== undefined){
+                this.input();//吃进更多的字符
+            } else {
+                break;
+            }
         }
     }
     print(yytext);
@@ -284,12 +291,12 @@ COMMANDS ("var"|"evar"|"lvar"|"set"|"name"|"include"|"if"|"elif"|"alt"|"each"|"l
             if (ch2 == "?"){
                 break;//说明是cs标签开始
             } else if (ch2 !== undefined ){
-                yytext += this.input();
+                this.input();
             } else {
                 break;
             }
         } else if (ch !== undefined){
-            yytext += this.input();
+            this.input();
         } else {
             break;
         }

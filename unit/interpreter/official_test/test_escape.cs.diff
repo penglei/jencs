@@ -1,0 +1,56 @@
+23,25c23,25
+< UrlArg: Secret Password~!@#$%^\0x5Cx26*()+=-_|\0x5C[]{}:\x22\x3B\x27\x3C>,.?
+< BlahJs: quote \x27 backslash \0x5C semicolon \x3B end tag \x3C\x2Fscript>
+< Title:  \x3C\x2Ftitle>\x3Cscript>alert(1)\x3C\x2Fscript>
+---
+> UrlArg: Secret Password~!@#$%^\x26*()+=-_|\x5C[]{}:\x22\x3B\x27\x3C\x3E,.?
+> BlahJs: quote \x27 backslash \x5C semicolon \x3B end tag \x3C\x2Fscript\x3E
+> Title:  \x3C\x2Ftitle\x3E\x3Cscript\x3Ealert(1)\x3C\x2Fscript\x3E
+30,31c30,31
+< UrlArg: Secret%20Password~!%40%23%24%25%5E%26*()%2B%3D-_%7C%5C%5B%5D%7B%7D%3A%22%3B'%3C%3E%2C.%3F
+< BlahJs: quote%20'%20backslash%20%5C%20semicolon%20%3B%20end%20tag%20%3C%2Fscript%3E
+---
+> UrlArg: Secret+Password%7E!%40%23%24%25%5E%26*()%2B%3D-_%7C%5C%5B%5D%7B%7D%3A%22%3B%27%3C%3E%2C.%3F
+> BlahJs: quote+%27+backslash+%5C+semicolon+%3B+end+tag+%3C%2Fscript%3E
+38,40c38,40
+< url  -> UrlArg: Secret%20Password~!%40%23%24%25%5E%26*()%2B%3D-_%7C%5C%5B%5D%7B%7D%3A%22%3B&#39;%3C%3E%2C.%3F
+< js   -> BlahJs: quote \x27 backslash \0x5C semicolon \x3B end tag \x3C\x2Fscript&gt;
+< html -> Title:  &amp;lt;/title&amp;gt;&amp;lt;script&amp;gt;alert(1)&amp;lt;/script&amp;gt;
+---
+> url  -> UrlArg: Secret+Password%7E!%40%23%24%25%5E%26*()%2B%3D-_%7C%5C%5B%5D%7B%7D%3A%22%3B%27%3C%3E%2C.%3F
+> js   -> BlahJs: quote \x27 backslash \x5C semicolon \x3B end tag \x3C\x2Fscript\x3E
+> html -> Title:  &lt;/title&gt;&lt;script&gt;alert(1)&lt;/script&gt;
+50,51c50,51
+< url:      %3C%2Ftitle%3E%3Cscript%3Ealert(1)%3C%2Fscript%3Equote%20'%20backslash%20%5C%20semicolon%20%3B%20end%20tag%20%3C%2Fscript%3E
+< js:       \x3C\x2Ftitle>\x3Cscript>alert(1)\x3C\x2Fscript>quote \x27 backslash \0x5C semicolon \x3B end tag \x3C\x2Fscript>
+---
+> url:      %3C%2Ftitle%3E%3Cscript%3Ealert(1)%3C%2Fscript%3Equote+%27+backslash+%5C+semicolon+%3B+end+tag+%3C%2Fscript%3E
+> js:       \x3C\x2Ftitle\x3E\x3Cscript\x3Ealert(1)\x3C\x2Fscript\x3Equote \x27 backslash \x5C semicolon \x3B end tag \x3C\x2Fscript\x3E
+59,61c59,61
+< none:     &lt;/title&gt;&lt;script&gt;alert(1)&lt;/script&gt;quote &#39; backslash \ semicolon ; end tag &lt;/script&gt;
+< url:      %3C%2Ftitle%3E%3Cscript%3Ealert(1)%3C%2Fscript%3Equote%20'%20backslash%20%5C%20semicolon%20%3B%20end%20tag%20%3C%2Fscript%3E
+< js:       \x3C\x2Ftitle>\x3Cscript>alert(1)\x3C\x2Fscript>quote \x27 backslash \0x5C semicolon \x3B end tag \x3C\x2Fscript>
+---
+> none:     </title><script>alert(1)</script>quote ' backslash \ semicolon ; end tag </script>
+> url:      %3C%2Ftitle%3E%3Cscript%3Ealert(1)%3C%2Fscript%3Equote+%27+backslash+%5C+semicolon+%3B+end+tag+%3C%2Fscript%3E
+> js:       \x3C\x2Ftitle\x3E\x3Cscript\x3Ealert(1)\x3C\x2Fscript\x3Equote \x27 backslash \x5C semicolon \x3B end tag \x3C\x2Fscript\x3E
+69,72c69,72
+< not used: \x3C\x2Ftitle>\x3Cscript>alert(1)\x3C\x2Fscript>quote \x27 backslash \0x5C semicolon \x3B end tag \x3C\x2Fscript>
+< none:     \x3C\x2Ftitle>\x3Cscript>alert(1)\x3C\x2Fscript>quote \x27 backslash \0x5C semicolon \x3B end tag \x3C\x2Fscript>
+< url:      %3C%2Ftitle%3E%3Cscript%3Ealert(1)%3C%2Fscript%3Equote%20'%20backslash%20%5C%20semicolon%20%3B%20end%20tag%20%3C%2Fscript%3E
+< js:       \x3C\x2Ftitle>\x3Cscript>alert(1)\x3C\x2Fscript>quote \x27 backslash \0x5C semicolon \x3B end tag \x3C\x2Fscript>
+---
+> not used: \x3C\x2Ftitle\x3E\x3Cscript\x3Ealert(1)\x3C\x2Fscript\x3Equote \x27 backslash \x5C semicolon \x3B end tag \x3C\x2Fscript\x3E
+> none:     </title><script>alert(1)</script>quote ' backslash \ semicolon ; end tag </script>
+> url:      %3C%2Ftitle%3E%3Cscript%3Ealert(1)%3C%2Fscript%3Equote+%27+backslash+%5C+semicolon+%3B+end+tag+%3C%2Fscript%3E
+> js:       \x3C\x2Ftitle\x3E\x3Cscript\x3Ealert(1)\x3C\x2Fscript\x3Equote \x27 backslash \x5C semicolon \x3B end tag \x3C\x2Fscript\x3E
+80,83c80,83
+< not used: %3C%2Ftitle%3E%3Cscript%3Ealert(1)%3C%2Fscript%3Equote%20'%20backslash%20%5C%20semicolon%20%3B%20end%20tag%20%3C%2Fscript%3E
+< none:     %3C%2Ftitle%3E%3Cscript%3Ealert(1)%3C%2Fscript%3Equote%20'%20backslash%20%5C%20semicolon%20%3B%20end%20tag%20%3C%2Fscript%3E
+< url:      %3C%2Ftitle%3E%3Cscript%3Ealert(1)%3C%2Fscript%3Equote%20'%20backslash%20%5C%20semicolon%20%3B%20end%20tag%20%3C%2Fscript%3E
+< js:       \x3C\x2Ftitle>\x3Cscript>alert(1)\x3C\x2Fscript>quote \x27 backslash \0x5C semicolon \x3B end tag \x3C\x2Fscript>
+---
+> not used: %3C%2Ftitle%3E%3Cscript%3Ealert(1)%3C%2Fscript%3Equote+%27+backslash+%5C+semicolon+%3B+end+tag+%3C%2Fscript%3E
+> none:     </title><script>alert(1)</script>quote ' backslash \ semicolon ; end tag </script>
+> url:      %3C%2Ftitle%3E%3Cscript%3Ealert(1)%3C%2Fscript%3Equote+%27+backslash+%5C+semicolon+%3B+end+tag+%3C%2Fscript%3E
+> js:       \x3C\x2Ftitle\x3E\x3Cscript\x3Ealert(1)\x3C\x2Fscript\x3Equote \x27 backslash \x5C semicolon \x3B end tag \x3C\x2Fscript\x3E

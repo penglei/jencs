@@ -132,7 +132,7 @@ var AST_CommaExpr = exports.AST_CommaExpr = declare("CommaExpr", function(list){
 
 var AST_Symbol = exports.AST_Symbol = declare("Symbol", function(name) {
     this.name = name;
-}, AST_Expression);
+}, AST_Node);
 
 var AST_VariableAccess = exports.AST_VariableAccess = declare("VariabelAccess", {
     initialize: function(obj) {
@@ -143,7 +143,7 @@ var AST_VariableAccess = exports.AST_VariableAccess = declare("VariabelAccess", 
             this.target.walk(visitor);
         });
     }
-}, AST_Expression);
+}, AST_Node);
 
 var AST_Prop = exports.AST_Prop = declare("Prop", {
     initialize: function(right) {
@@ -155,19 +155,20 @@ var AST_Prop = exports.AST_Prop = declare("Prop", {
             this.right.walk(visitor);
         });
     }
-}, AST_Expression);
+}, AST_Node);
 
 var AST_SubProp = exports.AST_SubProp = declare("SubProp", null, AST_Prop);
 var AST_DotProp = exports.AST_DotProp = declare("DotProp", null, AST_Prop);
 
-var AST_Constant = declare("Constant", function($) {
+var AST_Constant = exports.AST_Constant = declare("Constant", function($) {
     this.literalValue = $;
-}, AST_Expression);
+}, AST_Node);
 
 var AST_Content = exports.AST_Content = declare("Content", null, AST_Constant);
 
 var AST_String = exports.AST_String = declare("String", null, AST_Constant);
 var AST_Number = exports.AST_Number = declare("Number", null, AST_Constant);
+var AST_HexNumber = exports.AST_HexNumber = declare("HexNumber", null, AST_Number);
 
 var AST_Invoke = declare('Invoke', {
     initialize: function InvokeInitialize(name, args /*argsTree*/ ) {

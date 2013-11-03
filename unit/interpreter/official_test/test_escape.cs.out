@@ -1,0 +1,86 @@
+Parsing test_escape.cs
+escape: not used
+UrlArg: Secret Password~!@#$%^&*()+=-_|\[]{}:";'<>,.?
+BlahJs: quote ' backslash \ semicolon ; end tag </script>
+Title:  </title><script>alert(1)</script>
+
+
+escape: none
+UrlArg: Secret Password~!@#$%^&*()+=-_|\[]{}:";'<>,.?
+BlahJs: quote ' backslash \ semicolon ; end tag </script>
+Title:  </title><script>alert(1)</script>
+
+
+
+escape: html
+UrlArg: Secret Password~!@#$%^&amp;*()+=-_|\[]{}:&quot;;&#39;&lt;&gt;,.?
+BlahJs: quote &#39; backslash \ semicolon ; end tag &lt;/script&gt;
+Title:  &lt;/title&gt;&lt;script&gt;alert(1)&lt;/script&gt;
+
+
+
+escape: js
+UrlArg: Secret Password~!@#$%^\0x5Cx26*()+=-_|\0x5C[]{}:\x22\x3B\x27\x3C>,.?
+BlahJs: quote \x27 backslash \0x5C semicolon \x3B end tag \x3C\x2Fscript>
+Title:  \x3C\x2Ftitle>\x3Cscript>alert(1)\x3C\x2Fscript>
+
+
+
+escape: url
+UrlArg: Secret%20Password~!%40%23%24%25%5E%26*()%2B%3D-_%7C%5C%5B%5D%7B%7D%3A%22%3B'%3C%3E%2C.%3F
+BlahJs: quote%20'%20backslash%20%5C%20semicolon%20%3B%20end%20tag%20%3C%2Fscript%3E
+Title:  %3C%2Ftitle%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E
+
+
+
+Nested escaping: html
+The internal calls should take precedence
+url  -> UrlArg: Secret%20Password~!%40%23%24%25%5E%26*()%2B%3D-_%7C%5C%5B%5D%7B%7D%3A%22%3B&#39;%3C%3E%2C.%3F
+js   -> BlahJs: quote \x27 backslash \0x5C semicolon \x3B end tag \x3C\x2Fscript&gt;
+html -> Title:  &amp;lt;/title&amp;gt;&amp;lt;script&amp;gt;alert(1)&amp;lt;/script&amp;gt;
+
+
+Defining the macro echo_all inside of a "html" escape.
+
+
+Calling echo_all() macro:
+
+not used: </title><script>alert(1)</script>quote ' backslash \ semicolon ; end tag </script>
+none:     </title><script>alert(1)</script>quote ' backslash \ semicolon ; end tag </script>
+url:      %3C%2Ftitle%3E%3Cscript%3Ealert(1)%3C%2Fscript%3Equote%20'%20backslash%20%5C%20semicolon%20%3B%20end%20tag%20%3C%2Fscript%3E
+js:       \x3C\x2Ftitle>\x3Cscript>alert(1)\x3C\x2Fscript>quote \x27 backslash \0x5C semicolon \x3B end tag \x3C\x2Fscript>
+html:     &lt;/title&gt;&lt;script&gt;alert(1)&lt;/script&gt;quote &#39; backslash \ semicolon ; end tag &lt;/script&gt;
+
+
+
+Calling echo_all() macro from within "html":
+
+not used: &lt;/title&gt;&lt;script&gt;alert(1)&lt;/script&gt;quote &#39; backslash \ semicolon ; end tag &lt;/script&gt;
+none:     &lt;/title&gt;&lt;script&gt;alert(1)&lt;/script&gt;quote &#39; backslash \ semicolon ; end tag &lt;/script&gt;
+url:      %3C%2Ftitle%3E%3Cscript%3Ealert(1)%3C%2Fscript%3Equote%20'%20backslash%20%5C%20semicolon%20%3B%20end%20tag%20%3C%2Fscript%3E
+js:       \x3C\x2Ftitle>\x3Cscript>alert(1)\x3C\x2Fscript>quote \x27 backslash \0x5C semicolon \x3B end tag \x3C\x2Fscript>
+html:     &lt;/title&gt;&lt;script&gt;alert(1)&lt;/script&gt;quote &#39; backslash \ semicolon ; end tag &lt;/script&gt;
+
+
+
+
+Calling echo_all() macro from within "js":
+
+not used: \x3C\x2Ftitle>\x3Cscript>alert(1)\x3C\x2Fscript>quote \x27 backslash \0x5C semicolon \x3B end tag \x3C\x2Fscript>
+none:     \x3C\x2Ftitle>\x3Cscript>alert(1)\x3C\x2Fscript>quote \x27 backslash \0x5C semicolon \x3B end tag \x3C\x2Fscript>
+url:      %3C%2Ftitle%3E%3Cscript%3Ealert(1)%3C%2Fscript%3Equote%20'%20backslash%20%5C%20semicolon%20%3B%20end%20tag%20%3C%2Fscript%3E
+js:       \x3C\x2Ftitle>\x3Cscript>alert(1)\x3C\x2Fscript>quote \x27 backslash \0x5C semicolon \x3B end tag \x3C\x2Fscript>
+html:     &lt;/title&gt;&lt;script&gt;alert(1)&lt;/script&gt;quote &#39; backslash \ semicolon ; end tag &lt;/script&gt;
+
+
+
+
+Calling echo_all() macro from within "url":
+
+not used: %3C%2Ftitle%3E%3Cscript%3Ealert(1)%3C%2Fscript%3Equote%20'%20backslash%20%5C%20semicolon%20%3B%20end%20tag%20%3C%2Fscript%3E
+none:     %3C%2Ftitle%3E%3Cscript%3Ealert(1)%3C%2Fscript%3Equote%20'%20backslash%20%5C%20semicolon%20%3B%20end%20tag%20%3C%2Fscript%3E
+url:      %3C%2Ftitle%3E%3Cscript%3Ealert(1)%3C%2Fscript%3Equote%20'%20backslash%20%5C%20semicolon%20%3B%20end%20tag%20%3C%2Fscript%3E
+js:       \x3C\x2Ftitle>\x3Cscript>alert(1)\x3C\x2Fscript>quote \x27 backslash \0x5C semicolon \x3B end tag \x3C\x2Fscript>
+html:     &lt;/title&gt;&lt;script&gt;alert(1)&lt;/script&gt;quote &#39; backslash \ semicolon ; end tag &lt;/script&gt;
+
+
