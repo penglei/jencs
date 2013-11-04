@@ -1,4 +1,0 @@
-<?cs if:foo == kbp?>
-	<?cs var: foo?>
-    if is true
-<?cs /if?>
