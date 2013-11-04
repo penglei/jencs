@@ -152,7 +152,8 @@ function bitmap_value_ex(bitmapEx, pos, len){
     pos = getNumberCSValue(pos);
     len = getNumberCSValue(len);
 
-    bitmapEx.value = parseInt(bitmapCode.substr(bitmapCode.length - pos.value, len.value), 2);
+    var v = parseInt(bitmapCode.substr(bitmapCode.length - pos.value, len.value), 2);
+    bitmapEx.value = isNaN(v) ? 0 : v;
     bitmapEx.type = CSValue.Number;
     return bitmapEx;
 }

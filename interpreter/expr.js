@@ -58,12 +58,9 @@ ast.AST_VariableAccess.proto("calc", function(opts){//opts可以用来确定究�
     var resultVal = this.getSymbolValueNode();
     if (resultVal){
         if (resultVal instanceof CSValue){
-            return resultVal;
+            return resultVal.type == CSValue.String ? resultVal : new CSValue(CSValue.String, resultVal.getString());
         } else if (resultVal instanceof HNode){
             var hdfValue = resultVal.getValue();
-            //CSValue赋值给HNode的时候，是直接HNode.value = CSValue.value
-            //这时候有可能是Number，但是，通过hdfAccess得到的都是String!这与"+"操作的实现有紧密联系
-            //因为 "+", "==" 需要跟据左右操作数是否是数字进行不同的处理。
             return new CSValue(CSValue.String, hdfValue);
         } else {
             throw new Error("symbol value is unrecognized");

@@ -348,7 +348,7 @@ exports.dumpHdf = function dumpHdf(hdf){
 
         if (node.getValue() !== undefined){
             print(deep.join("."));
-            print(" =");
+            print(" = ");
             print(node.getValue());
             print("\n");
         }

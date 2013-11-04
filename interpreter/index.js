@@ -53,8 +53,6 @@ Engine.prototype._lexInclude = function(includeName) {
 
 Engine.prototype._renderListener = function(snippets) {
     this._result += snippets;
-
-    //console.log(snippets);
 };
 
 Engine.prototype.initEntrySource = function(csString, name){

@@ -39,7 +39,7 @@ def_execute(ast.AST_With, function(context) {
     //expression只能是VariableAccess，这在语法分析阶段已经完成了
     var resultVal = this.expression.getSymbolValueNode();
     //如果表达式对就的节点不存在。(或者没有值，这与标准和cs解析引擎行为会有差异）
-    if (resultVal){
+    if (resultVal && this.expression instanceof ast.AST_VariableAccess){
         var scope = context.enterScope(this); //必须先进入scope，才可以使用symbolAlias
 
         scope.symbolAlias[this.alias.name] = resultVal;
