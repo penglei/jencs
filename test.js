@@ -59,9 +59,7 @@ TestCSEngine.initEntrySource(mainCsSource);
 var hdfData = CSInterpreter.parseHDFString(dataSource);
 var result = TestCSEngine.execute(hdfData);
 
-//console.log(result);
 process.stdout.write(result);
 
-var a = HDF.dumpHdf(hdfData);
-//console.log(a);
-//process.stdout.write(a);
+var hdfStrResult = HDF.dumpHdf(hdfData);
+//process.stdout.write(hdfStrResult);
