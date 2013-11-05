@@ -37,7 +37,7 @@ ast.AST_BinaryExpr.proto("/", function BinaryExprDiv(leftValue, rightValue) {
         //TODO 直接报错比较好
         return new CSValue(CSValue.Number, 0);
     } else {
-        return new CSValue(CSValue.Number, leftValue.getNumber() / rightValue.getNumber());
+        return new CSValue(CSValue.Number, parseInt(leftValue.getNumber() / rightValue.getNumber()));
     }
 });
 

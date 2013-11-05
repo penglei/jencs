@@ -1,0 +1,798 @@
+hdf {
+	loadpaths {
+		0 = /usr/local/qzone_v3.0//feeds/cgi/htdocs/cs//module/
+	}
+}
+qz_metadata {
+	meta {
+		appid = 202
+		typeid = 2
+		feedflag = 2152009736
+		opuin = 1520077302
+		abstime = 1382584316
+		feedtime = 10月24日 11:11
+		opuin_nick = [script]a.c.d=2&amp;[/sc
+		opuin_emj = 
+		userhome = http://user.qzone.qq.com/1520077302
+		protrait = http://qlogo3.store.qq.com/qzone/1520077302/1520077302/50
+		bitmap = d8519d0002008001
+		yybitmap = 0000000000000002
+		feedkey = gbdeifcidb
+		otherflag = 0_0_0_0_0_0
+		loginuin = 1520077302
+		feedstype = 0
+		scope = 0
+		username = [script]a.c.d=2&amp;[/sc
+		userid = 1520077302
+	}
+	version = 1
+	feedtype = 100
+	relycount = 0
+	vt2count = 1
+	attachcount = 0
+	orgdata {
+		uin = 1125000303
+		nickname = 测试号303
+		subtype = 0
+		action = 0
+		mkey = V11txu0C3Omp86
+		ctime = 1382584316
+		strtime = 10月24日11:11
+		platformid = 50
+		platformsubid = 0
+		itemcount = 109
+		itemdata {
+			0 {
+				itemid = 
+				name = 
+				type = 0
+				desc {
+					0 {
+						type = 0
+						content = 
+					}
+				}
+				picinfo {
+					0 {
+						url = http://a4.qpic.cn/psb?/V11txu0C3Omp86/h4olH4Um8syQbGkMNz72Iwu8uPKmXofbouFrz4Nzs4E!/a/dLWiBZigJAAA&bo=IAMUAgAAAAABABI!
+						type = 1
+						width = 100
+						height = 66
+					}
+					1 {
+						url = http://a4.qpic.cn/psb?/V11txu0C3Omp86/h4olH4Um8syQbGkMNz72Iwu8uPKmXofbouFrz4Nzs4E!/m/dLWiBZigJAAA&bo=IAMUAgAAAAABABI!
+						type = 2
+						width = 200
+						height = 133
+					}
+					2 {
+						url = http://a4.qpic.cn/psb?/V11txu0C3Omp86/h4olH4Um8syQbGkMNz72Iwu8uPKmXofbouFrz4Nzs4E!/c/dLWiBZigJAAA&bo=IAMUAgAAAAABABI!
+						type = 3
+						width = 512
+						height = 340
+					}
+					3 {
+						url = http://a4.qpic.cn/psb?/V11txu0C3Omp86/h4olH4Um8syQbGkMNz72Iwu8uPKmXofbouFrz4Nzs4E!/b/dLWiBZigJAAA&bo=IAMUAgAAAAABABI!
+						type = 3
+						width = 800
+						height = 532
+					}
+				}
+				pictype = 1
+				picfrom = 0
+				width = 0
+				height = 0
+				albumname = test11
+				albumid = 
+				vidiourl = 
+				audiourl = 
+				duration = 
+				ctime = 0
+				strtime = 1月1日08:00
+				authoruin = 
+				authorname = 
+			}
+			1 {
+				itemid = 
+				name = 
+				type = 0
+				desc {
+					0 {
+						type = 0
+						content = 
+					}
+				}
+				picinfo {
+					0 {
+						url = http://a1.qpic.cn/psb?/V11txu0C3Omp86/d.LCRYuiahyn*yveyr7dYFJJfN0lBIOR8JJv0.VYync!/a/dGITmJioIgAA&bo=*gEAAwAAAAABANs!
+						type = 1
+						width = 66
+						height = 100
+					}
+					1 {
+						url = http://a1.qpic.cn/psb?/V11txu0C3Omp86/d.LCRYuiahyn*yveyr7dYFJJfN0lBIOR8JJv0.VYync!/m/dGITmJioIgAA&bo=*gEAAwAAAAABANs!
+						type = 2
+						width = 200
+						height = 301
+					}
+					2 {
+						url = http://a1.qpic.cn/psb?/V11txu0C3Omp86/d.LCRYuiahyn*yveyr7dYFJJfN0lBIOR8JJv0.VYync!/c/dGITmJioIgAA&bo=*gEAAwAAAAABANs!
+						type = 3
+						width = 510
+						height = 768
+					}
+					3 {
+						url = http://a1.qpic.cn/psb?/V11txu0C3Omp86/d.LCRYuiahyn*yveyr7dYFJJfN0lBIOR8JJv0.VYync!/b/dGITmJioIgAA&bo=*gEAAwAAAAABANs!
+						type = 3
+						width = 510
+						height = 768
+					}
+				}
+				pictype = 1
+				picfrom = 0
+				width = 0
+				height = 0
+				albumname = test11
+				albumid = 
+				vidiourl = 
+				audiourl = 
+				duration = 
+				ctime = 0
+				strtime = 1月1日08:00
+				authoruin = 
+				authorname = 
+			}
+			2 {
+				itemid = 
+				name = 
+				type = 0
+				desc {
+					0 {
+						type = 0
+						content = 
+					}
+				}
+				picinfo {
+					0 {
+						url = http://a2.qpic.cn/psb?/V11txu0C3Omp86/AMCElgk8fDsYFUpG3l2jcTF5CcGVNvMSUraBTNeDDpA!/a/dNxmPpm8CQAA&bo=qALFAQAAAAABAEk!
+						type = 1
+						width = 100
+						height = 66
+					}
+					1 {
+						url = http://a2.qpic.cn/psb?/V11txu0C3Omp86/AMCElgk8fDsYFUpG3l2jcTF5CcGVNvMSUraBTNeDDpA!/m/dNxmPpm8CQAA&bo=qALFAQAAAAABAEk!
+						type = 2
+						width = 200
+						height = 133
+					}
+					2 {
+						url = http://a2.qpic.cn/psb?/V11txu0C3Omp86/AMCElgk8fDsYFUpG3l2jcTF5CcGVNvMSUraBTNeDDpA!/c/dNxmPpm8CQAA&bo=qALFAQAAAAABAEk!
+						type = 3
+						width = 512
+						height = 341
+					}
+					3 {
+						url = http://a2.qpic.cn/psb?/V11txu0C3Omp86/AMCElgk8fDsYFUpG3l2jcTF5CcGVNvMSUraBTNeDDpA!/b/dNxmPpm8CQAA&bo=qALFAQAAAAABAEk!
+						type = 3
+						width = 680
+						height = 453
+					}
+				}
+				pictype = 1
+				picfrom = 0
+				width = 0
+				height = 0
+				albumname = test11
+				albumid = 
+				vidiourl = 
+				audiourl = 
+				duration = 
+				ctime = 0
+				strtime = 1月1日08:00
+				authoruin = 
+				authorname = 
+			}
+			3 {
+				itemid = 
+				name = 
+				type = 0
+				desc {
+					0 {
+						type = 0
+						content = 
+					}
+				}
+				picinfo {
+					0 {
+						url = http://a4.qpic.cn/psb?/V11txu0C3Omp86/00Tkwjm3cZowv6.5TQnmg3BqvjbNYT2VU1XqtsKty7Q!/a/dNCwCJiqIgAA&bo=WAIgAwAAAAABAF4!
+						type = 1
+						width = 75
+						height = 100
+					}
+					1 {
+						url = http://a4.qpic.cn/psb?/V11txu0C3Omp86/00Tkwjm3cZowv6.5TQnmg3BqvjbNYT2VU1XqtsKty7Q!/m/dNCwCJiqIgAA&bo=WAIgAwAAAAABAF4!
+						type = 2
+						width = 200
+						height = 266
+					}
+					2 {
+						url = http://a4.qpic.cn/psb?/V11txu0C3Omp86/00Tkwjm3cZowv6.5TQnmg3BqvjbNYT2VU1XqtsKty7Q!/c/dNCwCJiqIgAA&bo=WAIgAwAAAAABAF4!
+						type = 3
+						width = 512
+						height = 682
+					}
+					3 {
+						url = http://a4.qpic.cn/psb?/V11txu0C3Omp86/00Tkwjm3cZowv6.5TQnmg3BqvjbNYT2VU1XqtsKty7Q!/b/dNCwCJiqIgAA&bo=WAIgAwAAAAABAF4!
+						type = 3
+						width = 600
+						height = 800
+					}
+				}
+				pictype = 1
+				picfrom = 0
+				width = 0
+				height = 0
+				albumname = test11
+				albumid = 
+				vidiourl = 
+				audiourl = 
+				duration = 
+				ctime = 0
+				strtime = 1月1日08:00
+				authoruin = 
+				authorname = 
+			}
+			4 {
+				itemid = 
+				name = 
+				type = 0
+				desc {
+					0 {
+						type = 0
+						content = 
+					}
+				}
+				picinfo {
+					0 {
+						url = http://a1.qpic.cn/psb?/V11txu0C3Omp86/PMB3qfAn4jzYFTVEj20RLV5VJsr03wXKXvtYylKPto4!/a/dFhJpJgDIQAA&bo=IAMTAgAAAAABABU!
+						type = 1
+						width = 100
+						height = 66
+					}
+					1 {
+						url = http://a1.qpic.cn/psb?/V11txu0C3Omp86/PMB3qfAn4jzYFTVEj20RLV5VJsr03wXKXvtYylKPto4!/m/dFhJpJgDIQAA&bo=IAMTAgAAAAABABU!
+						type = 2
+						width = 200
+						height = 132
+					}
+					2 {
+						url = http://a1.qpic.cn/psb?/V11txu0C3Omp86/PMB3qfAn4jzYFTVEj20RLV5VJsr03wXKXvtYylKPto4!/c/dFhJpJgDIQAA&bo=IAMTAgAAAAABABU!
+						type = 3
+						width = 512
+						height = 339
+					}
+					3 {
+						url = http://a1.qpic.cn/psb?/V11txu0C3Omp86/PMB3qfAn4jzYFTVEj20RLV5VJsr03wXKXvtYylKPto4!/b/dFhJpJgDIQAA&bo=IAMTAgAAAAABABU!
+						type = 3
+						width = 800
+						height = 531
+					}
+				}
+				pictype = 1
+				picfrom = 0
+				width = 0
+				height = 0
+				albumname = test11
+				albumid = 
+				vidiourl = 
+				audiourl = 
+				duration = 
+				ctime = 0
+				strtime = 1月1日08:00
+				authoruin = 
+				authorname = 
+			}
+			5 {
+				itemid = 
+				name = 
+				type = 0
+				desc {
+					0 {
+						type = 0
+						content = 
+					}
+				}
+				picinfo {
+					0 {
+						url = http://a1.qpic.cn/psb?/V11txu0C3Omp86/NO74ZRHR71Jv9JBmzgWB42.oiLdZytplDt1sCqsKWZ4!/a/dDFEoZigIwAA&bo=9AGyAgAAAAABAGI!
+						type = 1
+						width = 72
+						height = 100
+					}
+					1 {
+						url = http://a1.qpic.cn/psb?/V11txu0C3Omp86/NO74ZRHR71Jv9JBmzgWB42.oiLdZytplDt1sCqsKWZ4!/m/dDFEoZigIwAA&bo=9AGyAgAAAAABAGI!
+						type = 2
+						width = 200
+						height = 276
+					}
+					2 {
+						url = http://a1.qpic.cn/psb?/V11txu0C3Omp86/NO74ZRHR71Jv9JBmzgWB42.oiLdZytplDt1sCqsKWZ4!/c/dDFEoZigIwAA&bo=9AGyAgAAAAABAGI!
+						type = 3
+						width = 500
+						height = 690
+					}
+					3 {
+						url = http://a1.qpic.cn/psb?/V11txu0C3Omp86/NO74ZRHR71Jv9JBmzgWB42.oiLdZytplDt1sCqsKWZ4!/b/dDFEoZigIwAA&bo=9AGyAgAAAAABAGI!
+						type = 3
+						width = 500
+						height = 690
+					}
+				}
+				pictype = 1
+				picfrom = 0
+				width = 0
+				height = 0
+				albumname = test11
+				albumid = 
+				vidiourl = 
+				audiourl = 
+				duration = 
+				ctime = 0
+				strtime = 1月1日08:00
+				authoruin = 
+				authorname = 
+			}
+			6 {
+				itemid = 
+				name = 
+				type = 0
+				desc {
+					0 {
+						type = 0
+						content = 
+					}
+				}
+				picinfo {
+					0 {
+						url = http://a2.qpic.cn/psb?/V11txu0C3Omp86/YOQlgehOSjwBqDbnOUCSdfMbcOR.i9VJgZGzgsYKj3g!/a/dK59Ppn5BwAA&bo=kAEVAgAAAAABAKE!
+						type = 1
+						width = 75
+						height = 100
+					}
+					1 {
+						url = http://a2.qpic.cn/psb?/V11txu0C3Omp86/YOQlgehOSjwBqDbnOUCSdfMbcOR.i9VJgZGzgsYKj3g!/m/dK59Ppn5BwAA&bo=kAEVAgAAAAABAKE!
+						type = 2
+						width = 200
+						height = 266
+					}
+					2 {
+						url = http://a2.qpic.cn/psb?/V11txu0C3Omp86/YOQlgehOSjwBqDbnOUCSdfMbcOR.i9VJgZGzgsYKj3g!/c/dK59Ppn5BwAA&bo=kAEVAgAAAAABAKE!
+						type = 3
+						width = 400
+						height = 533
+					}
+					3 {
+						url = http://a2.qpic.cn/psb?/V11txu0C3Omp86/YOQlgehOSjwBqDbnOUCSdfMbcOR.i9VJgZGzgsYKj3g!/b/dK59Ppn5BwAA&bo=kAEVAgAAAAABAKE!
+						type = 3
+						width = 400
+						height = 533
+					}
+				}
+				pictype = 1
+				picfrom = 0
+				width = 0
+				height = 0
+				albumname = test11
+				albumid = 
+				vidiourl = 
+				audiourl = 
+				duration = 
+				ctime = 0
+				strtime = 1月1日08:00
+				authoruin = 
+				authorname = 
+			}
+			7 {
+				itemid = 
+				name = 
+				type = 0
+				desc {
+					0 {
+						type = 0
+						content = 
+					}
+				}
+				picinfo {
+					0 {
+						url = http://a4.qpic.cn/psb?/V11txu0C3Omp86/BIMrmMHqjf2poaSLrsPaw2cvy.Z3HqI*CBWcEDUL4t0!/a/dOyiBZgGIwAA&bo=uAEuEwAAAAABAKM!
+						type = 1
+						width = 8
+						height = 100
+					}
+					1 {
+						url = http://a4.qpic.cn/psb?/V11txu0C3Omp86/BIMrmMHqjf2poaSLrsPaw2cvy.Z3HqI*CBWcEDUL4t0!/m/dOyiBZgGIwAA&bo=uAEuEwAAAAABAKM!
+						type = 2
+						width = 200
+						height = 2231
+					}
+					2 {
+						url = http://a4.qpic.cn/psb?/V11txu0C3Omp86/BIMrmMHqjf2poaSLrsPaw2cvy.Z3HqI*CBWcEDUL4t0!/c/dOyiBZgGIwAA&bo=uAEuEwAAAAABAKM!
+						type = 3
+						width = 440
+						height = 4910
+					}
+					3 {
+						url = http://a4.qpic.cn/psb?/V11txu0C3Omp86/BIMrmMHqjf2poaSLrsPaw2cvy.Z3HqI*CBWcEDUL4t0!/b/dOyiBZgGIwAA&bo=uAEuEwAAAAABAKM!
+						type = 3
+						width = 440
+						height = 4910
+					}
+				}
+				pictype = 1
+				picfrom = 0
+				width = 0
+				height = 0
+				albumname = test11
+				albumid = 
+				vidiourl = 
+				audiourl = 
+				duration = 
+				ctime = 0
+				strtime = 1月1日08:00
+				authoruin = 
+				authorname = 
+			}
+			8 {
+				itemid = 
+				name = 
+				type = 0
+				desc {
+					0 {
+						type = 0
+						content = 
+					}
+				}
+				picinfo {
+					0 {
+						url = http://a4.qpic.cn/psb?/V11txu0C3Omp86/3cgUF5l5WKhqvvv.WIRwxRbd1dnravlUaMqmaJjqt28!/a/dLWiBZigJAAA&bo=IAMUAgAAAAABABI!
+						type = 1
+						width = 100
+						height = 66
+					}
+					1 {
+						url = http://a4.qpic.cn/psb?/V11txu0C3Omp86/3cgUF5l5WKhqvvv.WIRwxRbd1dnravlUaMqmaJjqt28!/m/dLWiBZigJAAA&bo=IAMUAgAAAAABABI!
+						type = 2
+						width = 200
+						height = 133
+					}
+					2 {
+						url = http://a4.qpic.cn/psb?/V11txu0C3Omp86/3cgUF5l5WKhqvvv.WIRwxRbd1dnravlUaMqmaJjqt28!/c/dLWiBZigJAAA&bo=IAMUAgAAAAABABI!
+						type = 3
+						width = 512
+						height = 340
+					}
+					3 {
+						url = http://a4.qpic.cn/psb?/V11txu0C3Omp86/3cgUF5l5WKhqvvv.WIRwxRbd1dnravlUaMqmaJjqt28!/b/dLWiBZigJAAA&bo=IAMUAgAAAAABABI!
+						type = 3
+						width = 800
+						height = 532
+					}
+				}
+				pictype = 1
+				picfrom = 0
+				width = 0
+				height = 0
+				albumname = test11
+				albumid = 
+				vidiourl = 
+				audiourl = 
+				duration = 
+				ctime = 0
+				strtime = 1月1日08:00
+				authoruin = 
+				authorname = 
+			}
+		}
+		accessright = 0
+		title {
+			0 {
+				type = 0
+				content = test11
+				uin = 
+				name = 
+				who = 0
+				url = 
+			}
+		}
+		desc {
+			0 {
+				type = 0
+				content = 好图，转 
+				uin = 
+				name = 
+				who = 0
+				url = 
+			}
+		}
+		content {
+			0 {
+				type = 0
+				content = 
+			}
+		}
+		likekey = http://user.qzone.qq.com/1125000303/photo/V11txu0C3Omp86
+		mediatype = pic
+		srcurl = http://user.qzone.qq.com/1125000303/photo/V11txu0C3Omp86
+		source_name = 
+		source_url = 
+		extendinfo {
+			ReShareType = 0
+			albumid = V11txu0C3Omp86
+			game_appid = 
+			game_tag = 
+			iframe = 
+			mp4 = 
+			oriauthor = 
+			oriugcid = 
+			purviewbit = 0
+			share_subtype = 2
+			src_wap_url = 
+			zf_pl_flag = 1
+		}
+	}
+	relybody {
+		0 {
+			uin = 1520077302
+			nickname = [script]a.c.d=2&[/sc
+			action = 4
+			mkey = 1382584316
+			ctime = 1382584316
+			strtime = 10月24日11:11
+			platformid = 50
+			platformsubid = 0
+			msg {
+				0 {
+					type = 0
+					content = 好图，转
+					uin = 
+					name = 
+					who = 0
+					url = 
+				}
+			}
+			likekey = 001520077302001382584316
+		}
+	}
+	opinfo {
+		action = 1
+		opuin = 1520077302
+		nickname = [script]a.c.d=2&[/sc
+		platformid = 50
+		platformsubid = 0
+		t2body {
+			uin = 1520077302
+			nickname = [script]a.c.d=2&[/sc
+			ctime = 1382584358
+			strtime = 10月24日11:12
+			msg {
+				0 {
+					type = 1
+					content = 
+					uin = 78133089
+					name = soulfree
+					who = 1
+					url = 
+				}
+				1 {
+					type = 0
+					content =  jjjjjjjjjj
+					uin = 
+					name = 
+					who = 0
+					url = 
+				}
+			}
+			platformid = 50
+			platformsubid = 0
+			act = 0
+			seq = 1
+			flag = 0
+			respnum = 0
+			modifyflag = 1
+			sceneid = 0
+			extendinfo {
+				padding = 
+			}
+		}
+	}
+	extendKVinfo {
+		xmlfeeds = 
+	}
+	qz_data {
+		key1 = 001520077302001382584316
+		key1 {
+			ACT {
+				cnt = 0
+			}
+			BD {
+				cnt = 0
+			}
+			CP {
+				cnt = 0
+			}
+			CS {
+				cnt = 0
+			}
+			CSW {
+				cnt = 0
+			}
+			LIKE {
+				cnt = 1
+			}
+			PRD {
+				cnt = 13
+			}
+			PVS {
+				cnt = 0
+			}
+			RZC {
+				cnt = 0
+			}
+			RZRD {
+				cnt = 0
+			}
+			SJDP {
+				cnt = 0
+			}
+			SJDQ {
+				cnt = 0
+			}
+			SSWB {
+				cnt = 0
+			}
+			UNLIKE {
+				cnt = 0
+			}
+			VOTE {
+				cnt = 0
+			}
+			WB {
+				cnt = 0
+			}
+			WBZB {
+				cnt = 0
+			}
+			ZF {
+				cnt = 1
+			}
+			ZS {
+				cnt = 0
+			}
+			ZZ {
+				cnt = 0
+			}
+		}
+		key2 = http://user.qzone.qq.com/1125000303/photo/V11txu0C3Omp86
+		key2 {
+			ACT {
+				cnt = 0
+			}
+			BD {
+				cnt = 0
+			}
+			CP {
+				cnt = 6
+			}
+			CS {
+				cnt = 0
+			}
+			CSW {
+				cnt = 0
+			}
+			LIKE {
+				cnt = 1
+			}
+			PRD {
+				cnt = 0
+			}
+			PVS {
+				cnt = 0
+			}
+			RZC {
+				cnt = 0
+			}
+			RZRD {
+				cnt = 0
+			}
+			SJDP {
+				cnt = 0
+			}
+			SJDQ {
+				cnt = 0
+			}
+			SSWB {
+				cnt = 0
+			}
+			UNLIKE {
+				cnt = 0
+			}
+			VOTE {
+				cnt = 0
+			}
+			WB {
+				cnt = 0
+			}
+			WBZB {
+				cnt = 0
+			}
+			ZF {
+				cnt = 4
+			}
+			ZS {
+				cnt = 0
+			}
+			ZZ {
+				cnt = 0
+			}
+		}
+	}
+	remarkPool {
+		u1943589134 = aaa--bbb
+		u1520077302 = [script]a.c.d=2&amp;[/sc
+		u1125000303 = 测试号303
+		u78133089 = soulfree
+	}
+	logoPool30 {
+		u7919429 = http://qlogo2.store.qq.com/qzone/7919429/7919429/30
+		u78133089 = http://qlogo2.store.qq.com/qzone/78133089/78133089/30
+		u1125000303 = http://qlogo4.store.qq.com/qzone/1125000303/1125000303/30?1383274491
+		u1520077302 = http://qlogo3.store.qq.com/qzone/1520077302/1520077302/30
+		u1943589134 = http://qlogo3.store.qq.com/qzone/1943589134/1943589134/30
+		u2397194573 = http://qlogo2.store.qq.com/qzone/2397194573/2397194573/30
+	}
+	xylogoPool30 {
+		u7919429 = http://xy.store.qq.com/campus//30
+		u78133089 = http://xy.store.qq.com/campus//30
+		u1125000303 = http://xy.store.qq.com/campus//30
+		u1520077302 = http://xy.store.qq.com/campus//30
+		u1943589134 = http://xy.store.qq.com/campus//30
+		u2397194573 = http://xy.store.qq.com/campus//30
+	}
+	vt2body {
+		0 {
+			uin = 1520077302
+			nickname = [script]a.c.d=2&[/sc
+			ctime = 1382584358
+			strtime = 10月24日11:12
+			msg {
+				0 {
+					type = 1
+					content = 
+					uin = 78133089
+					name = soulfree
+					who = 1
+					url = 
+				}
+				1 {
+					type = 0
+					content =  jjjjjjjjjj
+					uin = 
+					name = 
+					who = 0
+					url = 
+				}
+			}
+			platformid = 50
+			platformsubid = 0
+			act = 0
+			seq = 1
+			flag = 0
+			respnum = 0
+			modifyflag = 1
+			sceneid = 0
+			extendinfo {
+				padding = 
+			}
+		}
+	}
+}

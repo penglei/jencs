@@ -1,5 +1,0 @@
-<?cs #debugger?>
-<?cs #debugger ?>
-<?cs #debugger foo?>
-<?cs #debugger g
-?>

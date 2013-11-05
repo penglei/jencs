@@ -6,22 +6,13 @@
 <?cs var:subcount(foo)?>
 <?cs loop:foo = 0, subcount(foo), foo?>
     <?cs set:foo[foo] = foo?>
-    <?cs #set:foo = 2?>
     --------loop(<?cs var:foo?>)--------
+    <?cs var:subcount(foo)?>
 <?cs /loop?>
 
 <?cs var:subcount(foo)?>
 
-
-================================
-<?cs loop:foo = 0, 3, 1?>
-    <?cs set:foo.xx = foo?>
-    <?cs #set:foo = 2?>
-    --------loop(<?cs var:foo?>)--------
-<?cs /loop?>
-
-
-==============3==================
+==============step times test==============
 <?cs loop:foo = 0, 3, 1?>
     1.--------loop(<?cs var:foo?>)--------
 <?cs /loop?>
@@ -38,5 +29,5 @@
 
 ============negative step==============
 <?cs loop:i=-1, 0, -1?>
-    <?cs var:i?>
+    error, this can't be rendered
 <?cs /loop?>

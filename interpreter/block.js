@@ -137,7 +137,6 @@ def_execute(ast.AST_Loop, function(context){
 
         start += step;
         //同时要更新aliasSymbolValue的值
-        //为什么要这样更新，详见loop测试用例
         var symbolValue = context.querySymbol(name);
         if (symbolValue instanceof CSValue){
             symbolValue.value = start;
