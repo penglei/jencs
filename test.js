@@ -36,6 +36,10 @@ CSInterpreter.render(mainCsSource, dataSource, {
 });
 */
 
+if (useDebug){
+} else {
+}
+
 var TestCSEngine = new Engine();
 //必须先设置inlcude的回调，否者分析源码时会找不到
 TestCSEngine.setLexerInclude(function(filename){
@@ -52,14 +56,15 @@ TestCSEngine.addOutputFilter(function SimpleFormatFilter(str, astNode){
 });
 */
 TestCSEngine.setConfig({
-    //"entryName":entryCsFile
+    "entryName":entryCsFile
 });
 
 TestCSEngine.initEntrySource(mainCsSource);
 var hdfData = CSInterpreter.parseHDFString(dataSource);
 var result = TestCSEngine.execute(hdfData);
 
-process.stdout.write(result);
+//console.log(result);
+//process.stdout.write(result);
 
 var hdfStrResult = HDF.dumpHdf(hdfData);
 //process.stdout.write(hdfStrResult);

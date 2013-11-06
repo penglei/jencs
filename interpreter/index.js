@@ -55,6 +55,10 @@ Engine.prototype._renderListener = function(snippets) {
     this._result += snippets;
 };
 
+Engine.prototype.onRendered = function(fun){
+    this._onReaderResultCb = fun;
+};
+
 Engine.prototype.initEntrySource = function(csString, name){
     if (name !== undefined) this.csparser.yy.name = name;
     this.astInstance = this.csparser.parse(csString);
@@ -92,6 +96,7 @@ Engine.prototype.execute = function(hdfData, render){
     Executer.run(this.astInstance, this.context);
     return this._result;
 };
+
 Engine.prototype.addOutputFilter = function(filter){
     if (typeof filter == "function"){
         this._externFilters.push(filter);

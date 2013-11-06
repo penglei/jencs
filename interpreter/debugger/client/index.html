@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <title>clearsivler debugger</title>
+    </head>
+    <body>
+        <div id="container">
+            <button id="next-step">step next</button>
+        </div>
+        <script src="/socket.io/socket.io.js"></script>
+        <script>
+            var seq = 0;
+            document.getElementById("next-step").addEventListener("click", function(evt)
+            {
+                socket.emit("next", {
+                    "seq": seq,
+                    "type": "request"
+                })
+
+            }, false);
+
+            var socket = io.connect('http://localhost');
+            socket.on('news', function(data)
+            {
+                console.log(data);
+            });
+
+        socket.on('runtonext', function(data){
+                console.log(data);
+                seq++;
+        });
+        </script>
+    </body>
+
+</html>

@@ -1,19 +1,50 @@
 var ast = require("../parse/ast"),
     CSValue = require("./scope").CSValue,
     HNode = require("./hdf").HNode,
-    def_execute = require("./executer").def_execute;
+    Executer = require("./executer"),
+    def_execute = Executer.def_execute;
 
 def_execute(ast.AST_Block, function(context){
     this.gen_body(context);
 });
 
 ast.AST_Block.proto("gen_body", function(context) {
+    var i = 0, len = this.body.length, self = this;
+    if (len) {
+        var state = this.body[i];
+        var cb = function{
+            i++;
+            if (i < len) self.body[i].execute(cb);
+        };
+        this.body[i].execute(context, cb);
+    }
+    /*
     for(var i = 0; i < this.body.length; i++){
         if (this.body[i] instanceof ast.AST_MacroDef){
         } else {
             this.body[i].execute(context);
         }
     }
+    */
+});
+
+//function createEntity(astCommand, cb);
+ast.AST_Block.proto("executeBody", function(){
+    //Executer.createEntity(this.body
+    var entity;
+    var body = this.body;
+    var i = 0;
+    function nextState(){
+    }
+    Executer.runbody(this.body).then();
+
+    if (i < body.length){
+        Executer.createEntity(body[i], function(){
+            i++;
+            Executer.createEntity(body[i],
+        });
+    }
+
 });
 
 def_execute(ast.AST_If, function(context){
@@ -182,8 +213,17 @@ def_execute(ast.AST_Content, function(context){
     context.output(this.literalValue, this);
 });
 
+/*
 def_execute(ast.AST_Program, function(context) {
     context.enterScope(this);
     this.gen_body(context);
     context.leaveScope();
+});
+*/
+
+def_execute(ast.AST_Program, function(context){
+    context.enterScope(this);
+    Executer.runbody(this.body, context, function(){
+        context.leaveScope();
+    });
 });
