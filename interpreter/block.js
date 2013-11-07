@@ -1,50 +1,21 @@
 var ast = require("../parse/ast"),
-    CSValue = require("./scope").CSValue,
-    HNode = require("./hdf").HNode,
-    Executer = require("./executer"),
-    def_execute = Executer.def_execute;
+    Types = require("./types"),
+    def_execute = require("./executer").def_execute;
+
+var CSValue = Types.CSValue;
+var HNode = Types.HNode;
 
 def_execute(ast.AST_Block, function(context){
     this.gen_body(context);
 });
 
 ast.AST_Block.proto("gen_body", function(context) {
-    var i = 0, len = this.body.length, self = this;
-    if (len) {
-        var state = this.body[i];
-        var cb = function{
-            i++;
-            if (i < len) self.body[i].execute(cb);
-        };
-        this.body[i].execute(context, cb);
-    }
-    /*
     for(var i = 0; i < this.body.length; i++){
         if (this.body[i] instanceof ast.AST_MacroDef){
         } else {
             this.body[i].execute(context);
         }
     }
-    */
-});
-
-//function createEntity(astCommand, cb);
-ast.AST_Block.proto("executeBody", function(){
-    //Executer.createEntity(this.body
-    var entity;
-    var body = this.body;
-    var i = 0;
-    function nextState(){
-    }
-    Executer.runbody(this.body).then();
-
-    if (i < body.length){
-        Executer.createEntity(body[i], function(){
-            i++;
-            Executer.createEntity(body[i],
-        });
-    }
-
 });
 
 def_execute(ast.AST_If, function(context){
@@ -183,7 +154,90 @@ def_execute(ast.AST_Loop, function(context){
     context.leaveScope();
 });
 
-def_execute(ast.AST_MacroDef, function(context, _symbolAlias) {
+/*
+def_execute(ast.AST_Loop, function(context){
+    var start = this.initVarSymbol.initValue.calc().getNumber();
+    var end = this.endexpr.calc().getNumber();
+    var step = this.step.calc().getNumber();
+
+    var name = this.initVarSymbol.name;
+    var aliasSymbolValue = new CSValue(CSValue.Number, start);
+
+    var scope = context.enterScope(this);
+
+    scope.symbolAlias[name] = aliasSymbolValue;//setSymbolInCurrentScope
+    scope.loopVarName = name;
+
+    var checkFun;
+    //循环次数是固定的
+    if (step > 0){
+        //start <= end
+        checkFun = function(){
+            return start <= end;
+        }
+    } else if (step < 0) {
+        //start >= end
+        checkFun = function(){
+            return start >= end;
+        }
+    } else {
+        //TODO notice 不要执行
+    }
+    var firsted = false;
+    scope.isLoopFirst = true;
+    scope.isLoopLast = false;
+    if (step == 0) return;
+
+    var executer = this.executer;
+
+    var self = this;
+
+    function eachStep(){
+
+        if (checkFun()) {
+            //为第一次循环打一个标记，留给first函数使用
+            if (!firsted) firsted = true;
+            else scope.isLoopFirst = false;//以后每次循环要置为false
+
+            var next = start + step;
+            if (step > 0){
+                if (next > end) {
+                    scope.isLoopLast = true;
+                }
+            } else {
+                if (next < end){
+                    scope.isLoopLast = true;
+                }
+            }
+
+            self.gen_body(context);
+
+            start += step;
+            //同时要更新aliasSymbolValue的值
+            var symbolValue = context.querySymbol(name);
+            if (symbolValue instanceof CSValue){
+                symbolValue.value = start;
+            } else if (symbolValue instanceof HNode){
+                symbolValue.setValue(start);
+            } else {
+                throw new Error("运行时内部错误。循环变量: " + name + " 意外为空");
+            }
+            //循环亦是不支持写，否则这是一个有歧义的语法，这样做与官方解析引擎是不同的.详见loop测试3
+            //eachStep();
+            executer.genLoop(eachStep, function(){});
+        }
+    }
+    //eachStep();
+    //context.leaveScope();
+
+    executer.genLoop(eachStep, function(){
+        context.leaveScope();
+    });
+
+});
+*/
+
+ast.AST_MacroDef.proto("execJump", function(context, _symbolAlias) {
     var scope = context.enterScope(this);
 
     //初始化实参
@@ -213,17 +267,11 @@ def_execute(ast.AST_Content, function(context){
     context.output(this.literalValue, this);
 });
 
-/*
-def_execute(ast.AST_Program, function(context) {
-    context.enterScope(this);
-    this.gen_body(context);
-    context.leaveScope();
-});
-*/
-
 def_execute(ast.AST_Program, function(context){
+    var executer = this.executer;
     context.enterScope(this);
-    Executer.runbody(this.body, context, function(){
+    executer.genList(this.body, function(){
         context.leaveScope();
-    });
+        executer.emit("end");
+    }, this);
 });

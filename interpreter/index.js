@@ -3,7 +3,7 @@ var ClearSilverParser = require("../parse/clearsilver").Parser;
 var HDF = require("./hdf");
 
 var Scope = require("./scope");
-var Executer = require("./executer");
+var Executer = require("./executer").Executer;
 
 //放在这里而不是executer里面，是因为executer里的def_execute会被它们用到，这就会形成循环依赖
 require("./block");
@@ -11,8 +11,10 @@ require("./statement");
 require("./expr");
 require("./external");
 
-
 function Engine(csString){
+    this.result = "";
+    this._debugMode = false;
+
     this.csparser = new ClearSilverParser();
     if (typeof csString == 'string') this.initEntrySource(csString);
 
@@ -51,14 +53,6 @@ Engine.prototype._lexInclude = function(includeName) {
     }
 };
 
-Engine.prototype._renderListener = function(snippets) {
-    this._result += snippets;
-};
-
-Engine.prototype.onRendered = function(fun){
-    this._onReaderResultCb = fun;
-};
-
 Engine.prototype.initEntrySource = function(csString, name){
     if (name !== undefined) this.csparser.yy.name = name;
     this.astInstance = this.csparser.parse(csString);
@@ -79,22 +73,45 @@ Engine.prototype.setConfig = function(opts){
     if (opts.lexerIncludeFun){
         this._lexIncludeSource = opts.lexerIncludeFun;
     }
+    if(opts.debug){
+        this._debugMode = true;
+    }
     return this;
 };
 
-Engine.prototype.execute = function(hdfData, render){
-    this._result = "";
+Engine.prototype.run = function(hdfData){
+    if (typeof hdfData == "string"){
+        hdfData = HDF.parse(hdfData);
+    }
 
-    this.context = new Scope.Context();
-    this.context.initHDFData(hdfData || {});
-    this.context.setExternalFilters(this._externFilters);
+    this.result = "";
+    this._hdf = hdfData;
+
+    //context主要负责内部数据, Executer主要负责执行控制，实现debugger
+    var executer = new Executer();
+    var context = new Scope.Context();
+
+    context.initHDFData(hdfData || {});
+    context.setExternalFilters(this._externFilters);
 
     var self = this;
-    this.context.setRenderListener(function(){
-        self._renderListener.apply(self, Array.prototype.slice.call(arguments, 0));
+    context.setRenderListener(function(snippets){
+        self.result += snippets;
     });
-    Executer.run(this.astInstance, this.context);
-    return this._result;
+
+    executer.on("end", function(){
+        self._onEnd();
+    });
+
+    executer.run(this.astInstance, context);
+};
+
+Engine.prototype.setEndListener = function(listener){
+    if (typeof listener == "function"){
+        this._onEnd = listener;
+    } else {
+        this._onEnd = function(){};
+    }
 };
 
 Engine.prototype.addOutputFilter = function(filter){
@@ -103,9 +120,16 @@ Engine.prototype.addOutputFilter = function(filter){
     }
 };
 
+Engine.prototype.enableDebugger = function(){
+    this._debugMode = true;
+};
+
+Engine.prototype.dumpData = function(){
+    return HDF.dumpHdf(this._hdf);
+};
+
 exports.Engine = Engine;
 exports.CSValue = Scope.CSValue;
-exports.parseHDFString = HDF.parse;
 exports.HNode = HDF.HNode;
 exports.AST = AST;
 

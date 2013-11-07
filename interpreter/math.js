@@ -1,5 +1,5 @@
 var ast = require("../parse/ast"),
-    CSValue = require("./scope").CSValue;
+    CSValue = require("./types").CSValue;
 
 
 ast.AST_BinMathExpr.proto("calc", function BinaryExprCalc(){

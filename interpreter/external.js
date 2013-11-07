@@ -1,6 +1,6 @@
 var Scope = require("./scope");
 
-var CSValue = Scope.CSValue;
+var CSValue = require("./types").CSValue;
 
 function getStringCSValue(obj){
     if (obj instanceof CSValue){

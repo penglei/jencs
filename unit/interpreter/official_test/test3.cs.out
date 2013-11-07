@@ -2,7 +2,26 @@ Parsing test3.cs
 
 
 
+  
 
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+
+  
 
 
 before weekday
@@ -47,6 +66,10 @@ echo a number: 5
 
 
 
+  
+
+
+
 echo a variable: 3
 
 
@@ -67,6 +90,12 @@ echo a number: 5
 
 
 
+  
+
+
+
+  
+  
 
 
 
@@ -92,6 +121,8 @@ echo a number: 5
 
 after echo
 
+
+   == 
 
 
 testing macro calls in local vars in an each
