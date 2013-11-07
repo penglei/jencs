@@ -28,5 +28,5 @@ TestCSEngine.initEntrySource(mainCsSource);
 TestCSEngine.setEndListener(function(){
     process.stdout.write(this.result);
 });
-//console.log(result);
+
 TestCSEngine.run(dataSource);

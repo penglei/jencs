@@ -2,29 +2,10 @@ var ast = require("../parse/ast");
 var util = require("util");
 var events = require("events");
 
-//var CSDebugger = require("./debugger/app");
-//startup -> waitConnect -> connect-> isbreakfirst -n-> hasBreakpoints -y-> runToFirstBreakpoint -> waitDebuggerCommand
-
-var nextExeEntity;
-
-function waitDebugger(cb, that){
-    nextExeEntity = function(){
-        cb.call(that);
-        return that.pos;
-    };
-}
-
-/*
-CSDebugger.onNext(function(){
-    debugger
-    return nextExeEntity();//执行这一条语句
-});
-*/
-
 function def_execute(nodeType, executeFun){
     nodeType.proto("execute", function(){
         var args = Array.prototype.slice.call(arguments);
-        executeFun.apply(this, args);
+        if (!(this instanceof ast.AST_MacroDef)) executeFun.apply(this, args);
     });
 }
 

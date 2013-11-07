@@ -3,7 +3,7 @@ var ast = require("../parse/ast"),
     def_execute = require("./executer").def_execute;
 
 var HNode = Types.HNode;
-var CSValue = require("./types").CSValue;
+var CSValue = Types.CSValue;
 
 def_execute(ast.AST_VarStmt, function(context){
     var resultVal = this.argument.calc();
