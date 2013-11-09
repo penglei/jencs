@@ -2,8 +2,6 @@ var HNode = require("./hdf").HNode;
 CSValue.String = 1;
 CSValue.Number = 2;
 
-function Empty(){}
-
 function CSValue(type, value){
     this.type = type || CSValue.String;
     this.value = (value !== undefined ? value : "");//默认用空字符串比较方便处理
@@ -19,7 +17,7 @@ CSValue.prototype.getNumber = function(){
 
 CSValue.prototype._r_num_ = /^\d+$/;
 CSValue.prototype.getString = function () {
-    return this.value !== undefined ? this.value + "" : "";
+    return (this.value === undefined || this.value === null) ? "" : this.value + "";
 };
 
 CSValue.prototype.isTrue = function(){

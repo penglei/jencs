@@ -3,8 +3,7 @@ var Walker = require("./walker").Walker;
 var HNode = require("./types").HNode;
 var CSValue = require("./types").CSValue;
 
-function Empty(){
-}
+function Empty(){}
 
 //{internal function
 function subcount(arg){
@@ -74,13 +73,13 @@ Context.prototype = {
     "_getData": function(path){
         var pathkeyArr = path.split(".");
         var node = this.querySymbol(pathkeyArr[0]), key;
-        if (!node) return null;
+        if (!node) return "";
 
         for (var i = 1; i < pathkeyArr.length; i++){
             key = pathkeyArr[i];
-            if (key == "") return null;
+            if (key == "") return "";
             if (node instanceof CSValue){
-                return null;
+                return "";
             } else if (node instanceof HNode){
                 node = node.getChild(key);
             }
@@ -135,7 +134,7 @@ Context.prototype = {
     },
 
     /**
-     * @return NULL || HNode || CSValue  符号对应的变量(两种类型)
+     * @return "" || HNode || CSValue  符号对应的变量(两种类型)
      */
     "querySymbol": function(key){
         var _scope = null;
