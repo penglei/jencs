@@ -6,30 +6,38 @@
     </head>
     <body>
         <div id="container">
-            <button id="next-step">step next</button>
+            <button id="resume" class="break-button">Resume</button>
+            <button id="step-over" class="break-button">step over</button>
+            <button id="step-into" class="break-button">step into</button>
+            <button id="step-out" class="break-button">step out</button>
         </div>
         <script src="/socket.io/socket.io.js"></script>
         <script>
-            var seq = 0;
-            document.getElementById("next-step").addEventListener("click", function(evt)
-            {
-                socket.emit("next", {
+            var seq = 0;//每个请求给一个续号(续号需要实现有效期)
+            document.getElementById("step-over").addEventListener("click", function(evt){
+                socket.emit("stepover", {
                     "seq": seq,
                     "type": "request"
                 })
-
             }, false);
 
             var socket = io.connect('http://localhost');
-            socket.on('news', function(data)
-            {
-                console.log(data);
+
+            socket.on("connect", function(){
+                console.log("debugger connect>>>");
             });
 
-        socket.on('runtonext', function(data){
-                console.log(data);
-                seq++;
-        });
+            socket.on("files", function(){
+            });
+
+            socket.on('next', function(data){
+                    console.log(data);
+                    seq++;
+            });
+            socket.on('end', function(){
+                console.log("remote execute end");
+                socket.disconnect();
+            });
         </script>
     </body>
 

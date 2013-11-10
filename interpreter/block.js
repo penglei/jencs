@@ -45,19 +45,31 @@ def_execute(ast.AST_If, function(context){
     var testExpr = this.test.calc();
     if (testExpr.isTrue()){
         this.gen_body(context);
-    } else if (this.alternate) {//alternate is ast.AST_Block
+    } else if (this.alternate) {//alternate is ast.AST_Block (or ast.AST_If)
         this.alternate.execute(context);
     }
 });
 */
 
 def_execute(ast.AST_Alt, function(context){
-    var echoValue = this.expression.calc();
-    if (echoValue.isTrue()){
-        context.output(echoValue.getString(), this);
-    } else {
-        this.gen_body(context);
+    var echoValue, altIsTrue = false;
+
+    //执行器首先会运行expression的calc，保证时序是对的
+    function outputAltTrue(){
+        echoValue = this.expression.calc();
+        altIsTrue = echoValue.isTrue();
+        if (altIsTrue){
+            context.output(echoValue.getString(), this);
+        }
     }
+
+    function outputAltBody(){
+        if (!altIsTrue){
+            this.gen_body(context);
+        }
+    }
+
+    this.executer.step(outputAltTrue, outputAltBody, this);
 });
 
 /*
@@ -72,6 +84,7 @@ def_execute(ast.AST_Alt, function(context){
 */
 
 
+/*
 def_execute(ast.AST_With, function(context) {
     //expression只能是VariableAccess，这在语法分析阶段已经完成了
     var resultVal = this.expression.getSymbolValueNode();
@@ -87,6 +100,28 @@ def_execute(ast.AST_With, function(context) {
     } else {
         //TODO tips
     }
+});
+*/
+
+def_execute(ast.AST_With, function(context) {
+    var executer = this.executer;
+    //expression只能是VariableAccess，这在语法分析阶段已经完成了
+    function withGetExpr(){
+        resultVal = this.expression.getSymbolValueNode();
+        if (resultVal && this.expression instanceof ast.AST_VariableAccess){
+            var scope = context.enterScope(this); //必须先进入scope，才可以使用symbolAlias
+
+            scope.symbolAlias[this.alias.name] = resultVal;
+
+            //所有body后面需要执行其它语句的逻辑都需要封装成函数
+            executer.genList(this.body, function(){
+                context.leaveScope();
+            }, this);
+        } else {
+            //TODO tips this.executer.step....
+        }
+    }
+    executer.step(withGetExpr, null, this);
 });
 
 /*
@@ -119,7 +154,7 @@ def_execute(ast.AST_Each, function(context){
 });
 */
 
-def_execute(ast.AST_Each, function(context){
+def_execute(ast.AST_Each, function(context){debugger;
     var resultVal = this.expression.getSymbolValueNode();
     if (resultVal && resultVal instanceof HNode){
         var scope = context.enterScope(this),
@@ -132,7 +167,14 @@ def_execute(ast.AST_Each, function(context){
         scope.isLoopFirst = true;
         scope.isLoopLast = false;
 
-        var childNode = resultVal.child;
+        var childNode = resultVal.child;//this is firstchild
+
+        function eachStepSuffixInEach(){
+            childNode = childNode.next;
+            if (childNode){
+                executer.step(eachStep, null, this);
+            }
+        }
 
         function eachStep(){
             scope.symbolAlias[itemName] = childNode;
@@ -140,14 +182,12 @@ def_execute(ast.AST_Each, function(context){
             else scope.isLoopFirst = false;
             //TODO gen_body里面可能会改变children，所以这样是不对的，需要在last函数里动态判断
             if (!childNode.next) scope.isLoopLast = true;
-            this.gen_body(context);
-            childNode = childNode.next;
 
-            if (childNode){
-                executer.genLoop(eachStep, null, this);
-            }
+            //this.gen_body(context);
+            this.executer.genList(this.body, eachStepSuffixInEach, this);
         }
-        executer.genLoop(eachStep, function(){
+
+        executer.step(eachStep, function(){
             context.leaveScope();
         }, this);
     } else {
@@ -265,7 +305,7 @@ def_execute(ast.AST_Loop, function(context){
 
     var self = this;
 
-    function eachStepSuffix(){
+    function eachStepSuffixInLoop(){
         start += step;
         //同时要更新aliasSymbolValue的值
         var symbolValue = context.querySymbol(name);
@@ -277,6 +317,7 @@ def_execute(ast.AST_Loop, function(context){
             throw new Error("运行时内部错误。循环变量: " + name + " 意外为空");
         }
         //循环变量是不支持写，否则这是一个有歧义的语法，这样做与官方解析引擎是不同的.详见loop测试3
+        executer.step(eachStep, null, self);//交给运行器决定是否运行下一步
     }
 
     function eachStep(){
@@ -297,18 +338,18 @@ def_execute(ast.AST_Loop, function(context){
                 }
             }
 
-            self.gen_body(context);
-            eachStepSuffix();
-            executer.genLoop(eachStep, null, self);//交给运行器决定是否运行下一步
+            //self.gen_body(context);
+            executer.genList(this.body, eachStepSuffixInLoop, this);
         }
     }
 
-    executer.genLoop(eachStep, function(){
+    executer.step(eachStep, function(){
         context.leaveScope();
     }, this);
 
 });
 
+/*
 ast.AST_MacroDef.proto("execJump", function(context, _symbolAlias) {
     var scope = context.enterScope(this);
 
@@ -326,13 +367,48 @@ ast.AST_MacroDef.proto("execJump", function(context, _symbolAlias) {
     this.gen_body(context);
     context.leaveScope();
 });
+*/
 
+ast.AST_MacroDef.proto("execJump", function(context, _symbolAlias) {
+    var scope = context.enterScope(this);
+
+    //初始化实参
+    for(var name in _symbolAlias){
+        if (_symbolAlias.hasOwnProperty(name)){
+            if (_symbolAlias[name] instanceof ast.AST_Node){
+                scope.symbolAlias[name] = null;
+                scope.nonExistParams[name] = _symbolAlias[name];
+            } else {
+                scope.symbolAlias[name] = _symbolAlias[name];
+            }
+        }
+    }
+    //this.gen_body(context);
+    //context.leaveScope();
+    this.executer.genList(this.body, function(){
+        context.leaveScope();
+    }, this);
+});
+
+/*
 def_execute(ast.AST_Escape, function(context){
     var escapeType = this.escapeType;// "html" || "js" || "url"
 
     context.pushEscapeFilter(escapeType);
     this.gen_body(context);
     context.popEscapeFilter();
+});
+*/
+
+def_execute(ast.AST_Escape, function(context){
+    var escapeType = this.escapeType;// "html" || "js" || "url"
+
+    context.pushEscapeFilter(escapeType);
+    //this.gen_body(context);
+    //context.popEscapeFilter();
+    executer.genList(this.body, function(){
+        context.popEscapeFilter();
+    }, this);
 });
 
 def_execute(ast.AST_Content, function(context){
@@ -347,8 +423,11 @@ def_execute(ast.AST_Program, function(context){
 
     var executer = this.executer;
     context.enterScope(this);
+
+    //所有body后面需要执行其它语句的逻辑都需要封装成函数
     executer.genList(this.body, function(){
         context.leaveScope();
         executer.emit("end");
     }, this);
+    executer.start();
 });

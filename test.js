@@ -8,6 +8,17 @@ var HNode = CSInterpreter.HNode;
 var CSValue = CSInterpreter.CSValue;
 var AST = CSInterpreter.AST;
 
+var opts  = require('nomnom')
+            .option("enable-debugger", {
+                abbr: 'csd',
+                flag: true,
+                default: false,
+                help: 'enable cs debugger'
+            })
+            .parse();
+
+opts.enableDebugger = !!opts["enable-debugger"];
+
 //设置内容\n\r\t过滤器
 function ContentWhiteFilter(valueStr, astNode){
     return astNode instanceof AST.AST_Content ? valueStr.replace(/[\r\n\t]/g, '') : valueStr;
@@ -43,7 +54,7 @@ TestCSEngine.setLexerInclude(function(filename){
 });
 TestCSEngine.setConfig({
     "entryName":entryCsFile,
-    "debug": true
+    "debug": opts.enableDebugger
 });
 
 //TestCSEngine.addOutputFilter(ContentWhiteFilter);
@@ -54,7 +65,7 @@ TestCSEngine.setEndListener(function(){
     console.log(this.result);
     //process.stdout.write(this.result);
 
-    console.log(this.dumpData());
+    //console.log(this.dumpData());
     //process.stdout.write(this.dumpData());
 
 });

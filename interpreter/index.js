@@ -91,6 +91,8 @@ Engine.prototype.run = function(hdfData){
     var executer = new Executer();
     var context = new Scope.Context();
 
+    if (this._debugMode) executer.enableDebugger();
+
     context.initHDFData(hdfData || {});
     context.setExternalFilters(this._externFilters);
 
@@ -118,10 +120,6 @@ Engine.prototype.addOutputFilter = function(filter){
     if (typeof filter == "function"){
         this._externFilters.push(filter);
     }
-};
-
-Engine.prototype.enableDebugger = function(){
-    this._debugMode = true;
 };
 
 Engine.prototype.dumpData = function(){

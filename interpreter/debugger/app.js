@@ -1,6 +1,8 @@
-var app = require('http').createServer(handler),
-    io = require('socket.io').listen(app),
-    fs = require('fs');
+var http = require('http');
+var SocketIO = require('socket.io');
+var fs = require('fs');
+
+var app;
 
 function handler(req, res) {
     fs.readFile(__dirname + '/client/index.html', function(err, data) {
@@ -14,33 +16,57 @@ function handler(req, res) {
     });
 }
 
-var readyed = false;
-io.sockets.on('connection', function(socket) {
+function OnConnection(socket){
     if (readyed == false){
         readyFun();
         readyed = true;
     }
-    socket.emit('news', {
-        hello: 'world'
+
+    socket.on('stepover', function(data) {
+        if (endFlag){
+            socket.emit("end");
+        } else {
+            var resultInfo = csEngineStepOver();
+            socket.emit("next", resultInfo || {
+                linenum: "unknown",
+                filename:"unknown"
+            });
+        }
     });
+}
 
-    socket.on('next', function(data) {
-        var resultInfo = csengineNext();
+var endFlag = false;
 
-        socket.emit("runtonext", resultInfo || {
-            linenum: "unknown",
-            filename:"unknown"
-        });
-    });
-});
+function OnExecuterEnd(){
+    endFlag = true;
+}
 
-var readyFun, csengineNext;
-exports.onNext = function(cb){
-    csengineNext = cb;
+
+var readyed = false;
+var readyFun, csEngineStepOver;
+
+exports.onStepOver = function(cb){
+    csEngineStepOver = cb;
 };
 
-exports.bootstrap = function(ready){
+exports.onResume = function(cb){
+};
+
+exports.onStepInto = function(cb){
+};
+
+exports.onStepOut = function(cb){
+};
+
+exports.bootstrap = function(executer, ready){
     readyFun = ready;
-    app.listen(80);
+
+    executer.on("end", OnExecuterEnd);
+
+    app = http.createServer(handler),
+    io = SocketIO.listen(app),
+    io.sockets.on('connection', OnConnection);
+
+    app.listen(10080);
 };
 
