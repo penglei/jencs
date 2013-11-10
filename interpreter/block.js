@@ -154,7 +154,7 @@ def_execute(ast.AST_Each, function(context){
 });
 */
 
-def_execute(ast.AST_Each, function(context){debugger;
+def_execute(ast.AST_Each, function(context){
     var resultVal = this.expression.getSymbolValueNode();
     if (resultVal && resultVal instanceof HNode){
         var scope = context.enterScope(this),

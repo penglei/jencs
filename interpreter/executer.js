@@ -19,12 +19,11 @@ function Command(act, astNode, that, args){
     this.that = that;
     this.node = astNode;
     this.next = null;
+    this.dependent = false;
 }
 
 Command.prototype.go = function(){
-    if (this.action){
-        this.action.apply(this.that, this.args);
-    }
+    this.action.apply(this.that, this.args);
 };
 
 function Executer(){
@@ -66,14 +65,18 @@ Executer.prototype.start = function(){
     if (this._debugMode){
         var self = this;
         CSDebugger.bootstrap(this, function(){
+            debugger
+            /*
             var astnode = self.forward();
             if (astnode) return astnode.pos;
+            */
         });
         //恢复执行到下一个断点
         CSDebugger.onResume(function(){
         });
         //单步执行
         CSDebugger.onStepOver(function(){
+            debugger
             var astnode = self.forward();
             if (astnode) return astnode.pos;
         });
@@ -136,6 +139,15 @@ Executer.prototype.genList = function(bodyList, endcb, that){
         this.cmdHead = commandLocalStart;
     }
 
+};
+
+Executer.prototype.command = function(fun, astNode, opts){
+    var cmd = new Command(fun, astNode, astNode);
+    if (opts.dependent){//说明该条指令不能单独存在，不能单独执行
+        cmd.dependent = true;
+    }
+    cmd.next = this.cmdHead;
+    this.cmdHead = cmd;
 };
 
 Executer.prototype.step = function(step, next, that){
