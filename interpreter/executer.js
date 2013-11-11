@@ -97,6 +97,9 @@ Executer.prototype.forward = function(){
         this.cmdHead = cmd.next;
         //执行command的动作，可以在这里卡住
         cmd.go();
+        if (this.cmdHead.dependent){
+            this.forward();
+        }
         return cmd.node;
     }
 };
