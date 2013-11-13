@@ -13,15 +13,20 @@
         </div>
         <script src="/socket.io/socket.io.js"></script>
         <script>
+            var end_closed = false;
             var seq = 0;//每个请求给一个续号(续号需要实现有效期)
             document.getElementById("step-over").addEventListener("click", function(evt){
-                socket.emit("stepover", {
-                    "seq": seq,
-                    "type": "request"
-                })
+                if (!end_closed) {
+                    socket.emit("stepover", {
+                        "seq": seq,
+                        "type": "request"
+                    });
+                }
             }, false);
 
-            var socket = io.connect('http://localhost');
+            var socket = io.connect('http://localhost', {
+                    'reconnect': false
+            });
 
             socket.on("connect", function(){
                 console.log("debugger connect>>>");
@@ -34,9 +39,9 @@
                     console.log(data);
                     seq++;
             });
-            socket.on('end', function(){
-                console.log("remote execute end");
-                socket.disconnect();
+            socket.on('disconnect', function(){
+                end_closed = true;
+                console.log('<< remote execute end');
             });
         </script>
     </body>

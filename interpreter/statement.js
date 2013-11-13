@@ -10,6 +10,10 @@ def_execute(ast.AST_VarStmt, function(context){
     context.output(resultVal.getString(), this);
 });
 
+def_execute(ast.AST_Content, function(context){
+    context.output(this.literalValue, this);
+});
+
 def_execute(ast.AST_SetStmt, function(){
     var targetNode = this.left.getOrCreateNodeObject();
     if (targetNode){

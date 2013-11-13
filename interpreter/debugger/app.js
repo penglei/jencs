@@ -2,7 +2,7 @@ var http = require('http');
 var SocketIO = require('socket.io');
 var fs = require('fs');
 
-var app;
+var io, app;
 
 function handler(req, res) {
     fs.readFile(__dirname + '/client/index.html', function(err, data) {
@@ -24,7 +24,9 @@ function OnConnection(socket){
 
     socket.on('stepover', function(data) {
         if (endFlag){
-            socket.emit("end");
+            //socket.emit("end");
+            console.log("client has disconnect");
+            socket.disconnect(true);
         } else {
             var resultInfo = csEngineStepOver();
             socket.emit("next", resultInfo || {
@@ -33,12 +35,19 @@ function OnConnection(socket){
             });
         }
     });
+    socket.on("disconnect", function(){
+        console.log("socket disconnect");
+    });
 }
 
 var endFlag = false;
 
 function OnExecuterEnd(){
+    app.close();
     endFlag = true;
+    process.nextTick(function(){
+        process.exit();
+    });
 }
 
 
@@ -63,8 +72,10 @@ exports.bootstrap = function(executer, ready){
 
     executer.on("end", OnExecuterEnd);
 
-    app = http.createServer(handler),
-    io = SocketIO.listen(app),
+    app = http.createServer(handler);
+    io = SocketIO.listen(app, {
+        //"log": false
+    });
     io.sockets.on('connection', OnConnection);
 
     app.listen(10080);

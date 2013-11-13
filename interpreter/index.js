@@ -36,7 +36,9 @@ function Engine(csString){
 Engine.prototype._lexInclude = function(includeName) {
     var self = this;
     var source = this._lexIncludeSource(includeName);
-    if (source){
+    if (source && !this.subAsts[includeName]){
+        //同一个文件只需要解析一次，语法树只允许读，每个地方不需要重新生成
+        //TODO 检查循环依赖
         //source必須每次解析，因為include就是簡單的代碼插入
         var csSubParser = new ClearSilverParser();
         csSubParser.lexer.include = function(name){

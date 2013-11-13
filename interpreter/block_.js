@@ -6,17 +6,17 @@ var CSValue = Types.CSValue;
 var HNode = Types.HNode;
 
 ast.AST_Block.proto("gen_body", function(context) {
-    //对AST_MacroDef的排除放在genList函数体里
-    this.executer.genList(this.body, this);
+    for(var i = 0; i < this.body.length; i++){
+        this.body[i].execute(context);
+    }
 });
-
 
 def_execute(ast.AST_If, function(context){
     var testExpr = this.test.calc();
     if (testExpr.isTrue()){
         this.gen_body(context);
-    } else if (this.alternate) {
-        this.alternate.execute(context);//这里一定要直接调用execute，生成下一个command
+    } else if (this.alternate) {//alternate is ast.AST_Block (or ast.AST_If)
+        this.alternate.execute(context);
     }
 });
 
@@ -38,23 +38,18 @@ def_execute(ast.AST_With, function(context) {
 
         scope.symbolAlias[this.alias.name] = resultVal;
 
-        //所有body后面需要执行其它语句的逻辑都需要封装成函数
-        var lastCommand = this.executer.genList(this.body, this);
-        this.executer.insertCommand(lastCommand,  function(){
-            context.leaveScope();
-        }, this, true);
+        this.gen_body(context);
+
+        context.leaveScope();
     } else {
-        //TODO tips this.executer.step....
+        //TODO tips
     }
 });
-
 
 def_execute(ast.AST_Each, function(context){
     var resultVal = this.expression.getSymbolValueNode();
     if (resultVal && resultVal instanceof HNode){
-        var scope = context.enterScope(this),
-            executer = this.executer,
-            itemName = this.variable.name;
+        var scope = context.enterScope(this), itemName = this.variable.name;
 
         scope.loopVarName = itemName;
 
@@ -62,41 +57,31 @@ def_execute(ast.AST_Each, function(context){
         scope.isLoopFirst = true;
         scope.isLoopLast = false;
 
-        var childNode = resultVal.child;//this is firstchild
-
-        function eachStep(){
+        var childNode = resultVal.child;
+        while(childNode){
             scope.symbolAlias[itemName] = childNode;
             if (!firsted) firsted = true;
             else scope.isLoopFirst = false;
-            //TODO gen_body里面可能会改变children，所以这样判断isLoopFirst可能是不对的，需要在last函数里动态判断
-            if (!childNode.next) scope.isLoopLast = true;
+            if (!childNode.next) scope.isLoopLast = true;//TODO gen_body里面可能会改变children，所以这样是不对的
 
-            var lastCommand = executer.genList(this.body, this);
-            executer.insertCommand(lastCommand, eachStepSuffixInEach, this);
-        }
-
-        function eachStepSuffixInEach(){
+            this.gen_body(context);
             childNode = childNode.next;
-            if (childNode){
-                executer.command(eachStep, this, true);//下一次执行eachStep时，它是被当前command依赖的
-            } else {
-                //在循环完后要leaveScope，比较直接的方式是放在整个循环后
-                //放在这个位置也是可以的，因为执行完下面这一句后就到整个循环后了
-                //也就不再需要一个command来封装执行了
-                context.leaveScope();
-            }
         }
 
-        eachStep.call(this);//一进来先执行一次
+        context.leaveScope();
     } else {
         //TODO 警告在一个值上面进行遍历
     }
 });
 
 def_execute(ast.AST_Loop, function(context){
+    //this.initvar is AST_Symbol;
+
+    //循环在遍历之前已经把start end step全部确定
     var start = this.initVarSymbol.initValue.calc().getNumber();
     var end = this.endexpr.calc().getNumber();
     var step = this.step.calc().getNumber();
+
 
     var name = this.initVarSymbol.name;
     var aliasSymbolValue = new CSValue(CSValue.Number, start);
@@ -121,17 +106,30 @@ def_execute(ast.AST_Loop, function(context){
     } else {
         //TODO notice 不要执行
     }
+
     var firsted = false;
     scope.isLoopFirst = true;
     scope.isLoopLast = false;
-    if (step == 0) return;
+    if (step != 0) while (checkFun()) {
+        //为第一次循环打一个标记，留给first函数使用
+        if (!firsted) firsted = true;
+        else scope.isLoopFirst = false;//以后每次循环要置为false
 
-    var executer = this.executer;
+        var next = start + step;
+        if (step > 0){
+            if (next > end) {
+                scope.isLoopLast = true;
+            }
+        } else {
+            if (next < end){
+                scope.isLoopLast = true;
+            }
+        }
 
-    function eachStepSuffixInLoop(){
+        this.gen_body(context);
+
         start += step;
         //同时要更新aliasSymbolValue的值
-        //循环变量是不支持写，否则这是一个有歧义的语法，这样做与官方解析引擎是不同的.详见loop测试3
         var symbolValue = context.querySymbol(name);
         if (symbolValue instanceof CSValue){
             symbolValue.value = start;
@@ -140,37 +138,11 @@ def_execute(ast.AST_Loop, function(context){
         } else {
             throw new Error("运行时内部错误。循环变量: " + name + " 意外为空");
         }
-        executer.command(eachStep, this);
+        //循环亦是不支持写，否则这是一个有歧义的语法，这样做与官方解析引擎是不同的.详见loop测试3
     }
 
-    function eachStep(){
-
-        if (checkFun()) {
-            //为第一次循环打一个标记，留给first函数使用
-            if (!firsted) firsted = true;
-            else scope.isLoopFirst = false;//以后每次循环要置为false
-
-            var next = start + step;
-            if (step > 0){
-                if (next > end) {
-                    scope.isLoopLast = true;
-                }
-            } else {
-                if (next < end){
-                    scope.isLoopLast = true;
-                }
-            }
-
-            var lastCommand = executer.genList(this.body, this);
-            executer.insertCommand(lastCommand, eachStepSuffixInLoop, this);
-        } else {
-            context.leaveScope();//类似于each
-        }
-    }
-
-    eachStep.call(this);
+    context.leaveScope();
 });
-
 
 ast.AST_MacroDef.proto("execJump", function(context, _symbolAlias) {
     var scope = context.enterScope(this);
@@ -186,39 +158,24 @@ ast.AST_MacroDef.proto("execJump", function(context, _symbolAlias) {
             }
         }
     }
-    var lastCommand = this.executer.genList(this.body, this);
-    this.executer.insertCommand(lastCommand, function(){
-        context.leaveScope();
-    }, this, true);
+    this.gen_body(context);
+    context.leaveScope();
 });
 
 def_execute(ast.AST_Escape, function(context){
     var escapeType = this.escapeType;// "html" || "js" || "url"
 
     context.pushEscapeFilter(escapeType);
-    var lastCommand = this.executer.genList(this.body, this);
-    this.executer.insertCommand(lastCommand, function(){
-        context.popEscapeFilter();
-    }, this, true);
+    this.gen_body(context);
+    context.popEscapeFilter();
 });
 
+
 def_execute(ast.AST_Program, function(context){
-    var executer = this.executer;
-
-    if (!this.body.length) {
-        executer.emit("end");
-        return;
-    }
-
     context.enterScope(this);
 
-    //所有body后面需要执行其它语句的逻辑都需要封装成函数
-    var lastCommand = executer.genList(this.body, this);
+    this.gen_body(context);
 
-    executer.insertCommand(lastCommand, function(){
-        context.leaveScope();
-        executer.emit("end");
-    }, this, true);
-
-    executer.start();
+    context.leaveScope();
+    this.executer.emit("end");
 });
