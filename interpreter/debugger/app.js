@@ -17,10 +17,6 @@ function handler(req, res) {
 }
 
 function OnConnection(socket){
-    if (readyed == false){
-        readyFun();
-        readyed = true;
-    }
 
     socket.on('stepover', function(data) {
         if (endFlag){
@@ -29,12 +25,27 @@ function OnConnection(socket){
             socket.disconnect(true);
         } else {
             var resultInfo = csEngineStepOver();
-            socket.emit("next", resultInfo || {
+            socket.emit("runned", resultInfo || {
                 linenum: "unknown",
                 filename:"unknown"
             });
         }
     });
+
+    socket.on('stepinto', function (data) {
+        if (endFlag){
+            //socket.emit("end");
+            console.log("client has disconnect");
+            socket.disconnect(true);
+        } else {
+            var resultInfo = csEngineStepInto();
+            socket.emit("runned", resultInfo || {
+                linenum: "unknown",
+                filename:"unknown"
+            });
+        }
+    });
+
     socket.on("disconnect", function(){
         console.log("socket disconnect");
     });
@@ -51,8 +62,8 @@ function OnExecuterEnd(){
 }
 
 
-var readyed = false;
-var readyFun, csEngineStepOver;
+var csEngineStepOver,
+    csEngineStepInto;
 
 exports.onStepOver = function(cb){
     csEngineStepOver = cb;
@@ -62,13 +73,13 @@ exports.onResume = function(cb){
 };
 
 exports.onStepInto = function(cb){
+    csEngineStepInto = cb;
 };
 
 exports.onStepOut = function(cb){
 };
 
-exports.bootstrap = function(executer, ready){
-    readyFun = ready;
+exports.bootstrap = function(executer){
 
     executer.on("end", OnExecuterEnd);
 

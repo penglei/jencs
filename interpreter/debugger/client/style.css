@@ -1,0 +1,11 @@
+body {
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+.CodeMirror{
+    border: 1px solid #eee;
+}
+
+.CodeMirror-linenumber{
+    border-right:1px solid;
+}

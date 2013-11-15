@@ -1,7 +1,7 @@
 var util = require("util");
 var events = require("events");
 var ast = require("../parse/ast");
-var CSDebugger = require("./debugger/app");
+var DebuggerServer = require("./debugger").DebuggerServer;
 
 function Empty(){}
 
@@ -24,90 +24,92 @@ function Command(act, astNode, args){
     this.node = astNode;
     this.next = null;
     this.dependent = false;
+
+    this.endTarget = null;
 }
 
 Command.prototype.go = function(){
     this.action.apply(this.that, this.args);
 };
 
+//-----
 function Executer(){
     events.EventEmitter.call(this);
 
+    this.debugr = null;
     this.context = null;
-
     this.cmdHead = null;
-
-    this._debugMode = false;
 }
 
 util.inherits(Executer, events.EventEmitter);
 
-Executer.prototype.enableDebugger = function(){
-    this._debugMode = true;
-};
-
 Executer.prototype.clean = function(){
+    this.context = null;
+    this.debugr = null;
+    this.cmdHead = null;
     ast.AST_Node.proto("context", null);
     ast.AST_Node.proto("executer", null);
 };
 
-Executer.prototype.run = function(astInstance, context){
+Executer.prototype.run = function(astInstance, context, debugr){
+    this.debugr = debugr;
     this.context = context;
+
     ast.AST_Node.proto("executer", this);
     ast.AST_Node.proto("context", context);
 
     astInstance.execute(context);//AST_Program start
 
-    if (!this._debugMode){
-        this.clean();
-    } else {
-        this.on("end", this.clean.bind(this))
-    }
+    //用事件的方式可以统一debug模式和普通模式
+    this.on("end", this.clean.bind(this))
 };
 
 //支持debug方式运行
 Executer.prototype.start = function(){
-    if (this._debugMode){
-        var self = this;
-        CSDebugger.bootstrap(this, function(){
-            /*
-            var astnode = self.forward();
-            if (astnode) return astnode.pos;
-            */
-        });
-        //恢复执行到下一个断点
-        CSDebugger.onResume(function(){
-        });
-        //单步执行
-        CSDebugger.onStepOver(function(){
-            var astnode = self.forward();
-            var info = {
-                "type":astnode.type,
-                "first_line":astnode.pos.first_line
-            };
-            return info;
-        });
-        //单步执行，遇到macro进入
-        CSDebugger.onStepInto(function(){
-        });
-        //跳出当前宏
-        CSDebugger.onStepOut(function(){
-        });
-    } else {
+    if (!this.debugr){//没有debugr就直接运行，否则运行的过程由debugr控制
         while(this.cmdHead) this.forward();
     }
 };
 
-Executer.prototype.forward = function(){
+Executer.prototype.forward = function(stepin){
     var cmd = this.cmdHead;
     if (cmd){
         this.cmdHead = cmd.next;
         //执行command的动作，可以在这里卡住
         cmd.go();
-        if (this.cmdHead && this.cmdHead.dependent){
+
+        if (cmd.node instanceof ast.AST_CSDebugger){
+            return this.cmdHead && this.cmdHead.node;
+        }
+        while (this.cmdHead && this.cmdHead.dependent){
+            var cmdContinue = this.cmdHead;
+            this.cmdHead = this.cmdHead.next;
+            cmdContinue.go();
+        }
+
+        if (cmd.endTarget && !stepin) {
+            while (cmd.endTarget && this.cmdHead != cmd.endTarget.target){
+                var cmdContinue = this.cmdHead;
+                this.cmdHead = this.cmdHead.next;
+                cmdContinue.go();
+                if (cmdContinue.node instanceof ast.AST_CSDebugger) return this.cmdHead && this.cmdHead.node;
+            }
             this.forward();
         }
-        return cmd.node;
+
+        return this.cmdHead && this.cmdHead.node;
+    }
+};
+
+Executer.prototype.resume = function(){
+    var cmd = this.cmdHead;
+    while(cmd){
+        this.cmdHead = cmd.next;
+        cmd.go();
+        cmd = this.cmdHead;
+        if (cmd && cmd.node instanceof ast.AST_CSDebugger){
+            return cmd.node;
+        }
     }
 };
 
@@ -120,7 +122,7 @@ Executer.prototype.genList = function(bodyList, that){
         st = bodyList[i];
 
         if (st instanceof ast.AST_MacroDef){
-            //macro_def什么也不要做
+            //AST_MacroDef不要生成command，因为它不能自已执行，需要被调用后才执行
         } else {
             ////st.execute(this.context);
 
@@ -129,6 +131,16 @@ Executer.prototype.genList = function(bodyList, that){
                 currentCommand = commandLocalStart = command;
             } else {
                 currentCommand = currentCommand.next = command;
+            }
+
+            if (st instanceof ast.AST_Include || st instanceof ast.AST_MacroCall){
+                //添加一个include结束的标志
+                var endFlagCmd = new Command(Empty, st);
+                command.endTarget = {
+                    name: st.targetName,
+                    target: endFlagCmd
+                };
+                currentCommand = currentCommand.next = endFlagCmd;
             }
         }
     }

@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 var fs = require('fs');
 var path = require('path');
 
@@ -60,7 +62,7 @@ TestCSEngine.setConfig({
 //TestCSEngine.addOutputFilter(ContentWhiteFilter);
 TestCSEngine.initEntrySource(mainCsSource);
 
-TestCSEngine.setEndListener(function(){
+TestCSEngine.setEndListener(function(result){
 
     console.log(this.result);
     //process.stdout.write(this.result);

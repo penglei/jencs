@@ -5,6 +5,8 @@ var HDF = require("./hdf");
 var Scope = require("./scope");
 var Executer = require("./executer").Executer;
 
+var DebugService = require("./debugger").DebugService;
+
 //放在这里而不是executer里面，是因为executer里的def_execute会被它们用到，这就会形成循环依赖
 require("./block");
 require("./statement");
@@ -15,10 +17,14 @@ function Engine(csString){
     this.result = "";
     this._debugMode = false;
 
+    this.executer = new Executer();
+
     this.csparser = new ClearSilverParser();
+
+    this.csparser.yy.name = this._entryName = "[main]";
+
     if (typeof csString == 'string') this.initEntrySource(csString);
 
-    this.csparser.yy.name = "[main]";
 
     this.subAsts = {};
 
@@ -30,6 +36,10 @@ function Engine(csString){
         return self.subAsts[name];
     };
     this._externFilters = [];
+
+    this.executer.on("end", this._onEnd.bind(this));
+
+    this._sources = {};
 }
 
 //include在语法分析阶段就完成要方便得多
@@ -55,8 +65,23 @@ Engine.prototype._lexInclude = function(includeName) {
     }
 };
 
+Engine.prototype._getDebuggerInstance = function(){
+    if (!this._debugr) {
+        this._debugr = new DebugService(this);
+    }
+    return this._debugr;
+};
+
+Engine.prototype._renderListener = function(snippets){
+    this.result += snippets;
+};
+
+Engine.prototype._onEnd = function(){
+    this._endListener.call(this, this.result);
+};
+
 Engine.prototype.initEntrySource = function(csString, name){
-    if (name !== undefined) this.csparser.yy.name = name;
+    if (name !== undefined) this.csparser.yy.name = this.entryName = name;
     this.astInstance = this.csparser.parse(csString);
     Scope.initScopeLayer(this.astInstance);//XXX 虽然会修改ast，但它是没有什么副作用的.但最好还是用一份clone的ast来运行最好
 };
@@ -89,32 +114,20 @@ Engine.prototype.run = function(hdfData){
     this.result = "";
     this._hdf = hdfData;
 
-    //context主要负责内部数据, Executer主要负责执行控制，实现debugger
-    var executer = new Executer();
     var context = new Scope.Context();
 
-    if (this._debugMode) executer.enableDebugger();
-
-    context.initHDFData(hdfData || {});
+    context.initHDFData(hdfData);
     context.setExternalFilters(this._externFilters);
+    context.setRenderListener(this._renderListener.bind(this));
 
-    var self = this;
-    context.setRenderListener(function(snippets){
-        self.result += snippets;
-    });
-
-    executer.on("end", function(){
-        self._onEnd();
-    });
-
-    executer.run(this.astInstance, context);
+    this.executer.run(this.astInstance, context, this._debugMode ? this._getDebuggerInstance() : null);
 };
 
 Engine.prototype.setEndListener = function(listener){
     if (typeof listener == "function"){
-        this._onEnd = listener;
+        this._endListener = listener;
     } else {
-        this._onEnd = function(){};
+        this._endListener = function(){};
     }
 };
 

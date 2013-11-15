@@ -68,7 +68,7 @@ Context.prototype = {
         return this._scopeStack[this._scopeStack.length - 1];
     },
     "initHDFData": function(hdfdata){
-        this.hdfData = hdfdata;
+        this.hdfData = hdfdata || {};
     },
     "_getData": function(path){
         var pathkeyArr = path.split(".");
