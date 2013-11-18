@@ -1,13 +1,25 @@
+#!/usr/bin/env node
+
 var fs = require('fs');
 var path = require('path');
 
 var CSInterpreter = require('./interpreter');
-var HDF = require('./interpreter/hdf');
 
 var Engine = CSInterpreter.Engine;
 var HNode = CSInterpreter.HNode;
 var CSValue = CSInterpreter.CSValue;
 var AST = CSInterpreter.AST;
+
+var opts  = require('nomnom')
+            .option("enable-debugger", {
+                abbr: 'csd',
+                flag: true,
+                default: false,
+                help: 'enable cs debugger'
+            })
+            .parse();
+
+opts.enableDebugger = !!opts["enable-debugger"];
 
 //设置内容\n\r\t过滤器
 function ContentWhiteFilter(valueStr, astNode){
@@ -42,24 +54,24 @@ TestCSEngine.setLexerInclude(function(filename){
     //console.log(filename);
     return fs.readFileSync(path.resolve(csIncludeRoot, filename), "utf8");
 });
-//TestCSEngine.addOutputFilter(ContentWhiteFilter);
-/*
-TestCSEngine.addOutputFilter(function SimpleFormatFilter(str, astNode){
-    if (astNode instanceof AST.AST_Content){
-        str = str.replace(/^[ \t\r\n]+$/, "");
-    }
-    return str;
-});
-*/
 TestCSEngine.setConfig({
-    //"entryName":entryCsFile
+    "debug": opts.enableDebugger
 });
 
-TestCSEngine.initEntrySource(mainCsSource);
-var hdfData = CSInterpreter.parseHDFString(dataSource);
-var result = TestCSEngine.execute(hdfData);
+//TestCSEngine.addOutputFilter(ContentWhiteFilter);
+TestCSEngine.initEntrySource(mainCsSource, entryCsFile);
 
-process.stdout.write(result);
+TestCSEngine.onRender(function(snippet){
+});
 
-var hdfStrResult = HDF.dumpHdf(hdfData);
-//process.stdout.write(hdfStrResult);
+TestCSEngine.setEndListener(function(result){
+
+    console.log(this.result);
+    //process.stdout.write(this.result);
+
+    //console.log(this.dumpData());
+    //process.stdout.write(this.dumpData());
+
+});
+
+TestCSEngine.run(dataSource);

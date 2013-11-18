@@ -1,7 +1,6 @@
 var ast = require("../parse/ast"),
-    Util = require("./util"),
-    CSValue = require("./scope").CSValue,
-    HNode = require("./hdf").HNode,
+    CSValue = require("./types").CSValue,
+    HNode = require("./types").HNode,
     def_execute = require("./executer").def_execute;
 
 function isSymbol(astNode) {

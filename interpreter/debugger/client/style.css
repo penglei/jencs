@@ -1,0 +1,46 @@
+body {
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+#container{
+    width:90%;
+    margin:auto;
+}
+
+.status-bar{
+    margin:8px 0;
+}
+.CodeMirror{
+    border: 1px solid #eee;
+}
+
+.CodeMirror-linenumber{
+    border-right:1px solid;
+    background-color:rgb(78, 73, 62);
+}
+
+.CodeCurrentLine{
+    background-color:rgb(79, 145, 206);
+    outline: 1px solid rgb(64, 115, 244);
+}
+
+.CodeMirror * {
+    box-sizing: content-box;
+}
+
+.CodeMirror-lines {
+    padding: 0;
+}
+
+.cm-execution-line {
+    background-color:rgb(79, 145, 206);
+    /*background-color: rgb(171, 191, 254) !important;*/
+    outline:1px solid rgb(163, 184, 238);
+
+}
+
+#sources-list{
+    overflow-y:auto;
+    height:260px;
+}
+

@@ -1,27 +1,22 @@
 var ast = require("../parse/ast"),
-    CSValue = require("./scope").CSValue,
-    HNode = require("./hdf").HNode,
+    Types = require("./types"),
     def_execute = require("./executer").def_execute;
 
-def_execute(ast.AST_Block, function(context){
-    this.gen_body(context);
-});
+var CSValue = Types.CSValue;
+var HNode = Types.HNode;
 
 ast.AST_Block.proto("gen_body", function(context) {
-    for(var i = 0; i < this.body.length; i++){
-        if (this.body[i] instanceof ast.AST_MacroDef){
-        } else {
-            this.body[i].execute(context);
-        }
-    }
+    //对AST_MacroDef的排除放在genList函数体里
+    this.executer.genList(this.body, this);
 });
+
 
 def_execute(ast.AST_If, function(context){
     var testExpr = this.test.calc();
     if (testExpr.isTrue()){
         this.gen_body(context);
-    } else if (this.alternate) {//alternate is ast.AST_Block
-        this.alternate.execute(context);
+    } else if (this.alternate) {
+        this.alternate.execute(context);//这里一定要直接调用execute，生成下一个command
     }
 });
 
@@ -34,28 +29,32 @@ def_execute(ast.AST_Alt, function(context){
     }
 });
 
-
 def_execute(ast.AST_With, function(context) {
     //expression只能是VariableAccess，这在语法分析阶段已经完成了
     var resultVal = this.expression.getSymbolValueNode();
-    //如果表达式对就的节点不存在。(或者没有值，这与标准和cs解析引擎行为会有差异）
+    //如果表达式对应的节点不存在。(或者没有值，这与标准和cs解析引擎行为会有差异）
     if (resultVal && this.expression instanceof ast.AST_VariableAccess){
         var scope = context.enterScope(this); //必须先进入scope，才可以使用symbolAlias
 
         scope.symbolAlias[this.alias.name] = resultVal;
 
-        this.gen_body(context);
-
-        context.leaveScope();
+        //所有body后面需要执行其它语句的逻辑都需要封装成函数
+        var lastCommand = this.executer.genList(this.body, this);
+        this.executer.insertCommand(lastCommand,  function(){
+            context.leaveScope();
+        }, this, true);
     } else {
-        //TODO tips
+        //TODO tips this.executer.step....
     }
 });
+
 
 def_execute(ast.AST_Each, function(context){
     var resultVal = this.expression.getSymbolValueNode();
     if (resultVal && resultVal instanceof HNode){
-        var scope = context.enterScope(this), itemName = this.variable.name;
+        var scope = context.enterScope(this),
+            executer = this.executer,
+            itemName = this.variable.name;
 
         scope.loopVarName = itemName;
 
@@ -63,32 +62,40 @@ def_execute(ast.AST_Each, function(context){
         scope.isLoopFirst = true;
         scope.isLoopLast = false;
 
-        var i = 1, end = resultVal.childrenSize();
-        resultVal.eachChild(function(prop){
-            scope.symbolAlias[itemName] = prop;
-
-            if (i++ == end) scope.isLoopLast = true;
-
+        var childNode = resultVal.child;//this is firstchild
+        function eachStep(){
+            scope.symbolAlias[itemName] = childNode;
             if (!firsted) firsted = true;
             else scope.isLoopFirst = false;
+            //TODO gen_body里面可能会改变children，所以这样判断isLoopFirst可能是不对的，需要在last函数里动态判断
+            if (!childNode.next) scope.isLoopLast = true;
 
-            this.gen_body(context);
-        }, this);
+            var lastCommand = executer.genList(this.body, this);
+            executer.insertCommand(lastCommand, eachStepSuffixInEach, this);
+        }
 
-        context.leaveScope();
+        function eachStepSuffixInEach(){
+            childNode = childNode.next;
+            if (childNode){
+                executer.command(eachStep, this, true);//下一次执行eachStep时，它是被当前command依赖的
+            } else {
+                //在循环完后要leaveScope，比较直接的方式是放在整个循环后
+                //放在这个位置也是可以的，因为执行完下面这一句后就到整个循环后了
+                //也就不再需要一个command来封装执行了
+                context.leaveScope();
+            }
+        }
+
+        eachStep.call(this);
     } else {
         //TODO 警告在一个值上面进行遍历
     }
 });
 
 def_execute(ast.AST_Loop, function(context){
-    //this.initvar is AST_Symbol;
-
-    //循环在遍历之前已经把start end step全部确定
     var start = this.initVarSymbol.initValue.calc().getNumber();
     var end = this.endexpr.calc().getNumber();
     var step = this.step.calc().getNumber();
-
 
     var name = this.initVarSymbol.name;
     var aliasSymbolValue = new CSValue(CSValue.Number, start);
@@ -113,30 +120,17 @@ def_execute(ast.AST_Loop, function(context){
     } else {
         //TODO notice 不要执行
     }
-
     var firsted = false;
     scope.isLoopFirst = true;
     scope.isLoopLast = false;
-    if (step != 0) while (checkFun()) {
-        //为第一次循环打一个标记，留给first函数使用
-        if (!firsted) firsted = true;
-        else scope.isLoopFirst = false;//以后每次循环要置为false
+    if (step == 0) return;
 
-        var next = start + step;
-        if (step > 0){
-            if (next > end) {
-                scope.isLoopLast = true;
-            }
-        } else {
-            if (next < end){
-                scope.isLoopLast = true;
-            }
-        }
+    var executer = this.executer;
 
-        this.gen_body(context);
-
+    function eachStepSuffixInLoop(){
         start += step;
         //同时要更新aliasSymbolValue的值
+        //循环变量是不支持写，否则这是一个有歧义的语法，这样做与官方解析引擎是不同的.详见loop测试3
         var symbolValue = context.querySymbol(name);
         if (symbolValue instanceof CSValue){
             symbolValue.value = start;
@@ -145,18 +139,43 @@ def_execute(ast.AST_Loop, function(context){
         } else {
             throw new Error("运行时内部错误。循环变量: " + name + " 意外为空");
         }
-        //循环亦是不支持写，否则这是一个有歧义的语法，这样做与官方解析引擎是不同的.详见loop测试3
+        executer.command(eachStep, this);
     }
 
+    function eachStep(){
 
-    context.leaveScope();
+        if (checkFun()) {
+            //为第一次循环打一个标记，留给first函数使用
+            if (!firsted) firsted = true;
+            else scope.isLoopFirst = false;//以后每次循环要置为false
+
+            var next = start + step;
+            if (step > 0){
+                if (next > end) {
+                    scope.isLoopLast = true;
+                }
+            } else {
+                if (next < end){
+                    scope.isLoopLast = true;
+                }
+            }
+
+            var lastCommand = executer.genList(this.body, this);
+            executer.insertCommand(lastCommand, eachStepSuffixInLoop, this);
+        } else {
+            context.leaveScope();//类似于each
+        }
+    }
+
+    eachStep.call(this);
 });
 
-def_execute(ast.AST_MacroDef, function(context, _symbolAlias) {
+
+ast.AST_MacroDef.proto("execJump", function(context, _symbolAlias) {
     var scope = context.enterScope(this);
 
     //初始化实参
-    for(var name in _symbolAlias){
+    for (var name in _symbolAlias){
         if (_symbolAlias.hasOwnProperty(name)){
             if (_symbolAlias[name] instanceof ast.AST_Node){
                 scope.symbolAlias[name] = null;
@@ -166,24 +185,39 @@ def_execute(ast.AST_MacroDef, function(context, _symbolAlias) {
             }
         }
     }
-    this.gen_body(context);
-    context.leaveScope();
+    var lastCommand = this.executer.genList(this.body, this);
+    this.executer.insertCommand(lastCommand, function(){
+        context.leaveScope();
+    }, this, true);
 });
 
 def_execute(ast.AST_Escape, function(context){
     var escapeType = this.escapeType;// "html" || "js" || "url"
 
     context.pushEscapeFilter(escapeType);
-    this.gen_body(context);
-    context.popEscapeFilter();
+    var lastCommand = this.executer.genList(this.body, this);
+    this.executer.insertCommand(lastCommand, function(){
+        context.popEscapeFilter();
+    }, this, true);
 });
 
-def_execute(ast.AST_Content, function(context){
-    context.output(this.literalValue, this);
-});
+def_execute(ast.AST_Program, function(context){
+    var executer = this.executer;
 
-def_execute(ast.AST_Program, function(context) {
+    if (!this.body.length) {
+        executer.emit("end");
+        return;
+    }
+
     context.enterScope(this);
-    this.gen_body(context);
-    context.leaveScope();
+
+    //所有body后面需要执行其它语句的逻辑都需要封装成函数
+    var lastCommand = executer.genList(this.body, this);
+
+    executer.insertCommand(lastCommand, function(){
+        context.leaveScope();
+        executer.emit("end");
+    }, this, true);
+
+    executer.start();
 });

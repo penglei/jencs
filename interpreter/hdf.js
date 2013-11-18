@@ -19,9 +19,13 @@ var all_rules = [
 ];
 
 function HNode(name){
-    //this._val = null;
-    //this.children = {};
-    //this._len = 0;
+    this._val = "";
+    this.children = null;//children的hash表，加快查找儿子
+    this._len = 0;
+    this.child = null;//第一个儿子
+    this.last_child = null;//最后一个儿子，加快set new child的访问速度
+    this.next = null;//儿子间的兄弟关系
+    //this.top = null;//父结点，暂时不用
     this.name = name;
 }
 
@@ -32,13 +36,23 @@ HNode.prototype = {
     setValue: function(val){
         this._val = val;
     },
-    setChild: function(name, childNode){
+    setChild: function(name, childNode){//name不支持foo.bar.gar形式
         this.children = this.children || {};
         this._len = this._len || 0;
 
         if (!this.children[name]){
             this._len++;
-            this.children[name] = childNode;
+            this.children[name] = childNode;//儿子都放在这里加快访问
+
+            if (!this.child) {//第一个儿子
+                this.child = childNode;
+                this.last_child = childNode;
+            } else {//其它的儿子作为相应的兄弟
+                //hdf支持引用，但那只影响value和children，不影响兄弟节点关系，因此没有循环
+                //参见 ":"的实现代码
+                this.last_child.next = childNode;
+                this.last_child = childNode;
+            }
         }
     },
     getChild: function(name){
@@ -58,6 +72,8 @@ HNode.prototype = {
         }
         return node;
     },
+    //直接根据key的排序遍历子节占，注意cs中不能使用这方法
+    //cs只能通过child指针遍历链表，否帽与官方的遍历顺序不同
     eachChild: function(handler, that){
         if (typeof handler != "function") return;
         for (var i in this.children){
@@ -218,7 +234,6 @@ Parser.prototype.hdfItem = function(node){
         var ret = this.path(node);
         //这里非常绕，首先是根据path返回根节点，然后在再根节点上对path的名字赋值
         var _v = this.val(ret.node, ret.name);
-        ret.node.setChild(ret.name, _v);
         this.hdfItem(node);
     } else if (this.lookahead() == right_braces){
         return null;
@@ -309,8 +324,13 @@ Parser.prototype.val = function(rootNode, name){
             //newHNodeInVal = node;//这里不应该把被copy的节点返回，而是要把其内容返回
             //具体来说就是value, children
             newHNodeInVal.setValue(node.getValue());
-            newHNodeInVal.children = node.children;
+            newHNodeInVal.children = {};
+            node.eachChild(function(hn){
+                newHNodeInVal.setChild(hn.name, hn);
+            });
             newHNodeInVal._len = node._len;
+            newHNodeInVal.child = node.child;
+            newHNodeInVal.last_child = node.last_child;
             //!要保留自己的名字
         }
         return newHNodeInVal;
