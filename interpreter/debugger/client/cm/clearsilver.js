@@ -21,9 +21,9 @@ CodeMirror.defineMode("clearsilver", function() {
         var ch = stream.next();
         // start of unparsed string?
         if (ch == "<") {
-            if (stream.match(/\?cs/)) return "comment";
+            if (stream.match(/\?cs/)) return "comment cs-tag-start";
         } else if (ch == "?" && stream.eat(">")) {
-            return "comment";
+            return "comment cs-tag-end";
         } else if ((ch == "'") && state.inParams) {
             state.lastTokenWasBuiltin = false;
             return chain(stream, state, tokenString(ch));

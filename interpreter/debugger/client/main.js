@@ -1,5 +1,6 @@
 define(function(require) {
-    require("CodeMirrorEditor");
+    var CodeEditor = require("CodeMirrorEditor");
+    var SourcePanel = require("SourcePanel");
 
     var $ = require('jquery');
 
@@ -37,22 +38,29 @@ define(function(require) {
     });
 
     conn.on('Debug.break', function(data) {
-        if (data.finished) {
-            conn.socket.disconnect();
-        } else {
-            console.log("next:");
-            console.log(data);
-            seq++;
-        }
+        seq++;
+        SourcePanel.ActiveSourceLine(data.id, data.first_line);
+    });
+
+    conn.on('finished', function(){
+        conn.disconnect();
+        SourcePanel.UnActiveSourceLine();
     });
 
     conn.on("connect", function() {
-        console.log("debugger connect>>>");
+        console.log("debugger connected >>>");
     });
 
     conn.on('disconnect', function() {
         end_closed = true;
-        console.log('<< remote execute end');
+        console.log('<<< deubbger finished');
     });
 
+    conn.on('init', function(data){
+        CodeEditor.onDataSources(data);
+    });
+
+    conn.on('Render.Snippet', function (str) {
+        console.log(str);
+    });
 });

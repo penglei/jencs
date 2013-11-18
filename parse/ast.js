@@ -260,7 +260,7 @@ var AST_Include = exports.AST_Include = declare("include", {
     }
 }, AST_Node);
 
-//以后可以扩展更多语法
+//扩展支持debug
 var AST_CSDebugger = exports.AST_CSDebugger = declare("CSDebugger", null , AST_Statement);
 
 var AST_Block = exports.AST_Block = declare("Block", {

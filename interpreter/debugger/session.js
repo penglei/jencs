@@ -4,12 +4,38 @@ function Session(csengine, socket) {
     this.executer = csengine.executer;
     this.socket = socket;
 
-    socket.emit("init");
-
     socket.on("next", this.forwardCommand.bind(this));
     socket.on("resume", this.resumeCommand.bind(this));
     socket.on("disconnect", this.disconnect.bind(this));
+
+    this.engine.onRender(this.emitSnippet.bind(this));
+
+    this.emitInitStatus();
 }
+
+Session.prototype.emitInitStatus = function(){
+
+    var data = {
+        "sources": this.engine.getSource(),
+    };
+    if (this.executer.cmdHead){
+        var astnode = this.executer.cmdHead.node;
+        data["DebugBreak"] = {
+            "type": astnode.type,
+            "first_line": astnode.pos.first_line,
+            "filename": astnode.pos.name,
+            "id":astnode.pos.fileid
+        };
+    } else {
+        data["finished"] = true;
+    }
+    //csengine.getCurrentStatus();//isrunning? Debug.break?
+    this.socket.emit("init", data);
+};
+
+Session.prototype.emitSnippet = function(str){
+    this.socket.emit("Render.Snippet", str);
+};
 
 Session.prototype.debugBreak = function(astnode){
     var socket = this.socket;
@@ -17,14 +43,12 @@ Session.prototype.debugBreak = function(astnode){
         var info = {
             "type": astnode.type,
             "first_line": astnode.pos.first_line,
-            "filename": astnode.pos.name
+            "filename": astnode.pos.name,
+            "id": astnode.pos.fileid
         };
         socket.emit("Debug.break", info);
     } else {
-        socket.emit("runned", {
-            "finished": true
-        });
-        socket.emit("finish");
+        socket.emit("finished");
     }
 };
 
@@ -48,7 +72,7 @@ Session.prototype.resumeCommand = function(){
 
 Session.prototype.disconnect = function() {
     console.log("socket disconnect");
-    //process.exit(); //TODO for test convinient
+    process.exit(); //TODO for test convinient
 };
 
 exports.Session = Session;

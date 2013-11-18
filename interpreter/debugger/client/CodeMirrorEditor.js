@@ -1,29 +1,43 @@
-define(function(require) {
+define(function(require, exports) {
+    require('cm/codemirror.js');
     var $ = require('jquery');
 
-    require('cm/codemirror.js');
-    require('cm/codemirror.css');
-    require('cm/monokai.css');
-    //require('cm/velocity.js');
+    var SourcePanel = require("SourcePanel");
 
-    var code = require("code.cs")
+    var DataSourcesDeffer = $.Deferred();
+    function onDataSourcesReady(data) {
+        DataSourcesDeffer.resolve(data);
+    }
 
-    require(['cm/clearsilver.js'], function(){
+    function CodeMirrorReady(){
+        var dtd = $.Deferred();
 
-        var editor = new CodeMirror($("#code").get(0), {
-            //value: code || "",
-            cursorBlinkRate: 0, //0 is disabled
-            readOnly: true,
-            tabMode: "indent",
-            theme: "monokai",
-            lineNumbers: true,
-            indentUnit: 4,
-            mode: "text/clearsilver"
+        require(['cm/clearsilver.js'], function(){
+            editor = new CodeMirror($("#code").get(0), {
+                //value: code || "",
+                cursorBlinkRate: 0, //0 is disabled
+                readOnly: true,
+                tabMode: "indent",
+                theme: "monokai",
+                lineNumbers: true,
+                indentUnit: 4,
+                mode: "text/clearsilver"
+            });
+            editor.setSize("auto", "500");
+            editor.setSize("auto", editor.getScrollInfo().clientHeight);
+            dtd.resolve(editor);
         });
-        editor.setSize("auto", "500");
+        var timeout = setTimeout(function(){
+            dtd.reject();
+        }, 30 * 1000);
+        return dtd.promise();
+    }
 
-        setTimeout(function(){
-            editor.setValue(code || "");
-        });
+    $.when(DataSourcesDeffer, CodeMirrorReady()).done(function(data, CMEditor){
+        SourcePanel.initSourcesView(CMEditor, data);
+    }).fail(function(){
+        alert("数据加载失败");
     });
+
+    exports.onDataSources = onDataSourcesReady;
 });

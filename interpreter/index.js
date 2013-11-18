@@ -21,7 +21,7 @@ function Engine(csString){
 
     this.csparser = new ClearSilverParser();
 
-    this.csparser.yy.name = this._entryName = "[main]";
+    this.csparser.yy.filename = this._entryName = "[main]";
 
     if (typeof csString == 'string') this.initEntrySource(csString);
 
@@ -29,9 +29,11 @@ function Engine(csString){
     this.subAsts = {};
 
     var self = this;
+    //安装词法分析器的include回调
     this.csparser.lexer.include = function(name){
         self._lexInclude(name);
     };
+    //安装语法分析解析对include的解析
     this.csparser.yy.getSubAst = function(name){
         return self.subAsts[name];
     };
@@ -39,17 +41,32 @@ function Engine(csString){
 
     this.executer.on("end", this._onEnd.bind(this));
 
-    this._sources = {};
+    this._sources = [];
+
+    this._onRenderListeners = [];
 }
+
+Engine.prototype.request = function(type, val, cb){/*
+    if (type == "fetchVarValue"){
+        var csSubParser = new ClearSilverParser();
+        val = "<?cs " + val + "?>";
+        try{
+            var valast = csSubParser.parse(source);
+        } catch(e){
+            if (cb();
+        }
+    }
+    */
+};
 
 //include在语法分析阶段就完成要方便得多
 Engine.prototype._lexInclude = function(includeName) {
     var self = this;
     var source = this._lexIncludeSource(includeName);
     if (source && !this.subAsts[includeName]){
+        var fileid = this._saveSource(includeName, source);
         //同一个文件只需要解析一次，语法树只允许读，每个地方不需要重新生成
         //TODO 检查循环依赖
-        //source必須每次解析，因為include就是簡單的代碼插入
         var csSubParser = new ClearSilverParser();
         csSubParser.lexer.include = function(name){
             self._lexInclude(name);
@@ -57,9 +74,12 @@ Engine.prototype._lexInclude = function(includeName) {
         csSubParser.yy.getSubAst = function(name){
             return self.subAsts[name];
         };
-        csSubParser.yy.name = includeName;
-        var subAsts = csSubParser.parse(source);
-        this.subAsts[includeName] = subAsts;
+        //给yy上面安装属性必须在parse调用前
+        csSubParser.yy.filename = includeName;
+        csSubParser.yy.fileid = fileid;
+
+        var subAst = csSubParser.parse(source);
+        this.subAsts[includeName] = subAst;
     } else {
         //TODO notice
     }
@@ -72,18 +92,52 @@ Engine.prototype._getDebuggerInstance = function(){
     return this._debugr;
 };
 
-Engine.prototype._renderListener = function(snippets){
-    this.result += snippets;
+Engine.prototype._renderListener = function(snippet){
+    for(var i = 0; this._onRenderListeners[i]; i++){
+        this._onRenderListeners[i](snippet);
+    }
+    this.result += snippet;
 };
 
 Engine.prototype._onEnd = function(){
     this._endListener.call(this, this.result);
 };
 
+Engine.prototype._saveSource = function(name, source){
+    var id = this._sources.length;
+    this._sources.push({
+        "name":name,
+        "source":source,
+        "id": id
+    });
+    return id;
+};
+
+Engine.prototype.onRender = function(cb){
+    this._onRenderListeners.push(cb);
+};
+
+Engine.prototype.offRender = function (cb) {
+    // body...
+};
+
 Engine.prototype.initEntrySource = function(csString, name){
-    if (name !== undefined) this.csparser.yy.name = this.entryName = name;
+    if (name !== undefined) this.csparser.yy.name = this._entryName = name;
+    var fileid = this._saveSource(this._entryName, csString);
+    this.csparser.yy.fileid = fileid;
     this.astInstance = this.csparser.parse(csString);
     Scope.initScopeLayer(this.astInstance);//XXX 虽然会修改ast，但它是没有什么副作用的.但最好还是用一份clone的ast来运行最好
+};
+
+Engine.prototype.getSource = function(name){
+    if (name) {
+        for(var i = 0; i < this._sources.length; i++){
+            if (this._sources[i].name == name) {
+                return [this._sources[i]];
+            }
+        }
+    }
+    return this._sources;
 };
 
 //設定一個Include處理器，用於返回include的源碼
@@ -94,13 +148,7 @@ Engine.prototype.setLexerInclude = function(cb) {
 Engine.prototype.setConfig = function(opts){
     opts = opts || {};
 
-    if (opts.entryName){
-        this.csparser.yy.name = opts.entryName;
-    }
-    if (opts.lexerIncludeFun){
-        this._lexIncludeSource = opts.lexerIncludeFun;
-    }
-    if(opts.debug){
+    if (opts.debug) {
         this._debugMode = true;
     }
     return this;

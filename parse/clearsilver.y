@@ -15,7 +15,8 @@
                 _p[i] = $pos[i]
             }
         }
-        _p.name = yy.name;//自定义的，这是文件名
+        _p.name = yy.filename;//自定义的，这是文件名
+        _p.fileid = yy.fileid;//自定义的，这是文件名
         return _p;
     }
 %}

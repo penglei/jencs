@@ -1,11 +1,4 @@
-
-<?cs def:foo()?>
-    <?cs #debugger?>
-    <?cs var:title?>
-    <?cs set:a = 1 + 3?>
-    <?cs var:a?>
-    ------ end foo -------
-<?cs /def?>
 -----if-------
-<?cs include:"test_d_if.cs"?>
+<?cs include:"test_d_each.cs"?>
 <?cs call:foo()?>
+<?cs var:'aaa'?>

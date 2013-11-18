@@ -63,7 +63,6 @@ def_execute(ast.AST_Each, function(context){
         scope.isLoopLast = false;
 
         var childNode = resultVal.child;//this is firstchild
-
         function eachStep(){
             scope.symbolAlias[itemName] = childNode;
             if (!firsted) firsted = true;
@@ -87,7 +86,7 @@ def_execute(ast.AST_Each, function(context){
             }
         }
 
-        eachStep.call(this);//一进来先执行一次
+        eachStep.call(this);
     } else {
         //TODO 警告在一个值上面进行遍历
     }
@@ -176,7 +175,7 @@ ast.AST_MacroDef.proto("execJump", function(context, _symbolAlias) {
     var scope = context.enterScope(this);
 
     //初始化实参
-    for(var name in _symbolAlias){
+    for (var name in _symbolAlias){
         if (_symbolAlias.hasOwnProperty(name)){
             if (_symbolAlias[name] instanceof ast.AST_Node){
                 scope.symbolAlias[name] = null;
