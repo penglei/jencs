@@ -44,3 +44,11 @@ body {
     height:260px;
 }
 
+.operation-bar > div{
+    display:inline-block;
+    width:50%;
+}
+.query-widget{
+    width: 80%;
+    float:right;
+};

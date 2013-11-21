@@ -16,6 +16,7 @@ require("./external");
 function Engine(csString){
     this.result = "";
     this._debugMode = false;
+    this._debugConfig = {};
 
     this.executer = new Executer();
 
@@ -87,7 +88,7 @@ Engine.prototype._lexInclude = function(includeName) {
 
 Engine.prototype._getDebuggerInstance = function(){
     if (!this._debugr) {
-        this._debugr = new DebugService(this);
+        this._debugr = new DebugService(this, this._debugConfig);
     }
     return this._debugr;
 };
@@ -104,7 +105,7 @@ Engine.prototype._onEnd = function(){
 };
 
 Engine.prototype._saveSource = function(name, source){
-    var id = this._sources.length;
+    var id = this._sources.length + 1;
     this._sources.push({
         "name":name,
         "source":source,
@@ -129,7 +130,7 @@ Engine.prototype.initEntrySource = function(csString, name){
     Scope.initScopeLayer(this.astInstance);//XXX 虽然会修改ast，但它是没有什么副作用的.但最好还是用一份clone的ast来运行最好
 };
 
-Engine.prototype.getSource = function(name){
+Engine.prototype.getSources = function(name){
     if (name) {
         for(var i = 0; i < this._sources.length; i++){
             if (this._sources[i].name == name) {
@@ -150,6 +151,9 @@ Engine.prototype.setConfig = function(opts){
 
     if (opts.debug) {
         this._debugMode = true;
+    }
+    if (opts.debugBreakFirst){
+        this._debugConfig.breakFirst = true;
     }
     return this;
 };

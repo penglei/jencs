@@ -107,23 +107,28 @@ Executer.prototype.forward = function(stepin){
             continueCmd.go();
         }
     }
-
-    return this.cmdHead && this.cmdHead.node;
 };
 
 //恢复执行:从当前断点处继续执行，直接遇到下一个断点
 //标准的作法是不断调用forward直到遇到debug，但那样效率比较低，在这用一个循环代替
 Executer.prototype.resume = function(){
     var curcmd = this.cmdHead;
-    while(curcmd){
+    while (curcmd) {
         this.cmdHead = curcmd.next;
         curcmd.go();
 
         curcmd = this.cmdHead;
         if (curcmd && curcmd.node instanceof ast.AST_CSDebugger){//这里保证debug cmd还没有执行
-            return curcmd.node;
+            break;
         }
     }
+};
+
+Executer.prototype.allowPaused = function(){
+    if (this.cmdHead && this.cmdHead.node instanceof ast.AST_CSDebugger){
+        return true;
+    }
+    return false;
 };
 
 

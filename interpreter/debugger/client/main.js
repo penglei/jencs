@@ -1,66 +1,44 @@
 define(function(require) {
-    var CodeEditor = require("CodeMirrorEditor");
-    var SourcePanel = require("SourcePanel");
-
     var $ = require('jquery');
 
-    var conn = io.connect('http://localhost', {
+    var Panel = require("Panel");
+    var Backend = require("Backend");
+    var DebugModel = require("DebugModel");//接受数据
+    var DebugAgent = require("DebugAgent");//发送请求
+    //var VariabelPanel = require("VariablePanel");
+    var DebugToolbar = require("DebugToolbar");
+    var CodeEditor = require("CodeCMEditor");
+
+    var backend = new Backend(io.connect('http://localhost', {
         'reconnect': false
-    });
+    }));
 
-    var end_closed = false;
-    var seq = 0; //每个请求给一个续号(续号需要实现有效期)
-    $("#resume").click(function(evt) {
-        if (!end_closed) {
-            conn.emit("resume", {
-                "seq": seq,
-                "type": "resume"
-            });
-        }
-    });
+    //global variable DebugAgent
+    this.DebugAgent = new DebugAgent(backend);
 
-    $("#step-over").click(function(evt) {
-        if (!end_closed) {
-            conn.emit("next", {
-                "seq": seq,
-                "type": "stepover"
-            });
-        }
-    });
+    var debugModel = new DebugModel(backend);
 
-    $("#step-into").click(function(evt) {
-        if (!end_closed) {
-            conn.emit("next", {
-                "seq": seq,
-                "type": "stepinto"
-            });
-        }
-    });
+    Panel.toolbar = new DebugToolbar();
+    Panel.codeEditor = new CodeEditor(debugModel);
 
-    conn.on('Debug.break', function(data) {
-        seq++;
-        SourcePanel.ActiveSourceLine(data.id, data.first_line);
-    });
 
-    conn.on('finished', function(){
-        conn.disconnect();
-        SourcePanel.UnActiveSourceLine();
-    });
+    debugModel.on(DebugModel.EventTypes.SessionInit, Panel.setReSources.bind(Panel));//main
 
-    conn.on("connect", function() {
-        console.log("debugger connected >>>");
-    });
+    debugModel.on(DebugModel.EventTypes.DebuggerPaused, Panel.debuggerPaused.bind(Panel));
+    debugModel.on(DebugModel.EventTypes.DebugFinished, onFinish);
 
-    conn.on('disconnect', function() {
-        end_closed = true;
-        console.log('<<< deubbger finished');
-    });
-
-    conn.on('init', function(data){
-        CodeEditor.onDataSources(data);
-    });
-
-    conn.on('Render.Snippet', function (str) {
+    /*
+    debugModel.on(DebugModel.EventTypes.RenderSnippet, function (str) {
         console.log(str);
     });
+    */
+
+    function onFinish(exit){
+        Panel.codeEditor.unActiveExecutionLine();
+        Panel.toolbar.disable();
+        if (exit){
+            backend.close();
+        }
+    }
+
 });

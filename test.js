@@ -2,6 +2,7 @@
 
 var fs = require('fs');
 var path = require('path');
+var util = require('util');
 
 var CSInterpreter = require('./interpreter');
 
@@ -26,7 +27,7 @@ function ContentWhiteFilter(valueStr, astNode){
     return astNode instanceof AST.AST_Content ? valueStr.replace(/[\r\n\t]/g, '') : valueStr;
 }
 
-if (1){
+if (0){
     var _csRoot = path.resolve(__dirname, './resource/cs/');
     var csIncludeRoot = path.resolve(_csRoot, 'module/');
     var entryCsFile = path.resolve(_csRoot, "wupmain.cs");
