@@ -34,7 +34,7 @@ if (0){
     var dataHdfFile = path.resolve(__dirname, "./resource/wupdata.hdf");
 } else {
     var csIncludeRoot = path.resolve(__dirname, './unit/interpreter/');
-    var entryCsFile = path.resolve(__dirname, "./unit/interpreter/test.cs");
+    var entryCsFile = path.resolve(__dirname, "./unit/interpreter/test_d_each.cs");
     var dataHdfFile = path.resolve(__dirname, "./unit/interpreter/test.hdf");
 }
 

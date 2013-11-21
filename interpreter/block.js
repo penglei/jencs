@@ -189,7 +189,7 @@ ast.AST_MacroDef.proto("execJump", function(context, _symbolAlias) {
     var lastCommand = this.executer.genList(this.body, this);
     this.executer.insertCommand(lastCommand, function(){
         context.leaveScope();
-    }, this, false);
+    }, this, false);//宏执行末尾添加一个独立的command，方便调试的时候更直观
 });
 
 def_execute(ast.AST_Escape, function(context){
