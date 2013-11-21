@@ -24,8 +24,8 @@ function handleServerError(err) {
 /**
  * DebugService
  */
-function DebugService(csEngine) {
-    this._config = {};
+function DebugService(csEngine, config) {
+    this.config = config || {};
     this._engine = csEngine;
     this._httpServer = null;
     this._wsio = null;
@@ -59,10 +59,11 @@ DebugService.prototype._init = function() {
 DebugService.prototype._createSession = function(socket){
     //每次有一个客户端连接都需要新建一个session
     //exectuer的事件需要发到每一个session上面去
-    new Session(this._engine, socket);
+    var newClient =  new Session(this._engine, socket, this.config);
 };
 
-DebugService.prototype.close = function(){
+
+DebugService.prototype._close = function(){
     if (this.wsServer) {
         this.wsServer.close();
         this.emit('close');

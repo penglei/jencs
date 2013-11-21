@@ -14,8 +14,11 @@
                 <button id="step-into" class="break-button">step into</button>
                 <button id="step-out" class="break-button">step out</button>
             </div>
-            <div id="source-panel">
+            <div class="operation-bar">
                 <div id="files-nav"></div>
+                <div id="variable-panel"></div>
+            </div>
+            <div id="source-panel">
                 <div class="source-view">
                     <form><div id="code" name="code"></div><form>
                 </div>
@@ -27,7 +30,7 @@
         <script src="bootstrap/js/bootstrap.js"></script>
         <script src="css.js"></script>
         <script src="text.js"></script>
-        <script>
+        <script type="text/javascript">
             require.config({
                 'textType': ['cs', 'vm']
             });
@@ -37,7 +40,11 @@
             require('bootstrap/css/bootstrap-theme.css');
             require('style.css');
 
-            require("main");
+            require('cm/codemirror.js', function(){
+                require('cm/clearsilver.js', function(){
+                    require("main");
+                });
+            });
         </script>
     </body>
 
