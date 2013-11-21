@@ -204,6 +204,9 @@ function initScopeLayer(astTree){
                 //macrodef的作用域是运行时决定的。所以不需要给其加上parent_scope，等到call的时候再指定
                 node.parent_scope = scope;
             } else {
+                if (macros[node.id]){
+                    throw new Error("macro:" + node.id + " defined repeatly.");
+                }
                 macros[node.id] = node;
                 if (node.parameters.length > 1){
                     //TODO 检查去重，不允许同名形参

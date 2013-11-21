@@ -73,19 +73,12 @@ Session.prototype.emitSnippet = function(str){
 
 Session.prototype.debugBreak = function(requstParam){
     var socket = this.socket;
-    if (this.executer.cmdHead) {
+    if (this.executer.isRunning()) {
         //说明还在执行
-        var astnode = this.executer.cmdHead.node;
-        console.log(astnode);
+        var lineInfo = this.executer.getExecutePos();
         var params = {
-            "executeLine": {
-                "stype": astnode.type,
-                "line": astnode.pos.first_line,
-                "colnum": astnode.pos.first_column,
-                "sourceName": astnode.pos.name,
-                "sourceId": astnode.pos.fileid,
-            },
-            "watchExpressions": null,
+            "executeLine": lineInfo,
+            "watchExpressions": null, //TODO 获得所有需要查看的表达值
             "scopeChain": null //TODO 获得当前的调用堆栈
         };
         this.sendEvent("DebugPaused", params);

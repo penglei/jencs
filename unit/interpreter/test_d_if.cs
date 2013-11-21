@@ -2,8 +2,12 @@
     aaa
 <?cs elif:bbb?>
     bbb
-<?cs else ?>
+<?cs elif:xxx ?>
     xxx
+<?cs elif:yyy ?>
+    yyy
+<?cs else ?>
+    .....
 <?cs /if?>
   
 -----each--------

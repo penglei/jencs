@@ -15,8 +15,7 @@
                 _p[i] = $pos[i]
             }
         }
-        _p.name = yy.filename;//自定义的，这是文件名
-        _p.fileid = yy.fileid;//自定义的，这是文件名
+        _p.fileid = yy.fileid;//自定义的属性，这是文件名
         return _p;
     }
 %}
@@ -99,9 +98,10 @@ elif_list:
         //console.log('elif:' + $3.left.target.name);
         //console.log($1);
         var alternate = new ast.AST_If($4, $3);
+        alternate.pos = pos(@2, yy);
         if ($1){
             //遍历AST_If找到最下面的alternate，把当前归约出的elif放到末尾
-            //归约的顺序跟书顺序是一样的
+            //归约的顺序跟代码书写顺序是一样的
             var curBranch = $1;
             while(curBranch.alternate){
                 curBranch = curBranch.alternate
@@ -111,7 +111,6 @@ elif_list:
         } else {
             $$ = alternate;
         }
-        $$.pos = pos(@1, yy);
       }
     | /* empty */
     ;
@@ -188,6 +187,8 @@ macro_def:
       T_DEF T_MACRO_NAME '(' def_formal_parameters ')' inner_statement_list T_END_MACRO_DEF {
         $$ = new ast.AST_MacroDef($6, $2, $4);
         $$.pos = pos(@1, yy);
+        $$.pos.last_line = @7.last_line;
+        $$.pos.last_column = @7.last_column;
       }
     ;
 

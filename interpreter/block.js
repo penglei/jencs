@@ -16,7 +16,8 @@ def_execute(ast.AST_If, function(context){
     if (testExpr.isTrue()){
         this.gen_body(context);
     } else if (this.alternate) {
-        this.alternate.execute(context);//这里一定要直接调用execute，生成下一个command
+        this.executer.command(this.alternate.execute, this.alternate);
+        //this.alternate.execute(context);
     }
 });
 
@@ -139,7 +140,7 @@ def_execute(ast.AST_Loop, function(context){
         } else {
             throw new Error("运行时内部错误。循环变量: " + name + " 意外为空");
         }
-        executer.command(eachStep, this);
+        executer.command(eachStep, this, true);
     }
 
     function eachStep(){
@@ -188,7 +189,7 @@ ast.AST_MacroDef.proto("execJump", function(context, _symbolAlias) {
     var lastCommand = this.executer.genList(this.body, this);
     this.executer.insertCommand(lastCommand, function(){
         context.leaveScope();
-    }, this, true);
+    }, this, false);
 });
 
 def_execute(ast.AST_Escape, function(context){

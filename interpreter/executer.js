@@ -20,7 +20,7 @@ function Command(act, astNode, args){
     this.type = astNode.type;
     this.action = act;
     this.args = args || [];
-    this.that = astNode;
+    this.pos = astNode.pos;
     this.node = astNode;
     this.next = null;
     this.dependent = false;
@@ -29,7 +29,7 @@ function Command(act, astNode, args){
 }
 
 Command.prototype.go = function(){
-    this.action.apply(this.that, this.args);
+    this.action.apply(this.node, this.args);
 };
 
 //-----
@@ -124,6 +124,22 @@ Executer.prototype.resume = function(){
     }
 };
 
+Executer.prototype.isRunning = function(){
+    return this.cmdHead ? true : false;
+};
+
+Executer.prototype.getExecutePos = function(){
+    if (!this.cmdHead) return;
+    var cmd = this.cmdHead;
+    var executePos = {
+        "stype": cmd.node.type,
+        "column": cmd.pos.column ||cmd.pos.first_column,
+        "line": cmd.pos.line || cmd.pos.first_line,//first_line在某些时候不是最好的
+        "sourceId": cmd.pos.fileid
+    };
+    return executePos;
+};
+
 Executer.prototype.allowPaused = function(){
     if (this.cmdHead && this.cmdHead.node instanceof ast.AST_CSDebugger){
         return true;
@@ -135,7 +151,7 @@ Executer.prototype.allowPaused = function(){
 /**
  * 生成bodyCommands
  */
-Executer.prototype.genList = function(bodyList, that){
+Executer.prototype.genList = function(bodyList){
     var st, commandLocalStart, currentCommand;
 
     //i = 0已经在上面处理
@@ -190,7 +206,14 @@ Executer.prototype.command = function(fun, astNode, dependent){
 
 Executer.prototype.insertCommand = function(parentCmd, fun, astNode, dependent){
     var cmd = new Command(fun, astNode);
-    if (dependent) cmd.dependent = true;
+    if (dependent) {
+        cmd.dependent = true;
+    } else if (astNode instanceof ast.AST_MacroDef){
+        //只有单独存在的cmd才需要特殊处理
+        cmd.pos = util._extend({}, astNode.pos);
+        cmd.pos.line = cmd.pos.last_line;
+        cmd.pos.column = cmd.pos.last_column;
+    }
     cmd.next = parentCmd.next;
     parentCmd.next = cmd;
 };
