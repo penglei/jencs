@@ -4,43 +4,48 @@
     <head>
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
         <title>clearsivler debugger</title>
+        <script src="joins.js"></script>
+        <script src="css.js"></script><!-- amd loader stylesheet file plugin -->
+        <script type="text/javascript" charset="utf-8">
+            require('cm/codemirror.css');
+            require('cm/cmdevtools.css');
+
+            require('inspector.css');
+            require('inspectorCommon.css');
+            require('splitView.css');
+            require('navigatorView.css');
+            require('tabbedPane.css');
+            require('scriptsPanel.css');
+            require('style.css');
+        </script>
     </head>
 
     <body>
-        <div id="container">
-            <div class="status-bar">
-                <button id="resume" class="break-button">Resume</button>
-                <button id="step-over" class="break-button">step over</button>
-                <button id="step-into" class="break-button">step into</button>
-                <button id="step-out" class="break-button">step out</button>
-            </div>
-            <div class="operation-bar">
-                <div id="files-nav"></div>
-                <div id="variable-panel"></div>
-            </div>
-            <div id="source-panel">
-                <div class="source-view">
-                    <form><div id="code" name="code"></div><form>
+        <div id="root">
+            <div id="toolbar">
+                <div class="toolbar-item close-left"><div class="close-button" id="close-button-left"></div></div>
+                <div id="toolbar-controls">
+                    <div class="toolbar-item"><div id="toolbar-panels-menu" class="hidden">&hellip;</div></div>
+                    <div class="toolbar-item"><div id="toolbar-dropdown-arrow" class="hidden">&raquo;</div></div>
+                    <div class="toolbar-item close-right" style="display:none"><div class="close-button" id="close-button-right"></div></div>
                 </div>
+            </div>
+            <div id="main"></div>
+            <div id="drawer"></div>
+            <div id="main-status-bar" class="status-bar" style="display:none">
+                <div id="bottom-status-bar-container">
+                    <div id="panel-status-bar">
+                        <div id="drawer-view-anchor"></div>
+                    </div>
+                </div>
+                <div id="error-warning-count" class="hidden"></div>
             </div>
         </div>
         <script src="/socket.io/socket.io.js"></script>
-        <script src="joins.js"></script>
-        <script src="jquery.js"></script>
-        <script src="bootstrap/js/bootstrap.js"></script>
-        <script src="css.js"></script>
-        <script src="text.js"></script>
-        <script type="text/javascript">
-            require.config({
-                'textType': ['cs', 'vm']
-            });
-            require('cm/codemirror.css');
-            require('cm/monokai.css');
-            require('bootstrap/css/bootstrap.css');
-            require('bootstrap/css/bootstrap-theme.css');
-            require('style.css');
 
-            require('cm/codemirror.js', function(){
+        <script type="text/javascript">
+
+            require(['UIString', 'DOMExtension', 'utilities', 'cm/codemirror.js'], function(){
                 require('cm/clearsilver.js', function(){
                     require("main");
                 });

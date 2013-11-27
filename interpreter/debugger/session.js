@@ -1,11 +1,14 @@
 var EventEmitter = require("events").EventEmitter,
-    inherits = require('util').inherits;
+    inherits = require("util").inherits,
+    path = require("path");
 
 function Session(csengine, socket, config) {
     this.config = config;
     this.engine = csengine;
     this.executer = csengine.executer;
     this.socket = socket;
+
+    this._sourcesDescriptor = {};
 
     socket.on("disconnect", this.disconnect.bind(this));
     socket.on("message", this._onMessage.bind(this));
@@ -60,12 +63,45 @@ Session.prototype.sendMessage = function(message){
 };
 
 Session.prototype.emitInitStatus = function(){
+    var _sources = this.engine.getSources(), resources = [];
+    for (var i = 0, l = _sources.length; i < l; i ++) {
+        resources.push(this._fileResourcesDescriptor(_sources[i]));
+    }
+
     var data = {
-        "sources": this.engine.getSources(),
+        "resources": resources,
         "resumeEvaluate": this.config.breakFirst ? true : false
     };
     this.sendEvent("SessionInit", data);
 };
+
+Session.prototype._fileResourcesDescriptor = function(v){
+    if (this._sourcesDescriptor[v.id]) return this._sourcesDescriptor[v.id];
+    var sourcePathname = path.join(v.parent, v.name);
+
+    var sourceName = path.basename(sourcePathname),
+        sourceParent = "",
+        url = sourceName;//url要保证唯一的
+
+    if (!v.internal){//默认无名的入口文件不做任何处理
+        sourceParent = path.dirname(sourcePathname);
+        if (sourceParent == ".") sourceParent = "";
+        url = 'file://' + sourcePathname;
+    }
+
+    var _source = {
+        "id": v.id,
+        "mimeType":"text/clearsilver",
+        "name": sourceName,
+        "parentPath": sourceParent,
+        "content": v.source,
+        "url":url
+    };
+
+    this._sourcesDescriptor[v.id] = _source;
+    return _source;
+};
+
 
 Session.prototype.emitSnippet = function(str){
     this.socket.emit("RenderSnippet", str);
@@ -99,7 +135,7 @@ Session.prototype.debugBreak = function(requstParam){
 
 Session.prototype.disconnect = function() {
     console.log("socket disconnected.");
-    process.exit();
+    //process.exit();
 };
 
 

@@ -22,7 +22,9 @@ function Engine(csString){
 
     this.csparser = new ClearSilverParser();
 
-    this.csparser.yy.filename = this._entryName = "[main]";
+    this.csparser.yy.filename = this._entryPathname = "[main]";
+    this._entryPathIsDefault = true;
+    this._includeParentBase = "";
 
     if (typeof csString == 'string') this.initEntrySource(csString);
 
@@ -106,11 +108,24 @@ Engine.prototype._onEnd = function(){
 
 Engine.prototype._saveSource = function(name, source){
     var id = this._sources.length + 1;
-    this._sources.push({
-        "name":name,
-        "source":source,
+    var sourceInfo = {
+        "internal": false,
+        "parent": "",
+        "name": name,
+        "source": source,
         "id": id
-    });
+    };
+
+    if (id != 1) {
+        //说明这是子模板
+        sourceInfo.parent = this._includeParentBase;
+    } else {
+        if (this._entryPathIsDefault){
+            sourceInfo.internal = true;
+        }
+    }
+
+    this._sources.push(sourceInfo);
     return id;
 };
 
@@ -118,13 +133,13 @@ Engine.prototype.onRender = function(cb){
     this._onRenderListeners.push(cb);
 };
 
-Engine.prototype.offRender = function (cb) {
-    // body...
-};
+Engine.prototype.initEntrySource = function(csString, pathname){
+    if (pathname !== undefined) {
+        this._entryPathIsDefault = false;
+        this.csparser.yy.name = this._entryPathname = pathname;
+    }
+    var fileid = this._saveSource(this._entryPathname, csString);
 
-Engine.prototype.initEntrySource = function(csString, name){
-    if (name !== undefined) this.csparser.yy.name = this._entryName = name;
-    var fileid = this._saveSource(this._entryName, csString);
     this.csparser.yy.fileid = fileid;
     this.astInstance = this.csparser.parse(csString);
     Scope.initScopeLayer(this.astInstance);//XXX 虽然会修改ast，但它是没有什么副作用的.但最好还是用一份clone的ast来运行最好
@@ -155,6 +170,11 @@ Engine.prototype.setConfig = function(opts){
     if (opts.debugBreakFirst){
         this._debugConfig.breakFirst = true;
     }
+
+    if (opts.includeBase){
+        this._includeParentBase = opts.includeBase;
+    }
+
     return this;
 };
 

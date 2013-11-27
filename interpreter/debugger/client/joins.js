@@ -287,7 +287,7 @@
                     fetch(t.meta.url, function(defs) {
                         //最终，segmentDef会调用update方法完成依赖的加载
                         //有些插件可能需要改变加载顺序：加载依赖->再加载自身模块
-                        //XXX fetched事件改成reuested事件更好
+                        //XXX fetched事件改成requested事件更好
                         if (!t.emit("fetched", defs)) {
                             var children = segmentDef([t], defs);
                             each(children, function(item) {

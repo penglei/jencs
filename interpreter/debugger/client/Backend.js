@@ -3,6 +3,7 @@ define(function(require){
     var EventEmitter = require("events").EventEmitter;
 
     function Backend(conn){
+
         this._conn = conn;
         this._connected = false;
 
@@ -54,7 +55,7 @@ define(function(require){
     Backend.prototype._dispatchHandler = function(message){
         var messageObject = (typeof message === "string") ? JSON.parse(message) : message;
         if ("id" in messageObject){//confirm request
-            console.log(messageObject);
+            console.log(message);
             var request = this._requests[messageObject.id];
             delete this._requests[messageObject.id];
             this._requests._count--;

@@ -14,15 +14,15 @@ define(function (require, exports){
     }
 
     DebugToolbar.prototype.resume = function(){
-        if (!this._disabled) DebugAgent.resume();
+        if (!this._disabled) DebuggerAgent.resume();
     };
 
     DebugToolbar.prototype.stepOver = function(){
-        if (!this._disabled) DebugAgent.stepOver();
+        if (!this._disabled) DebuggerAgent.stepOver();
     };
 
     DebugToolbar.prototype.stepInto = function(){
-        if (!this._disabled) DebugAgent.stepInto();
+        if (!this._disabled) DebuggerAgent.stepInto();
     };
 
     DebugToolbar.prototype.disable = function(){

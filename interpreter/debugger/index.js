@@ -13,6 +13,9 @@ function indexAction(req, res){
     res.sendfile(path.join(WEBROOT, 'index.html'));
 }
 
+function sourcesReadAction() {
+}
+
 function handleServerListening() {
   this.emit('listening');
 }
@@ -26,6 +29,7 @@ function handleServerError(err) {
  */
 function DebugService(csEngine, config) {
     this.config = config || {};
+    this.config.port = this.config.port || "10080";
     this._engine = csEngine;
     this._httpServer = null;
     this._wsio = null;
@@ -41,6 +45,8 @@ DebugService.prototype._init = function() {
     var httpServer = this._httpServer = http.createServer(app);
 
     app.get('/', indexAction.bind(this));
+    app.get('/s/', sourcesReadAction.bind(this));
+
     app.use(express.static(WEBROOT));
 
     var wsServer = this.wsServer = io.listen(httpServer);
@@ -53,7 +59,7 @@ DebugService.prototype._init = function() {
     //startup server
     httpServer.on('listening', handleServerListening.bind(this));
     httpServer.on('error', handleServerError.bind(this));
-    httpServer.listen(10080);
+    httpServer.listen(this.config.port);
 };
 
 DebugService.prototype._createSession = function(socket){

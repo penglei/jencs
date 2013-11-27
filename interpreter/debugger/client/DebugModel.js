@@ -1,8 +1,8 @@
 define(function(require){
-    var Util = require("util");
     var EventEmitter = require("events").EventEmitter;
 
     function DebugModel(backend){
+        EventEmitter.call(this);
         this._backend = backend;
         this._listeners = {};
         backend.registerCommand(new Dispatcher(this));
@@ -10,18 +10,21 @@ define(function(require){
         this._backend.on("errorExit", this._connectErrorHandler.bind(this));
     }
 
-    Util.inherits(DebugModel, EventEmitter);
+    DebugModel.prototype = {
+        __proto__: EventEmitter.prototype
+    };
 
     DebugModel.prototype._connectErrorHandler = function(){
-        this.emit(DebugModel.EventTypes.DebugFinished, true);
+        this.emit(DebugModel.Events.DebugFinished, true);
         console.error("remote debugger closed unexpectedly.");
     };
 
-    DebugModel.EventTypes = {
-        SessionInit: "SessionInit",
-        RenderSnippet: "RenderSnippet",
-        DebuggerPaused: "DebuggerPaused",
-        DebugFinished: "DebugFinished",
+    DebugModel.Events = {
+        SessionInit: "sessionInit",
+        RenderSnippet: "renderSnippet",
+        DebuggerPaused: "debuggerPaused",
+        DebugFinished: "debugFinished",
+        FileSourcesAdded: "SourceCodeAdded"
 
         /*
         DebuggerWasEnabled: "DebuggerWasEnabled",
@@ -41,19 +44,25 @@ define(function(require){
     }
 
     Dispatcher.prototype = {
-        "SessionInit": function(sources, resumeEvaluate){
-            this._model.emit(DebugModel.EventTypes.SessionInit, sources);
-            DebugAgent.sessionReady(resumeEvaluate);
+        "SessionInit": function(resources, resumeEvaluate){
+            this._model.dispatchEventToListeners(DebugModel.Events.FileSourcesAdded, resources);
+            CSInspector.debugAgent.sessionReady(resumeEvaluate);
         },
-        "DebugPaused": function(evaluateLine, scopeChain, watchExpressions){
-            this._model.emit(DebugModel.EventTypes.DebuggerPaused, evaluateLine, scopeChain, watchExpressions);
+        "DebugPaused": function(evaluateLine, callFrames, watchExpressions){
+            var data = {
+                evaluateLine: evaluateLine,
+                callFrames: callFrames,
+                watchExpressions: watchExpressions
+            };
+            //this._model.emit(DebugModel.Events.DebuggerPaused, evaluateLine, callFrames, watchExpressions);
+            this._model.dispatchEventToListeners(DebugModel.Events.DebuggerPaused, data);
         },
         "DebugFinished": function(exit){
-            this._model.emit(DebugModel.EventTypes.DebugFinished, exit);
+            this._model.emit(DebugModel.Events.DebugFinished, exit);
         }
     };
 
-    Dispatcher.prototype.SessionInit.parameters = ["sources", "resumeEvaluate"];
+    Dispatcher.prototype.SessionInit.parameters = ["resources", "resumeEvaluate"];
     Dispatcher.prototype.DebugPaused.parameters = ["executeLine", "scopeChain", "watchExpressions"];
     Dispatcher.prototype.DebugFinished.parameters = ["exitOnFinished"];
 
