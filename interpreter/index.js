@@ -13,6 +13,12 @@ require("./statement");
 require("./expr");
 require("./external");
 
+function insertArray(arr, item){
+    for(var i = 0; arr[i]; i++){
+        if (arr[i] == item) return;
+    }
+    arr.push(item);
+}
 function Engine(csString){
     this.result = "";
     this._debugMode = false;
@@ -101,7 +107,7 @@ Engine.prototype._renderListener = function(snippet){
 };
 
 Engine.prototype._onEnd = function(){
-    this._endListener.call(this, this.result);
+    if (this._endListener) this._endListener.call(this, this.result);
 };
 
 Engine.prototype._saveSource = function(name, source){
@@ -115,7 +121,7 @@ Engine.prototype._saveSource = function(name, source){
 };
 
 Engine.prototype.onRender = function(cb){
-    this._onRenderListeners.push(cb);
+    if (typeof cb == "function") insertArray(this._onRenderListeners, cb);
 };
 
 Engine.prototype.offRender = function (cb) {
@@ -185,7 +191,7 @@ Engine.prototype.setEndListener = function(listener){
 
 Engine.prototype.addOutputFilter = function(filter){
     if (typeof filter == "function"){
-        this._externFilters.push(filter);
+        insertArray(this._externFilters, filter);
     }
 };
 

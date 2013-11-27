@@ -39,6 +39,9 @@ function Executer(){
     this.debugr = null;
     this.context = null;
     this.cmdHead = null;
+
+    //用事件的方式可以统一debug模式和普通模式
+    this.on("end", this.clean.bind(this))
 }
 
 util.inherits(Executer, events.EventEmitter);
@@ -59,9 +62,6 @@ Executer.prototype.run = function(astInstance, context, debugr){
     ast.AST_Node.proto("context", context);
 
     astInstance.execute(context);//AST_Program start
-
-    //用事件的方式可以统一debug模式和普通模式
-    this.on("end", this.clean.bind(this))
 };
 
 //支持debug方式运行
