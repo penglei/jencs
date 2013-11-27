@@ -59,7 +59,7 @@ TestCSEngine.setConfig({
     "debug": opts.enableDebugger
 });
 
-//TestCSEngine.addOutputFilter(ContentWhiteFilter);
+TestCSEngine.addOutputFilter(ContentWhiteFilter);
 TestCSEngine.initEntrySource(mainCsSource, entryCsFile);
 
 TestCSEngine.onRender(function(snippet){
