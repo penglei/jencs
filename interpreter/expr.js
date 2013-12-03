@@ -241,7 +241,7 @@ ast.AST_FunctionCall.proto("calc", function(){
     }
 
     var argValue, i, argsList = [];
-debugger
+
     for(i = 0; this.args[i]; i++){
         if (this.args[i] instanceof ast.AST_VariableAccess){
             argValue = this.args[i].getSymbolValueNode();
