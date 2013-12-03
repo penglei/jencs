@@ -1,5 +1,6 @@
-define(function(require){
+define(function(require, exports){
 var EventObjectEmitter = require("events").EventObjectEmitter;
+var ParsedURL = require("ParsedURL");
 /**
  * @constructor
  * @param {string} name
@@ -8,7 +9,7 @@ var EventObjectEmitter = require("events").EventObjectEmitter;
  * @param {string} color
  * @param {boolean} isTextType
  */
-function ResourceType(name, title, categoryTitle, color, isTextType){
+function ResourceType(name, title, categoryTitle, color, isTextType)
 {
     this._name = name;
     this._title = title;
@@ -71,17 +72,18 @@ ResourceType.prototype = {
      */
     canonicalMimeType: function()
     {
-        if (this === WebInspector.resourceTypes.Document)
+        if (this === ResourceTypes.Document)
             return "text/html";
-        if (this === WebInspector.resourceTypes.Script)
+        if (this === ResourceTypes.Script)
             return "text/javascript";
-        if (this === WebInspector.resourceTypes.Stylesheet)
+        if (this === ResourceTypes.Stylesheet)
             return "text/css";
         return "";
     }
 }
 
-ResourceType.Script = new ResourceType("script", "Script", "Scripts", "rgb(255,121,0)", true);
+var ResourceTypes = {};
+ResourceTypes.Script = new ResourceType("script", "Script", "Scripts", "rgb(255,121,0)", true);
 
 function Resource(url, mimeType, type)
 {
@@ -107,7 +109,7 @@ Resource.prototype = {
     set url(x)
     {
         this._url = x;
-        this._parsedURL = new WebInspector.ParsedURL(x);
+        this._parsedURL = new ParsedURL(x);
     },
 
     get parsedURL()
@@ -132,7 +134,7 @@ Resource.prototype = {
     },
 
     /**
-     * @return {WebInspector.ResourceType}
+     * @return {ResourceType}
      */
     get type()
     {
@@ -140,7 +142,7 @@ Resource.prototype = {
     },
 
     /**
-     * @return {Array.<WebInspector.ConsoleMessage>}
+     * @return {Array.<ConsoleMessage>}
      */
     get messages()
     {
@@ -148,7 +150,7 @@ Resource.prototype = {
     },
 
     /**
-     * @param {WebInspector.ConsoleMessage} msg
+     * @param {ConsoleMessage} msg
      */
     addMessage: function(msg)
     {
@@ -158,7 +160,7 @@ Resource.prototype = {
         if (!this._messages)
             this._messages = [];
         this._messages.push(msg);
-        this.dispatchEventToListeners(WebInspector.Resource.Events.MessageAdded, msg);
+        this.dispatchEventToListeners(Resource.Events.MessageAdded, msg);
     },
 
     /**
@@ -212,7 +214,7 @@ Resource.prototype = {
     },
 
     /**
-     * @return {WebInspector.ResourceType}
+     * @return {ResourceType}
      */
     contentType: function()
     {
@@ -285,7 +287,7 @@ Resource.prototype = {
          */
         function loadFallbackContent(error)
         {
-            var scripts = WebInspector.debuggerModel.scriptsForSourceURL(this.url);
+            var scripts = CSInspector.debugModel.scriptsForSourceURL(this.url);
             if (!scripts.length) {
                 console.error("Resource content request failed: " + error);
                 replyWithContent.call(this, null, false);
@@ -293,9 +295,9 @@ Resource.prototype = {
             }
 
             var contentProvider;
-            if (this.type === WebInspector.resourceTypes.Document)
+            if (this.type === ResourceTypes.Document)
                 contentProvider = new WebInspector.ConcatenatedScriptsContentProvider(scripts);
-            else if (this.type === WebInspector.resourceTypes.Script)
+            else if (this.type === ResourceTypes.Script)
                 contentProvider = scripts[0];
 
             if (!contentProvider) {
@@ -337,5 +339,6 @@ Resource.prototype = {
     __proto__: EventObjectEmitter.prototype
 }
 
-return Resource;
+exports.Resource = Resource;
+exports.ResourceTypes = ResourceTypes;
 });

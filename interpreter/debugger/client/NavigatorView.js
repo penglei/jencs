@@ -33,6 +33,7 @@ var View = require("View");
 var TreeOutline = require("treeoutline").TreeOutline;
 var TreeElement = require("treeoutline").TreeElement;
 var ContextMenu = require("ContextMenu");
+var Workspace = require("Workspace").Workspace;
 
 /**
  * @extends {View}

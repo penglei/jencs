@@ -1,7 +1,8 @@
-define(function(){
+define(function(require){
 
 var EventObjectEmitter = require("events").EventObjectEmitter;
-var SimpleProjectDelegate = require("SimpleWorkspaceProvider");
+var SimpleProjectDelegate = require("SimpleProjectDelegate");
+var ParsedURL = require("ParsedURL");
 
 /**
  * @constructor
@@ -9,7 +10,7 @@ var SimpleProjectDelegate = require("SimpleWorkspaceProvider");
  * @param {Workspace} workspace
  * @param {string} type
  */
-SimpleWorkspaceProvider = function(workspace, type)
+function SimpleWorkspaceProvider(workspace, type)
 {
     this._workspace = workspace;
     this._type = type;
@@ -30,7 +31,7 @@ SimpleWorkspaceProvider.prototype = {
         this._workspace.addProject(simpleProjectDelegate);
         return simpleProjectDelegate;
     },
- 
+
     /**
      * @param {string} url
      * @param {ContentProvider} contentProvider
@@ -68,7 +69,7 @@ SimpleWorkspaceProvider.prototype = {
         var splitURL = ParsedURL.splitURL(url);
         var projectName = splitURL[0];
         var parentPath = splitURL.slice(1, splitURL.length - 1).join("/");
-        var name = splitURL[splitURL.length - 1];
+        var name = ParsedURL.splitURL[splitURL.length - 1];
         var projectDelegate = this._projectDelegate(projectName);
         var path = projectDelegate.addFile(parentPath, name, forceUnique, url, contentProvider, isEditable, isContentScript);
         return this._workspace.uiSourceCode(projectDelegate.id(), path);

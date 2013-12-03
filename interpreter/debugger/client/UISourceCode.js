@@ -11,7 +11,7 @@ var EventObjectEmitter = require("events").EventObjectEmitter;
  * @param {string} content
  * @param {boolean} isEditable
  */
-function UISourceCode(project, id, parentPath, name, url, content)
+function UISourceCode(project, id, parentPath, name, url, content, contentType)
 {
     EventObjectEmitter.call(this);
     this._project = project;
@@ -22,6 +22,8 @@ function UISourceCode(project, id, parentPath, name, url, content)
     /** @type {!Array.<function(?string,boolean,string)>} */
     this._requestContentCallbacks = [];
     this._content = content || "";
+
+    this._contentType = contentType;
 }
 
 UISourceCode.Events = {
@@ -97,6 +99,14 @@ UISourceCode.prototype = {
     contentURL: function()
     {
         return this.originURL();
+    },
+
+    /**
+     * @return {WebInspector.ResourceType}
+     */
+    contentType: function()
+    {
+        return this._contentType;
     },
 
     /**

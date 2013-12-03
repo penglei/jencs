@@ -33,7 +33,7 @@ define(function(require){
 var Workspace = require("Workspace").Workspace;
 var ParsedURL = require("ParsedURL");
 var DebugModel = require("DebugModel");
-var Resource = require("Resource");
+var Resource = require("Resource").Resource;
 
 /**
  * @constructor
@@ -95,12 +95,12 @@ NetworkUISourceCodeProvider.prototype = {
 
     _fileResourcesAdded: function(event) {
         var fileResources = event.data;
-        for(var i = 0, l = fileResources.length; i++){
+        for(var i = 0, l = fileResources.length; i < l; i++) {
             var fileResourceItem = fileResources[i];
-            var resourceProvider = new Resource();
-            this._addFile(fileResources.url);
+            var resourceProvider = new Resource(fileResourceItem.url, fileResourceItem.name, "");
+            this._addFile(fileResourceItem.url, resourceProvider, true);
         }
-    }
+    },
 
     /**
      * @param {string} url
@@ -111,10 +111,10 @@ NetworkUISourceCodeProvider.prototype = {
         if (this._processedURLs[url])
             return;
 
-        //下面这条语句可以看出只需要这四个接口:contentType, contentURL, requestContent, searchInContent
+        //进入下面这条语句可以看出ContentProvider只要提供四个接口:contentType, contentURL, requestContent, searchInContent
         //contentProvider = new ContentProviderOverridingMimeType(contentProvider, mimeType);
         this._processedURLs[url] = true;
-        this._networkWorkspaceProvider.addFileForURL(url, contentProvider, isEditable, isContentScript);
+        this._networkWorkspaceProvider.addFileForURL(url, contentProvider, false, isContentScript);
     },
 
     _reset: function()
