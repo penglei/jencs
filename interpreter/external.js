@@ -1,6 +1,24 @@
 var Scope = require("./scope");
 
+var dumpHdf = require("./hdf").dumpHdf ;
 var CSValue = require("./types").CSValue;
+var HNode = require("./types").HNode;
+
+function subcount(arg){
+    if (arg instanceof HNode){
+        return new CSValue(CSValue.Number, arg.childrenSize());
+    } else {
+        return new CSValue(CSValue.Number, 0);
+    }
+}
+
+function name(hdfnode){
+    if (hdfnode instanceof HNode){
+        return new CSValue(CSValue.String, hdfnode.name);
+    }
+    return new CSValue(CSValue.String, "");
+}
+
 
 function getStringCSValue(obj){
     if (obj instanceof CSValue){
@@ -221,6 +239,16 @@ function string_firstwords_filter(url, replaceStr){
     return url;
 }
 
+function dump(hdfnode){
+    if (hdfnode instanceof HNode){
+        return new CSValue(CSValue.String, dumpHdf(hdfnode));
+    }
+    return new CSValue(CSValue.String, "");
+}
+
+Scope.addExternInterface("subcount", subcount);
+Scope.addExternInterface("len", subcount);
+Scope.addExternInterface("name", name);
 Scope.addExternInterface("string.slice", string_slice);
 Scope.addExternInterface("string.find", string_find);
 Scope.addExternInterface("string.length", string_length);
@@ -233,4 +261,6 @@ Scope.addExternInterface("html_encode", html_encode);
 Scope.addExternInterface("uri_encode", uri_encode);
 Scope.addExternInterface("string_firstwords_replace", string_firstwords_replace);
 Scope.addExternInterface("string_firstwords_filter", string_firstwords_filter);
+Scope.addExternInterface("dump", dump);
+
 //Scope.addExternInterface("", );

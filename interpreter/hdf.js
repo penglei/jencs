@@ -457,9 +457,14 @@ exports.dumpHdf = function dumpHdf(hdf){
         deep.pop();
     }
 
-    for(var i in hdf){
-        if (hdf.hasOwnProperty(i)){
-            print_node(hdf[i]);
+    if (hdf.name){
+        print_node(hdf);
+    } else {
+    //TODO 根节点被特殊处理了，考虑统一
+        for(var i in hdf){
+            if (hdf.hasOwnProperty(i)){
+                print_node(hdf[i]);
+            }
         }
     }
     return buffer;

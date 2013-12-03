@@ -5,24 +5,6 @@ var CSValue = require("./types").CSValue;
 
 function Empty(){}
 
-//{internal function
-function subcount(arg){
-    if (arg instanceof HNode){
-        return new CSValue(CSValue.Number, arg.childrenSize());
-    } else {
-        return new CSValue(CSValue.Number, 0);
-    }
-}
-
-function name(hdfnode){
-    if (hdfnode instanceof HNode){
-        return new CSValue(CSValue.String, hdfnode.name);
-    }
-    return new CSValue(CSValue.String, "");
-}
-
-//internal function}
-
 function  internalHtmlFilter(str){
     return str.replace(/&/g,'&amp;').replace(/>/g,'&gt;').replace(/</g,'&lt;').replace(/"/g,'&quot;').replace(/'/g, '&#39;');
 }
@@ -270,11 +252,7 @@ Context.prototype.last = function JudgeLoopLast(symbol){
     }
 };
 
-Context.prototype.externInterface = {
-    "subcount": subcount,
-    "len": subcount,
-    "name": name
-};
+Context.prototype.externInterface = {};
 
 Context.prototype.getExternInterface = function(id){
     return this.externInterface[id];

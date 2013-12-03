@@ -13,6 +13,8 @@ require("./statement");
 require("./expr");
 require("./external");
 
+function Empty(){}
+
 function insertArray(arr, item){
     for(var i = 0; arr[i]; i++){
         if (arr[i] == item) return;
@@ -24,6 +26,7 @@ function Engine(csString){
     this._debugMode = false;
     this._debugConfig = {};
 
+    this._lexIncludeSource  = Empty;
     this.executer = new Executer();
 
     this.csparser = new ClearSilverParser();

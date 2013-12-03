@@ -236,12 +236,12 @@ ast.AST_FunctionCall.proto("calc", function(){
         id = this.id.name;
     }
 
-    if (id == "last" || id == "first"){
+    if (id == "last" || id == "first"){//last 和 first函数的运行依赖执行环境
         return this.context[id](this.args[0]);
     }
 
     var argValue, i, argsList = [];
-
+debugger
     for(i = 0; this.args[i]; i++){
         if (this.args[i] instanceof ast.AST_VariableAccess){
             argValue = this.args[i].getSymbolValueNode();
