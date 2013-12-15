@@ -43,6 +43,7 @@ function Executer(engine){
     this._engine = engine;
 
     this._active = true;
+    this._breakpoints = [];
 }
 
 util.inherits(Executer, events.EventEmitter);
@@ -171,7 +172,10 @@ Executer.prototype.forward = function(stepin){
 
             while (this.cmdHead && this.cmdHead != tomatchEndCmd.endTarget.target){
             //@2 如果下一条指令是debug，就*直接(无论是单步还是resume)*返回它为下一次要执行的指令
-                if (this.cmdHead.node instanceof ast.AST_CSDebugger && this._active) break;
+            //
+                if (this._canBreak(this.cmdHead.node)) break;
+                //if (this.cmdHead.node instanceof ast.AST_CSDebugger && this._active) break;
+
                 cmd = this.cmdHead;
                 this.cmdHead = cmd.next;
                 cmd.go();
@@ -194,9 +198,6 @@ Executer.prototype.forward = function(stepin){
     }
 };
 
-Executer.prototype.setBreakpointsActive = function(active){
-    this._active = !!active;
-};
 
 //恢复执行:从当前断点处继续执行，直接遇到下一个断点
 //标准的作法是不断调用forward直到遇到debug，但那样效率比较低，在这用一个循环代替
@@ -207,9 +208,11 @@ Executer.prototype.resume = function(flag){
         curcmd.go();
 
         curcmd = this.cmdHead;
-        if (curcmd && curcmd.node instanceof ast.AST_CSDebugger && this._active){//这里保证debug cmd还没有执行
-            break;
-        }
+
+        if (curcmd && curcmd.node && this._canBreak(curcmd.node)) break;
+        //这里保证debug cmd还没有执行
+        //if (curcmd && curcmd.node instanceof ast.AST_CSDebugger && this._active) break;
+
         if (flag == 2){//运行到宏后面的语句
             //TODO 需要运行到当前哨兵位置
             if (curcmd && curcmd.type != "MacroReturn"){
@@ -315,6 +318,40 @@ Executer.prototype.insertCommand = function(parentCmd, fun, astNode, dependent){
     return cmd;
 };
 
+Executer.prototype._canBreak = function(node) {
+    if (this.cmdHead && this.cmdHead.type == "MacroReturn" || this.cmdHead.dependent) return false;
+    if (node instanceof ast.AST_CSDebugger && this._active) return true;
+    for(var i = 0; i < this._breakpoints.length; i++){
+        if (this._breakpoints[i].astNode == node){
+            return true;
+        }
+    }
+    return false;
+};
+
+Executer.prototype.setBreakpointsActive = function(active){
+    this._active = !!active;
+};
+
+Executer.prototype._setBreakpoint = function(node, line){
+    var i, breakobj;
+    for(var i = 0; i < this._breakpoints.length; i++){
+        breakobj = this._breakpoints[i];
+        if (breakobj.astNode == node){
+            return breakobj;
+        }
+    }
+    var id = this._breakpoints.length + 1;
+    breakobj = {
+        "astNode": node,
+        "line": line,
+        "active": true,
+        "id": id
+    }
+    this._breakpoints.push(breakobj);
+    return breakobj;
+};
+
 Executer.prototype.requestBreakpoint = function (rawPosition) {
     var fileid = rawPosition.scriptId;
     var sourceObj = this._engine.getSourceObjectById(fileid);
@@ -326,20 +363,33 @@ Executer.prototype.requestBreakpoint = function (rawPosition) {
         if (node instanceof ast.AST_Block){
             pos = node.pos;
             if (line >= pos.first_line && line <= pos.last_line){
+                /*
+                if (line in node.startPos) {
+                    点击的是block开始标签, finded = true
+                } else if (line in node.endPos) {
+                    if (node instanceof ast.AST_MacroDef) {
+                        //点击的是def的结束标签
+                    } else {
+                    }
+                    点击的是block结束标签 line = node.endPos.last_line + 1
+                } else {
+                    点击的是block的body内的
+                }
+                */
                 console.log("BlockLineRange:" + node.pos.first_line + "->" + node.pos.last_line);
                 //断点暂时属于该block
                 brkpos = pos;
                 brkNode = node;
                 return false;//找更精确的位置, 需要继续遍历body
             }
-        } else if (node instanceof ast.AST_Content) {
+        } /*else if (node instanceof ast.AST_Content) {
             pos = node.pos;
             if (line >= pos.first_line && line <= pos.last_line && pos.last_line - pos.first_line > 1){
                 console.log("ContentLineRange:" + node.pos.first_line + "->" + node.pos.last_line);
                 brkpos = pos;
                 brkNode = node;
             }
-        } else if (node instanceof ast.AST_Statement){
+        } */else if (node instanceof ast.AST_Statement){
             pos = node.pos;
             if (line >= pos.first_line && line <= pos.last_line){
                 console.log("StmtLineRange:" + node.pos.first_line + "->" + node.pos.last_line);
@@ -349,8 +399,18 @@ Executer.prototype.requestBreakpoint = function (rawPosition) {
         }
         return true;//不需要遍历表达式节点
     }));
-    console.log(brkNode);
-}
+    if (brkNode && brkpos) {
+        var breakobj = this._setBreakpoint(brkNode, line);
+        return {
+            "id": breakobj.id,
+            "pos": brkpos,
+            "type": brkNode.type
+        };
+    }
+};
+
+Executer.prototype.setBreakpointActive = function(id, active){
+};
 
 exports.Executer = Executer;
 exports.def_execute = def_execute;

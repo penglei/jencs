@@ -49,7 +49,7 @@
 %% /* language grammar */
 
 cs:
-      inner_statement_list EOF { 
+      inner_statement_list EOF {
         var program = new ast.AST_Program($1);
         program.pos = pos(@1 || {}, yy);
         return program;
@@ -71,37 +71,42 @@ block:
     | macro_def
     ;
 
+/*
+加了更加精确地得到位置，需要<?cs 和?>两个token，这导致很多方法都是以TAG_START开始，引起归约-移进冲突.
+因此，别的地方把用statement*代替，减少该list方法的使用.
+否则在看到TAG_START时既可以归约为_list_repetition，也可以移进以形成block或者single_stmt
+但那会破坏方法的可读性，因此最后还是去掉了TAG_START 这个 token
+*/
 inner_statement_list:
     statement*
     ;
 
 if:
-      T_IF expr inner_statement_list elif_list else_single T_END_IF {
+      T_IF expr TAG_END inner_statement_list elif_list else_single T_END_IF TAG_END {
         //console.log('if:' + $2.left.target.name);
-        //console.log(!1);
         var ifRootAlternate;
-        if ($4){
+        if ($5){
             //else是最后被归约出来的，要放到最末尾的AST_If中
-            var elifstmt = $4;
+            var elifstmt = $5;
             while (elifstmt.alternate){
                 elifstmt = elifstmt.alternate;
             };
-            elifstmt.alternate = $5;
+            elifstmt.alternate = $6;
 
-            ifRootAlternate = $4
-        } else {
             ifRootAlternate = $5
+        } else {
+            ifRootAlternate = $6
         }
-        $$ = new ast.AST_If($3, $2, ifRootAlternate);
+        $$ = new ast.AST_If($4, $2, ifRootAlternate);
         $$.pos = pos(@1, yy);
       }
     ;
 
 elif_list:
-      elif_list t_elif_tokens expr inner_statement_list {
+      elif_list T_ELIF_TOKENS expr TAG_END inner_statement_list {
         //console.log('elif:' + $3.left.target.name);
         //console.log($1);
-        var alternate = new ast.AST_If($4, $3);
+        var alternate = new ast.AST_If($5, $3);
         alternate.pos = pos(@2, yy);
         if ($1){
             //遍历AST_If找到最下面的alternate，把当前归约出的elif放到末尾
@@ -119,44 +124,44 @@ elif_list:
     | /* empty */
     ;
 
-t_elif_tokens:
+T_ELIF_TOKENS:
       T_ELIF
     | T_ELSEIF
     ;
 
 else_single:
       /* empty */
-    | T_ELSE inner_statement_list {
-        $$ = new ast.AST_Block($2);
+    | T_ELSE TAG_END inner_statement_list {
+        $$ = new ast.AST_Block($3);
         $$.pos = pos(@1, yy);
     }
     ;
 
 alt:
-      T_ALT expr inner_statement_list T_END_ALT {
-        $$ = new ast.AST_Alt($3, $2);
+      T_ALT expr TAG_END inner_statement_list T_END_ALT TAG_END{
+        $$ = new ast.AST_Alt($4, $2);
         $$.pos = pos(@1, yy);
     }
     ;
 
 each:
-      T_EACH t_variable_one '=' expr inner_statement_list T_END_EACH {
-        $$ = new ast.AST_Each($5, $2, $4);
+      T_EACH t_variable_one '=' expr TAG_END inner_statement_list T_END_EACH TAG_END{
+        $$ = new ast.AST_Each($6, $2, $4);
         $$.pos = pos(@1, yy);
     }
     ;
 
 with:
-      T_WITH t_variable_one '=' base_variable inner_statement_list T_END_WITH {
-        $$ = new ast.AST_With($5, $2, $4);
+      T_WITH t_variable_one '=' base_variable TAG_END inner_statement_list T_END_WITH TAG_END{
+        $$ = new ast.AST_With($6, $2, $4);
         $$.pos = pos(@1, yy);
     }
     ;
 
 escape:
-      T_ESCAPE STRING inner_statement_list escape_end {
+      T_ESCAPE STRING TAG_END inner_statement_list escape_end TAG_END {
         //check surpport 'html' and 'js' , 'url'
-        $$ = new ast.AST_Escape($3, $2);
+        $$ = new ast.AST_Escape($4, $2);
         $$.pos = pos(@1, yy);
       }
     ;
@@ -166,8 +171,8 @@ escape_end:
     ;
 
 loop:
-      T_LOOP loop_init_expr ',' expr loop_step inner_statement_list T_END_LOOP {
-        $$ = new ast.AST_Loop($6, $2, $4, $5);
+      T_LOOP loop_init_expr ',' expr loop_step TAG_END inner_statement_list T_END_LOOP TAG_END {
+        $$ = new ast.AST_Loop($7, $2, $4, $5);
         $$.pos = pos(@1, yy);
     }
     ;
@@ -188,8 +193,8 @@ loop_step:
     ;
 
 macro_def:
-      T_DEF T_MACRO_NAME '(' def_formal_parameters ')' inner_statement_list T_END_MACRO_DEF {
-        $$ = new ast.AST_MacroDef($6, $2, $4);
+      T_DEF T_MACRO_NAME '(' def_formal_parameters ')' TAG_END inner_statement_list T_END_MACRO_DEF TAG_END {
+        $$ = new ast.AST_MacroDef($7, $2, $4);
         $$.pos = pos(@1, yy);
         $$.pos.last_line = @7.last_line;
         $$.pos.last_column = @7.last_column;
@@ -218,16 +223,23 @@ def_formal_parameter:
     ;
 */
 
-single_stmt_complete:
-    TAG_START single_stmt TAG_END {
-        $$ = $2;
+single_stmt:
+      single_stmt_syntax TAG_END {
+        $$ = $1;
+        $$.pos = pos(@1, yy);
+        $$.pos.last_line = @2.last_line;
+        $$.pos.last_column = @2.last_column;
+    }
+    | CONTENT {
+        $$ = new ast.AST_Content($1)
+        //var lines = $1.match(/(?:\r\n?|\n).*/g)
+        $$.pos = pos(@1, yy);
     }
     ;
 
 /*单句表达式*/
-single_stmt:
-      content
-    | set_stmt
+single_stmt_syntax:
+      set_stmt
     | var_stmt
     | name_stmt
     | macro_call
@@ -235,39 +247,20 @@ single_stmt:
     | cs_debugger
     ;
 
-content:
-      CONTENT {
-        $$ = new ast.AST_Content($1)
-        $$.pos = pos(@1, yy);
-    }
-    ;
-
 set_stmt:
-      T_SET base_variable '=' expr {
-        $$ = new ast.AST_SetStmt($2, $4)
-        $$.pos = pos(@1, yy);
-    }
+      T_SET base_variable '=' expr -> new ast.AST_SetStmt($2, $4)
     ;
 
 var_stmt:
-      T_VAR expr {
-        $$ = new ast.AST_VarStmt($2)
-        $$.pos = pos(@1, yy);
-      }
+      T_VAR expr -> new ast.AST_VarStmt($2)
     ;
 
 name_stmt:
-      T_NAME base_variable  {
-        $$ = new ast.AST_NameStmt($2);
-        $$.pos = pos(@1, yy);
-    }
+      T_NAME base_variable -> new ast.AST_NameStmt($2);
     ;
 
 macro_call:
-      T_CALL T_MACRO_NAME '(' parameter_list ')' {
-        $$ = new ast.AST_MacroCall($2, $4);
-        $$.pos = pos(@1, yy);
-    }
+      T_CALL T_MACRO_NAME '(' parameter_list ')' -> new ast.AST_MacroCall($2, $4);
     ;
 
 include_stmt:
@@ -279,15 +272,11 @@ include_stmt:
         } else {
             $$ = new ast.AST_Include($1)
         }
-        $$.pos = pos(@1, yy);
     }
     ;
 
 cs_debugger:
-      T_DEBUGGER {
-        $$ = new ast.AST_CSDebugger();
-        $$.pos = pos(@1, yy);
-    }
+      T_DEBUGGER -> new ast.AST_CSDebugger();
     ;
 
 /**

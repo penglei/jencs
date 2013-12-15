@@ -189,7 +189,7 @@ var AST_Invoke = declare('Invoke', {
         } while (paramTree);
         return result;
     }
-}, AST_Node);
+}, AST_Statement);
 
 //@deprecated
 var AST_Parameter = exports.AST_Parameter = declare("Parameter", function(prevParam, thisParam) {

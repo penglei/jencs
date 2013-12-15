@@ -126,12 +126,21 @@ Session.prototype.debugBreak = function(requstParam){
 
 Session.prototype.breakpoint = function(requstParam){
     //TODO
-    var id = this.executer.requestBreakpoint(requstParam.rawLocation);
+    var result = this.executer.requestBreakpoint(requstParam.rawLocation);
+    if (!result) return;//断点设失败了
+
+    console.log(requstParam);
+    console.log(result);
+    var breakRawLocation = {
+        "lineNumber": result.pos.first_line,
+        "columnNumber": 0, //result.pos.first_column,
+        "scriptId":requstParam.rawLocation.scriptId
+    };
     this.sendMessage({
         "id": requstParam.id,
         "result": {
-            "breakpointId": 1,
-            "locations": requstParam.rawLocation
+            "breakpointId": result.id,
+            "locations": breakRawLocation
         }
     });
 };
@@ -169,6 +178,9 @@ MessageDispatcher.prototype = {
     },
     "setBreakpointBySourceId": function(msg) {
         this._session.breakpoint(msg);
+    },
+    "setBreakpointActive": function(msg){
+        this._executer.setBreakpointActive(msg.breakId, msg.active);
     }
 };
 

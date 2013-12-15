@@ -2,10 +2,7 @@
 
     <?cs var:11111111?>
     <?cs #debugger?>
-<?cs
-/def
-
-?>
+<?cs /def?>
 
 <?cs #include:"test_d_if.cs"
 
@@ -13,13 +10,3 @@
 <?cs #include:"test_d_macrodef.cs"?>
 -----if-------
 <?cs var:'aaa'?>
-
-<?cs call:fooa()?>
-
-<?cs set:a = 333?>
-
-
-<?cs var:b?>
-
-
-ff
