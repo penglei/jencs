@@ -27,6 +27,13 @@ define(function(){
                 "rawLocation": rawLocation
             };
             this.sendMessageToBackend(message, cb);
+        },
+        removeBreakpoint: function(breakpointId){
+            var message = {
+                "method":"removeBreakpoint",
+                "breakpointId": breakpointId
+            };
+            this.sendMessageToBackend(message);
         }
     };
 

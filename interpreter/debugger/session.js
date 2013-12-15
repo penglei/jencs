@@ -179,8 +179,12 @@ MessageDispatcher.prototype = {
     "setBreakpointBySourceId": function(msg) {
         this._session.breakpoint(msg);
     },
-    "setBreakpointActive": function(msg){
-        this._executer.setBreakpointActive(msg.breakId, msg.active);
+    "removeBreakpoint": function(msg){
+        var result = this._executer.removeBreakpoint(msg.breakpointId);
+        this._session.sendMessage({
+            "id": msg.id,
+            "result": "success"
+        });
     }
 };
 

@@ -44,6 +44,7 @@ function Executer(engine){
 
     this._active = true;
     this._breakpoints = [];
+    this._breakpiontIdUpper = 1;
 }
 
 util.inherits(Executer, events.EventEmitter);
@@ -319,8 +320,9 @@ Executer.prototype.insertCommand = function(parentCmd, fun, astNode, dependent){
 };
 
 Executer.prototype._canBreak = function(node) {
+    if (!this._active) return false;
     if (this.cmdHead && this.cmdHead.type == "MacroReturn" || this.cmdHead.dependent) return false;
-    if (node instanceof ast.AST_CSDebugger && this._active) return true;
+    if (node instanceof ast.AST_CSDebugger) return true;
     for(var i = 0; i < this._breakpoints.length; i++){
         if (this._breakpoints[i].astNode == node){
             return true;
@@ -330,6 +332,7 @@ Executer.prototype._canBreak = function(node) {
 };
 
 Executer.prototype.setBreakpointsActive = function(active){
+    console.log("setBreakpointsActive:" + active);
     this._active = !!active;
 };
 
@@ -341,7 +344,7 @@ Executer.prototype._setBreakpoint = function(node, line){
             return breakobj;
         }
     }
-    var id = this._breakpoints.length + 1;
+    var id = this._breakpiontIdUpper++;//id不会特别多，这种是保持唯一性的最简单方式
     breakobj = {
         "astNode": node,
         "line": line,
@@ -356,10 +359,13 @@ Executer.prototype.requestBreakpoint = function (rawPosition) {
     var fileid = rawPosition.scriptId;
     var sourceObj = this._engine.getSourceObjectById(fileid);
 
+    if (!sourceObj || !sourceObj.astTree) return;
+
     var line = rawPosition.lineNumber + 1;
     console.log("To find line:" + line);
     var pos, brkpos, brkNode;
     sourceObj.astTree.walk(new Walker(function(node, descend){
+        if (!node.pos) return;//AST_Program需要继续访问body部分
         if (node instanceof ast.AST_Block){
             pos = node.pos;
             if (line >= pos.first_line && line <= pos.last_line){
@@ -399,7 +405,7 @@ Executer.prototype.requestBreakpoint = function (rawPosition) {
         }
         return true;//不需要遍历表达式节点
     }));
-    if (brkNode && brkpos) {
+    if (brkNode && brkNode != sourceObj.astTree && brkpos) {
         var breakobj = this._setBreakpoint(brkNode, line);
         return {
             "id": breakobj.id,
@@ -409,7 +415,13 @@ Executer.prototype.requestBreakpoint = function (rawPosition) {
     }
 };
 
-Executer.prototype.setBreakpointActive = function(id, active){
+Executer.prototype.removeBreakpoint = function(breakpointId){
+    for (var i = 0; i < this._breakpoints.length; i++){
+        if (this._breakpoints[i].id == breakpointId) {
+            this._breakpoints.splice(i, 1);
+            return true;
+        }
+    }
 };
 
 exports.Executer = Executer;

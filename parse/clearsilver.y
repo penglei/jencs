@@ -8,12 +8,16 @@
     function debug(_){
         console.log(_);
     }
-    function pos($pos, yy){
+    function pos(yy, $pos, $pos2){
         var _p = {};
         for(var i in $pos){
             if ($pos.hasOwnProperty(i)){
                 _p[i] = $pos[i]
             }
+        }
+        if ($pos2) {
+            _p.last_line = $pos2.last_line;
+            _p.last_column = $pos2.last_column;
         }
         _p.fileid = yy.fileid;//自定义的属性，这是文件名
         return _p;
@@ -51,7 +55,6 @@
 cs:
       inner_statement_list EOF {
         var program = new ast.AST_Program($1);
-        program.pos = pos(@1 || {}, yy);
         return program;
       }
     ;
@@ -98,7 +101,8 @@ if:
             ifRootAlternate = $6
         }
         $$ = new ast.AST_If($4, $2, ifRootAlternate);
-        $$.pos = pos(@1, yy);
+        $$.pos = pos(yy, @1, @3);
+        $$.endPos = pos(yy, @7, @8);
       }
     ;
 
@@ -107,14 +111,16 @@ elif_list:
         //console.log('elif:' + $3.left.target.name);
         //console.log($1);
         var alternate = new ast.AST_If($5, $3);
-        alternate.pos = pos(@2, yy);
+        alternate.pos = pos(yy, @2, @4);
+        if ($5){
+            var lastStmt = $5[$5.length - 1];
+            alternate.endPos = pos(yy, lastStmt.endPos || lastStmt.pos);
+        }
         if ($1){
             //遍历AST_If找到最下面的alternate，把当前归约出的elif放到末尾
             //归约的顺序跟代码书写顺序是一样的
             var curBranch = $1;
-            while(curBranch.alternate){
-                curBranch = curBranch.alternate
-            }
+            while(curBranch.alternate) curBranch = curBranch.alternate
             curBranch.alternate = alternate;
             $$ = $1;
         } else {
@@ -133,28 +139,36 @@ else_single:
       /* empty */
     | T_ELSE TAG_END inner_statement_list {
         $$ = new ast.AST_Block($3);
-        $$.pos = pos(@1, yy);
+        /*
+        if ($3){
+            var firstStmt = $3[0];
+            var lastStmt = $3[$3.length - 1];
+            $$.endPos = pos(yy, firstStmt.pos);
+        } else {
+            $$.pos = pos(yy, @1, @2);
+        }
+        */
     }
     ;
 
 alt:
       T_ALT expr TAG_END inner_statement_list T_END_ALT TAG_END{
         $$ = new ast.AST_Alt($4, $2);
-        $$.pos = pos(@1, yy);
+        $$.pos = pos(yy, @1);
     }
     ;
 
 each:
       T_EACH t_variable_one '=' expr TAG_END inner_statement_list T_END_EACH TAG_END{
         $$ = new ast.AST_Each($6, $2, $4);
-        $$.pos = pos(@1, yy);
+        $$.pos = pos(yy, @1);
     }
     ;
 
 with:
       T_WITH t_variable_one '=' base_variable TAG_END inner_statement_list T_END_WITH TAG_END{
         $$ = new ast.AST_With($6, $2, $4);
-        $$.pos = pos(@1, yy);
+        $$.pos = pos(yy, @1);
     }
     ;
 
@@ -162,7 +176,7 @@ escape:
       T_ESCAPE STRING TAG_END inner_statement_list escape_end TAG_END {
         //check surpport 'html' and 'js' , 'url'
         $$ = new ast.AST_Escape($4, $2);
-        $$.pos = pos(@1, yy);
+        $$.pos = pos(yy, @1);
       }
     ;
 escape_end:
@@ -173,7 +187,7 @@ escape_end:
 loop:
       T_LOOP loop_init_expr ',' expr loop_step TAG_END inner_statement_list T_END_LOOP TAG_END {
         $$ = new ast.AST_Loop($7, $2, $4, $5);
-        $$.pos = pos(@1, yy);
+        $$.pos = pos(yy, @1);
     }
     ;
 
@@ -195,7 +209,7 @@ loop_step:
 macro_def:
       T_DEF T_MACRO_NAME '(' def_formal_parameters ')' TAG_END inner_statement_list T_END_MACRO_DEF TAG_END {
         $$ = new ast.AST_MacroDef($7, $2, $4);
-        $$.pos = pos(@1, yy);
+        $$.pos = pos(yy, @1);
         $$.pos.last_line = @7.last_line;
         $$.pos.last_column = @7.last_column;
       }
@@ -226,14 +240,12 @@ def_formal_parameter:
 single_stmt:
       single_stmt_syntax TAG_END {
         $$ = $1;
-        $$.pos = pos(@1, yy);
-        $$.pos.last_line = @2.last_line;
-        $$.pos.last_column = @2.last_column;
+        $$.pos = pos(yy, @1, @2);
     }
     | CONTENT {
         $$ = new ast.AST_Content($1)
         //var lines = $1.match(/(?:\r\n?|\n).*/g)
-        $$.pos = pos(@1, yy);
+        $$.pos = pos(yy, @1);
     }
     ;
 

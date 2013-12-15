@@ -84,7 +84,6 @@ var $0 = $$.length - 1;
 switch (yystate) {
 case 1:
         var program = new ast.AST_Program($$[$0-1]);
-        program.pos = pos(_$[$0-1] || {}, yy);
         return program;
       
 break;
@@ -104,21 +103,24 @@ case 12:
             ifRootAlternate = $$[$0-2]
         }
         this.$ = new ast.AST_If($$[$0-4], $$[$0-6], ifRootAlternate);
-        this.$.pos = pos(_$[$0-7], yy);
+        this.$.pos = pos(yy, _$[$0-7], _$[$0-5]);
+        this.$.endPos = pos(yy, _$[$0-1], _$[$0]);
       
 break;
 case 13:
         //console.log('elif:' + $$[$0-2].left.target.name);
         //console.log($$[$0-4]);
         var alternate = new ast.AST_If($$[$0], $$[$0-2]);
-        alternate.pos = pos(_$[$0-3], yy);
+        alternate.pos = pos(yy, _$[$0-3], _$[$0-1]);
+        if ($$[$0]){
+            var lastStmt = $$[$0][$$[$0].length - 1];
+            alternate.endPos = pos(yy, lastStmt.endPos || lastStmt.pos);
+        }
         if ($$[$0-4]){
             //遍历AST_If找到最下面的alternate，把当前归约出的elif放到末尾
             //归约的顺序跟代码书写顺序是一样的
             var curBranch = $$[$0-4];
-            while(curBranch.alternate){
-                curBranch = curBranch.alternate
-            }
+            while(curBranch.alternate) curBranch = curBranch.alternate
             curBranch.alternate = alternate;
             this.$ = $$[$0-4];
         } else {
@@ -128,33 +130,41 @@ case 13:
 break;
 case 18:
         this.$ = new ast.AST_Block($$[$0]);
-        this.$.pos = pos(_$[$0-2], yy);
+        /*
+        if ($$[$0]){
+            var firstStmt = $$[$0][0];
+            var lastStmt = $$[$0][$$[$0].length - 1];
+            this.$.endPos = pos(yy, firstStmt.pos);
+        } else {
+            this.$.pos = pos(yy, _$[$0-2], _$[$0-1]);
+        }
+        */
     
 break;
 case 19:
         this.$ = new ast.AST_Alt($$[$0-2], $$[$0-4]);
-        this.$.pos = pos(_$[$0-5], yy);
+        this.$.pos = pos(yy, _$[$0-5]);
     
 break;
 case 20:
         this.$ = new ast.AST_Each($$[$0-2], $$[$0-6], $$[$0-4]);
-        this.$.pos = pos(_$[$0-7], yy);
+        this.$.pos = pos(yy, _$[$0-7]);
     
 break;
 case 21:
         this.$ = new ast.AST_With($$[$0-2], $$[$0-6], $$[$0-4]);
-        this.$.pos = pos(_$[$0-7], yy);
+        this.$.pos = pos(yy, _$[$0-7]);
     
 break;
 case 22:
         //check surpport 'html' and 'js' , 'url'
         this.$ = new ast.AST_Escape($$[$0-2], $$[$0-4]);
-        this.$.pos = pos(_$[$0-5], yy);
+        this.$.pos = pos(yy, _$[$0-5]);
       
 break;
 case 25:
         this.$ = new ast.AST_Loop($$[$0-2], $$[$0-7], $$[$0-5], $$[$0-4]);
-        this.$.pos = pos(_$[$0-8], yy);
+        this.$.pos = pos(yy, _$[$0-8]);
     
 break;
 case 26:
@@ -168,7 +178,7 @@ case 28:this.$ =new ast.AST_Number(1) //默认步进为1;
 break;
 case 29:
         this.$ = new ast.AST_MacroDef($$[$0-2], $$[$0-7], $$[$0-5]);
-        this.$.pos = pos(_$[$0-8], yy);
+        this.$.pos = pos(yy, _$[$0-8]);
         this.$.pos.last_line = _$[$0-2].last_line;
         this.$.pos.last_column = _$[$0-2].last_column;
       
@@ -183,15 +193,13 @@ case 33:this.$ =$$[$0];
 break;
 case 34:
         this.$ = $$[$0-1];
-        this.$.pos = pos(_$[$0-1], yy);
-        this.$.pos.last_line = _$[$0].last_line;
-        this.$.pos.last_column = _$[$0].last_column;
+        this.$.pos = pos(yy, _$[$0-1], _$[$0]);
     
 break;
 case 35:
         this.$ = new ast.AST_Content($$[$0])
         //var lines = $$[$0].match(/(?:\r\n?|\n).*/g)
-        this.$.pos = pos(_$[$0], yy);
+        this.$.pos = pos(yy, _$[$0]);
     
 break;
 case 42:this.$ = new ast.AST_SetStmt($$[$0-2], $$[$0]);
@@ -497,12 +505,16 @@ parse: function parse(input) {
     function debug(_){
         console.log(_);
     }
-    function pos($pos, yy){
+    function pos(yy, $pos, $pos2){
         var _p = {};
         for(var i in $pos){
             if ($pos.hasOwnProperty(i)){
                 _p[i] = $pos[i]
             }
+        }
+        if ($pos2) {
+            _p.last_line = $pos2.last_line;
+            _p.last_column = $pos2.last_column;
         }
         _p.fileid = yy.fileid;//自定义的属性，这是文件名
         return _p;

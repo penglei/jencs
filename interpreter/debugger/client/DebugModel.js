@@ -198,7 +198,7 @@ define(function(require){
          */
         removeBreakpoint: function(breakpointId, callback)
         {
-            DebuggerAgent.removeBreakpoint(breakpointId, callback);
+            CSInspector.debugAgent.removeBreakpoint(breakpointId, callback);
         },
 
         /**
@@ -521,7 +521,6 @@ define(function(require){
             var script = this._scripts[rawLocation.scriptId];
             return script.createLiveLocation(rawLocation, updateDelegate);
         },
-
 
         __proto__: EventEmitter.prototype
     };
