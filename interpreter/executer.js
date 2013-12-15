@@ -1,6 +1,7 @@
 var util = require("util");
 var events = require("events");
 var ast = require("../parse/ast");
+var Walker = require("./walker").Walker;
 
 function Empty(){}
 
@@ -33,12 +34,15 @@ Command.prototype.go = function(){
 };
 
 //-----
-function Executer(){
+function Executer(engine){
     events.EventEmitter.call(this);
 
     this.debugr = null;
     this.context = null;
     this.cmdHead = null;
+    this._engine = engine;
+
+    this._active = true;
 }
 
 util.inherits(Executer, events.EventEmitter);
@@ -49,6 +53,81 @@ Executer.prototype.clean = function(){
     this.cmdHead = null;
     ast.AST_Node.proto("context", null);
     ast.AST_Node.proto("executer", null);
+};
+
+Executer.prototype.getCallFrames = function(){
+    var scopeStack = this.context.scopeStack;
+    var callFrames = [],
+        callStack = [scopeStack[0]];//0是Program
+
+    //先把with, each, loop形成的scope stack 去掉
+    for(var i = 1; i < scopeStack.length; i++) {
+        if (scopeStack[i].astNode instanceof ast.AST_MacroDef) callStack.push(scopeStack[i]);
+    }
+
+    var callDeep = callStack.length;
+    if (callDeep == 1) {
+        //顶层program
+        var posInfo = this.getExecutePos();
+        var frameInfo = {
+            "callFrameId": 0,
+            "functionName": "(Program)",
+            "location":{
+                "columnNumber":posInfo.column,
+                "lineNumber":posInfo.line - 1,
+                "scriptId":posInfo.scriptId
+            },
+            "scopechain":[/*{
+                className,
+                objectId: "scope:0:0",
+            }*/]
+        };
+        callFrames.push(frameInfo);
+        return callFrames;
+    }
+
+    var id, pos, scope;
+    var functionName, columnNumber, scriptId;
+    for(id = 0; id < callDeep; id++){
+        scope = callStack[id];
+        if (id == 0){//Top Level Program
+            pos = callStack[1].caller.pos;//在这里callStack[1]肯定是存在的
+            functionName = "(Program)";
+            columnNumber = pos.first_column;
+            lineNumber = pos.first_line;
+            scriptId = pos.fileid;
+        } else {
+            functionName =  scope.astNode.id;//macroDef name
+            if (id == callDeep - 1){
+                var posInfo = this.getExecutePos();
+                columnNumber = posInfo.column;
+                lineNumber = posInfo.line;
+                scriptId = posInfo.scriptId;
+            } else {
+                var exePos = callStack[id + 1].caller.pos;
+                columnNumber = exePos.first_column;
+                lineNumber = exePos.first_line;
+                scriptId = exePos.fileid;
+            }
+        }
+
+        var frameInfo = {
+            "callFrameId": id,
+            "functionName": functionName,
+            "location": {
+                "columnNumber":columnNumber,
+                "lineNumber":lineNumber - 1,//解析器返回的line是从1开始，debugger client需要从0开始，所以需要减1
+                "scriptId": scriptId
+            },
+            "scopechain":[/*{
+                className,
+                objectId: "scope:0:0",
+            }*/]
+        };
+        callFrames.unshift(frameInfo);
+    }
+
+    return callFrames;
 };
 
 Executer.prototype.run = function(astInstance, context, debugr){
@@ -67,7 +146,13 @@ Executer.prototype.run = function(astInstance, context, debugr){
 //支持debug方式运行
 Executer.prototype.start = function(){
     if (!this.debugr){//没有debugr就直接运行，否则运行的过程由debugr控制
-        while(this.cmdHead) this.forward();
+        this._active = false;
+        var curcmd = this.cmdHead;
+        while (curcmd) {
+            this.cmdHead = curcmd.next;
+            curcmd.go();
+            curcmd = this.cmdHead;
+        }
     }
 };
 
@@ -86,7 +171,7 @@ Executer.prototype.forward = function(stepin){
 
             while (this.cmdHead && this.cmdHead != tomatchEndCmd.endTarget.target){
             //@2 如果下一条指令是debug，就*直接(无论是单步还是resume)*返回它为下一次要执行的指令
-                if (this.cmdHead.node instanceof ast.AST_CSDebugger) break;
+                if (this.cmdHead.node instanceof ast.AST_CSDebugger && this._active) break;
                 cmd = this.cmdHead;
                 this.cmdHead = cmd.next;
                 cmd.go();
@@ -109,17 +194,28 @@ Executer.prototype.forward = function(stepin){
     }
 };
 
+Executer.prototype.setBreakpointsActive = function(active){
+    this._active = !!active;
+};
+
 //恢复执行:从当前断点处继续执行，直接遇到下一个断点
 //标准的作法是不断调用forward直到遇到debug，但那样效率比较低，在这用一个循环代替
-Executer.prototype.resume = function(){
+Executer.prototype.resume = function(flag){
     var curcmd = this.cmdHead;
     while (curcmd) {
         this.cmdHead = curcmd.next;
         curcmd.go();
 
         curcmd = this.cmdHead;
-        if (curcmd && curcmd.node instanceof ast.AST_CSDebugger){//这里保证debug cmd还没有执行
+        if (curcmd && curcmd.node instanceof ast.AST_CSDebugger && this._active){//这里保证debug cmd还没有执行
             break;
+        }
+        if (flag == 2){//运行到宏后面的语句
+            //TODO 需要运行到当前哨兵位置
+            if (curcmd && curcmd.type != "MacroReturn"){
+                this.forward(true);
+                break;
+            }
         }
     }
 };
@@ -134,8 +230,8 @@ Executer.prototype.getExecutePos = function(){
     var executePos = {
         "stype": cmd.node.type,
         "column": cmd.pos.column ||cmd.pos.first_column,
-        "line": cmd.pos.line || cmd.pos.first_line,//first_line在某些时候不是最好的
-        "sourceId": cmd.pos.fileid
+        "line": cmd.pos.line || cmd.pos.first_line,
+        "scriptId": cmd.pos.fileid
     };
     return executePos;
 };
@@ -154,7 +250,6 @@ Executer.prototype.allowPaused = function(){
 Executer.prototype.genList = function(bodyList){
     var st, commandLocalStart, currentCommand;
 
-    //i = 0已经在上面处理
     for (var i = 0; i < bodyList.length; i++){
         st = bodyList[i];
 
@@ -209,14 +304,53 @@ Executer.prototype.insertCommand = function(parentCmd, fun, astNode, dependent){
     if (dependent) {
         cmd.dependent = true;
     } else if (astNode instanceof ast.AST_MacroDef){
-        //只有单独存在的cmd才需要特殊处理
+        //macrodef结束时添加一个返回命令，它的位置相当于<?cs /def?>的位置
         cmd.pos = util._extend({}, astNode.pos);
         cmd.pos.line = cmd.pos.last_line;
         cmd.pos.column = cmd.pos.last_column;
+        cmd.type = "MacroReturn";
     }
     cmd.next = parentCmd.next;
     parentCmd.next = cmd;
+    return cmd;
 };
+
+Executer.prototype.requestBreakpoint = function (rawPosition) {
+    var fileid = rawPosition.scriptId;
+    var sourceObj = this._engine.getSourceObjectById(fileid);
+
+    var line = rawPosition.lineNumber + 1;
+    console.log("To find line:" + line);
+    var pos, brkpos, brkNode;
+    sourceObj.astTree.walk(new Walker(function(node, descend){
+        if (node instanceof ast.AST_Block){
+            pos = node.pos;
+            if (line >= pos.first_line && line <= pos.last_line){
+                console.log("BlockLineRange:" + node.pos.first_line + "->" + node.pos.last_line);
+                //断点暂时属于该block
+                brkpos = pos;
+                brkNode = node;
+                return false;//找更精确的位置, 需要继续遍历body
+            }
+        } else if (node instanceof ast.AST_Content) {
+            pos = node.pos;
+            if (line >= pos.first_line && line <= pos.last_line && pos.last_line - pos.first_line > 1){
+                console.log("ContentLineRange:" + node.pos.first_line + "->" + node.pos.last_line);
+                brkpos = pos;
+                brkNode = node;
+            }
+        } else if (node instanceof ast.AST_Statement){
+            pos = node.pos;
+            if (line >= pos.first_line && line <= pos.last_line){
+                console.log("StmtLineRange:" + node.pos.first_line + "->" + node.pos.last_line);
+                brkpos = pos;
+                brkNode = node;
+            }
+        }
+        return true;//不需要遍历表达式节点
+    }));
+    console.log(brkNode);
+}
 
 exports.Executer = Executer;
 exports.def_execute = def_execute;

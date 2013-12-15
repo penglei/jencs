@@ -8,14 +8,16 @@
         <script src="css.js"></script><!-- amd loader stylesheet file plugin -->
         <script type="text/javascript" charset="utf-8">
             require('cm/codemirror.css');
-            require('cm/cmdevtools.css');
+            require('cmdevtools.css');
 
             require('inspector.css');
             require('inspectorCommon.css');
             require('splitView.css');
             require('navigatorView.css');
             require('tabbedPane.css');
+            require('sidebarPane.css');
             require('scriptsPanel.css');
+            require('breakpointsList.css');
             require('style.css');
         </script>
     </head>
@@ -32,7 +34,7 @@
             </div>
             <div id="main"></div>
             <div id="drawer"></div>
-            <div id="main-status-bar" class="status-bar" style="display:none">
+            <div id="main-status-bar" class="status-bar" style="display:none;">
                 <div id="bottom-status-bar-container">
                     <div id="panel-status-bar">
                         <div id="drawer-view-anchor"></div>

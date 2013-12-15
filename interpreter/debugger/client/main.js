@@ -1,19 +1,19 @@
 define(function(require) {
 
     //global constroller
-    this.CSInspector = {};
+    CSInspector = {};
 
     var Backend = require("Backend");
     var DebugModel = require("DebugModel");//接受数据
     var DebugAgent = require("DebugAgent");//发送请求
     var Workspace = require("Workspace").Workspace;
 
-    var BreakpointsManager = require("BreakpointsManager");
+    var BreakpointManager = require("BreakpointManager");
     var NetworkUISourceCodeProvider = require("NetworkUISourceCodeProvider");
     var SimpleWorkspaceProvider = require("SimpleWorkspaceProvider");
     var Settings = require("Settings").Settings;
 
-    var MainView = require("MainView");
+    var InspectorView = require("InspectorView");
     var ScriptsPanel = require("ScriptsPanel");
     var ConsolePanel = require("ConsolePanel");
 
@@ -25,26 +25,23 @@ define(function(require) {
     CSInspector.debugAgent = new DebugAgent(backend);
     CSInspector.debugModel = new DebugModel(backend);
     CSInspector.workspace = new Workspace();
-    CSInspector.breakpointsManager = new BreakpointsManager();
+
+    CSInspector.breakpointManager = new BreakpointManager(CSInspector.settings.breakpoints, CSInspector.debugModel, CSInspector.workspace);
 
     CSInspector.debugModel.on(DebugModel.Events.DebugPaused, onPausedScripts);
     CSInspector.debugModel.on(DebugModel.Events.DebugFinished, onFinish);
 
+    CSInspector.inspectedPageURL = "";//mainFramePayload.frame.url;
+
     function onPausedScripts(){
         inspectorView.showPanel("scripts");
-    }
-
-    function onFinish(exit){
-        if (exit){
-            backend.close();
-        }
     }
 
     //初始化文件传输. file://也是network类型的(这里只有Network类型)
     new NetworkUISourceCodeProvider(new SimpleWorkspaceProvider(CSInspector.workspace, Workspace.ProjectTypes.Network), CSInspector.workspace);
 
 
-    var inspectorView = new MainView();
+    var inspectorView = new InspectorView();
     CSInspector.inspectorView = inspectorView;
     inspectorView.show(document.getElementById("main"));
 
@@ -54,4 +51,10 @@ define(function(require) {
     window.addEventListener("resize", inspectorView.doResize.bind(inspectorView), true);
 
     inspectorView.showPanel("scripts");
+
+    function onFinish(exit){
+        if (exit){
+            backend.close();
+        }
+    }
 });

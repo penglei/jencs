@@ -82,7 +82,11 @@ performAction: function anonymous(yytext, yyleng, yylineno, yy, yystate /* actio
 
 var $0 = $$.length - 1;
 switch (yystate) {
-case 1: return new ast.AST_Program($$[$0-1]) 
+case 1: 
+        var program = new ast.AST_Program($$[$0-1]);
+        program.pos = pos(_$[$0-1] || {}, yy);
+        return program;
+      
 break;
 case 12:
         //console.log('if:' + $$[$0-4].left.target.name);

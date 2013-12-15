@@ -214,10 +214,10 @@ TabbedPane.prototype = {
         this._hideCurrentTab();
         this._showTab(tab);
         this._currentTab = tab;
-        
+
         this._tabsHistory.splice(this._tabsHistory.indexOf(tab), 1);
         this._tabsHistory.splice(0, 0, tab);
-        
+
         this._updateTabElements();
 
         var eventData = { tabId: id, view: tab.view, isUserGesture: userGesture };
@@ -293,6 +293,7 @@ TabbedPane.prototype = {
 
     _updateTabElements: function()
     {
+        //WebInspector.invokeOnceAfterBatchUpdate(this, this._innerUpdateTabElements);
         this._innerUpdateTabElements();
     },
 
@@ -322,7 +323,7 @@ TabbedPane.prototype = {
                 delete this._noTabsMessageElement;
             }
         }
-        
+
         if (!this._measuredDropDownButtonWidth)
             this._measureDropDownButton();
 
@@ -381,7 +382,7 @@ TabbedPane.prototype = {
             if (!tab._shown)
                 this._showTabElement(i, tab);
         }
-        
+
         this._populateDropDownFromIndex();
     },
 

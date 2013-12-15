@@ -11,3 +11,7 @@
 <?cs /if?>
   
 -----each--------
+<?cs def:foo_if()?>
+    <?cs var:333?>
+    <?cs #debugger?>
+<?cs /def?>

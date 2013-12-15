@@ -16,11 +16,14 @@ function SimpleProjectDelegate(name, type)
     this._lastUniqueSuffix = 0;
 }
 
+/*
 SimpleProjectDelegate.projectId = function(name, type)
 {
     var typePrefix = type !== Workspace.ProjectTypes.Network ? (type + ":") : "";
     return typePrefix + name;
 }
+*/
+SimpleProjectDelegate.projectId = Workspace.SimpleProjectDelegateProjectId;
 
 SimpleProjectDelegate.prototype = {
     /**

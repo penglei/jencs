@@ -27,14 +27,14 @@ function ContentWhiteFilter(valueStr, astNode){
     return astNode instanceof AST.AST_Content ? valueStr.replace(/[\r\n\t]/g, '') : valueStr;
 }
 
-if (1){
+if (0){
     var _csRoot = path.resolve(__dirname, './resource/cs/');
     var csIncludeRoot = path.resolve(_csRoot, 'module/');
     var entryCsFile = path.resolve(_csRoot, "wupmain.cs");
     var dataHdfFile = path.resolve(__dirname, "./resource/wupdata.hdf");
 } else {
     var csIncludeRoot = path.resolve(__dirname, './unit/interpreter/');
-    var entryCsFile = path.resolve(__dirname, "./unit/interpreter/test_d_each.cs");
+    var entryCsFile = path.resolve(__dirname, "./unit/interpreter/test.cs");
     var dataHdfFile = path.resolve(__dirname, "./unit/interpreter/test.hdf");
 }
 
@@ -61,7 +61,7 @@ TestCSEngine.setConfig({
 });
 
 //TestCSEngine.addOutputFilter(ContentWhiteFilter);
-TestCSEngine.initEntrySource(mainCsSource, entryCsFile);
+TestCSEngine.initEntrySource(mainCsSource/*, entryCsFile*/);
 
 TestCSEngine.onRender(function(snippet){
 });

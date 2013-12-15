@@ -34,6 +34,8 @@ var TreeOutline = require("treeoutline").TreeOutline;
 var TreeElement = require("treeoutline").TreeElement;
 var ContextMenu = require("ContextMenu");
 var Workspace = require("Workspace").Workspace;
+var UISourceCode = require("UISourceCode");
+var UIUtils = require("UIUtils");
 
 /**
  * @extends {View}
@@ -235,7 +237,7 @@ NavigatorView.prototype = {
             WebInspector.isolatedFileSystemManager.addFileSystem();
         }
 
-        var addFolderLabel = UIString(WebInspector.useLowerCaseMenuTitles() ? "Add folder to workspace" : "Add Folder to Workspace");
+        var addFolderLabel = UIString(UIUtils.useLowerCaseMenuTitles() ? "Add folder to workspace" : "Add Folder to Workspace");
         contextMenu.appendItem(addFolderLabel, addFolder);
     },
 
@@ -257,7 +259,7 @@ NavigatorView.prototype = {
      */
    _treeKeyPress: function(event)
    {
-        if (WebInspector.isBeingEdited(this._scriptsTree.childrenListElement))
+        if (UIUtils.isBeingEdited(this._scriptsTree.childrenListElement))
             return;
 
         var searchText = String.fromCharCode(event.charCode);
@@ -298,7 +300,7 @@ NavigatorTreeOutline._treeElementsCompare = function compare(treeElement1, treeE
     {
         var type = treeElement.type();
         if (type === NavigatorTreeOutline.Types.Domain) {
-            if (treeElement.titleText === WebInspector.inspectedPageDomain)
+            if (treeElement.titleText === CSInspector.inspectedPageDomain)
                 return 1;
             return 2;
         }
@@ -521,7 +523,7 @@ NavigatorSourceTreeElement.prototype = {
             return false;
         var isSelected = this === this.treeOutline.selectedTreeElement;
         var isFocused = this.treeOutline.childrenListElement.isSelfOrAncestor(document.activeElement);
-        return isSelected && isFocused && !WebInspector.isBeingEdited(this.treeOutline.element);
+        return isSelected && isFocused && !UIUtils.isBeingEdited(this.treeOutline.element);
     },
 
     selectOnMouseDown: function(event)
@@ -774,9 +776,11 @@ NavigatorUISourceCodeTreeNode.prototype = {
         this.updateTitle();
 
         this._uiSourceCode.addEventListener(UISourceCode.Events.TitleChanged, this._titleChanged, this);
+        /*
         this._uiSourceCode.addEventListener(UISourceCode.Events.WorkingCopyChanged, this._workingCopyChanged, this);
         this._uiSourceCode.addEventListener(UISourceCode.Events.WorkingCopyCommitted, this._workingCopyCommitted, this);
         this._uiSourceCode.addEventListener(UISourceCode.Events.FormattedChanged, this._formattedChanged, this);
+        */
 
         return this._treeElement;
     },
@@ -808,9 +812,11 @@ NavigatorUISourceCodeTreeNode.prototype = {
         if (!this._treeElement)
             return;
         this._uiSourceCode.removeEventListener(UISourceCode.Events.TitleChanged, this._titleChanged, this);
+        /*
         this._uiSourceCode.removeEventListener(UISourceCode.Events.WorkingCopyChanged, this._workingCopyChanged, this);
         this._uiSourceCode.removeEventListener(UISourceCode.Events.WorkingCopyCommitted, this._workingCopyCommitted, this);
         this._uiSourceCode.removeEventListener(UISourceCode.Events.FormattedChanged, this._formattedChanged, this);
+        */
     },
 
     _titleChanged: function(event)
@@ -855,7 +861,7 @@ NavigatorUISourceCodeTreeNode.prototype = {
 
         // Tree outline should be marked as edited as well as the tree element to prevent search from starting.
         var treeOutlineElement = this._treeElement.treeOutline.element;
-        WebInspector.markBeingEdited(treeOutlineElement, true);
+        UIUtils.markBeingEdited(treeOutlineElement, true);
 
         function commitHandler(element, newTitle, oldTitle)
         {
@@ -870,7 +876,7 @@ NavigatorUISourceCodeTreeNode.prototype = {
         function renameCallback(success)
         {
             if (!success) {
-                WebInspector.markBeingEdited(treeOutlineElement, false);
+                UIUtils.markBeingEdited(treeOutlineElement, false);
                 this.updateTitle();
                 this.rename(callback);
                 return;
@@ -888,7 +894,7 @@ NavigatorUISourceCodeTreeNode.prototype = {
          */
         function afterEditing(committed)
         {
-            WebInspector.markBeingEdited(treeOutlineElement, false);
+            UIUtils.markBeingEdited(treeOutlineElement, false);
             this.updateTitle();
             this._treeElement.treeOutline.childrenListElement.focus();
             if (callback)

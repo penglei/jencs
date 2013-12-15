@@ -12,6 +12,7 @@ define(function(require, exports){
 
     var ProjectDelegate = require("ProjectDelegate");
     var UISourceCode = require("UISourceCode");
+    var ParsedURL = require("ParsedURL");
 
     /**
      * @constructor
@@ -27,6 +28,11 @@ define(function(require, exports){
         UISourceCodeAdded: "uiSourceCodeAdded",
         UISourceCodeContentCommitted: "UISourceCodeContentCommitted",
         ProjectWillReset: "ProjectWillReset"
+    }
+
+    Workspace.SimpleProjectDelegateProjectId  = function (name, type) {
+        var typePrefix = type !== Workspace.ProjectTypes.Network ? (type + ":") : "";
+        return typePrefix + name;
     }
 
     Workspace.ProjectTypes = {
@@ -129,11 +135,23 @@ define(function(require, exports){
 
         /**
          * @param {string} url
+         * @return {WebInspector.UISourceCode}
+         */
+        _networkUISourceCodeForURL: function(url)
+        {
+            var splitURL = ParsedURL.splitURL(url);
+            var projectId = Workspace.SimpleProjectDelegateProjectId(splitURL[0], Workspace.ProjectTypes.Network);
+            var project = this.project(projectId);
+            return project ? project.uiSourceCode(splitURL.slice(1).join("/")) : null;
+        },
+
+        /**
+         * @param {string} url
          * @return {UISourceCode}
          */
         uiSourceCodeForURL: function(url)
         {
-            //
+            return this._networkUISourceCodeForURL(url);
         },
 
         /**
@@ -212,10 +230,8 @@ define(function(require, exports){
                                     this,
                                     fileDescriptor.parentPath,
                                     fileDescriptor.name,
-                                    fileDescriptor.originURL,
                                     fileDescriptor.url,
-                                    fileDescriptor.contentType,
-                                    fileDescriptor.isEditable
+                                    fileDescriptor.contentType
                                 );
             uiSourceCode.isContentScript = fileDescriptor.isContentScript;
 

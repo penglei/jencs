@@ -34,6 +34,7 @@ var Workspace = require("Workspace").Workspace;
 var ParsedURL = require("ParsedURL");
 var DebugModel = require("DebugModel");
 var Resource = require("Resource").Resource;
+var ResourceTypes = require("Resource").ResourceTypes;
 
 /**
  * @constructor
@@ -45,9 +46,9 @@ function NetworkUISourceCodeProvider(networkWorkspaceProvider, workspace)
     this._networkWorkspaceProvider = networkWorkspaceProvider;
     this._workspace = workspace;
 
-    CSInspector.debugModel.addEventListener(DebugModel.Events.FileSourcesAdded, this._fileResourcesAdded, this)
+    //CSInspector.debugModel.addEventListener(DebugModel.Events.FileSourcesAdded, this._fileResourcesAdded, this)
     //WebInspector.resourceTreeModel.addEventListener(WebInspector.ResourceTreeModel.EventTypes.ResourceAdded, this._resourceAdded, this);
-    //WebInspector.debuggerModel.addEventListener(WebInspector.DebuggerModel.Events.ParsedScriptSource, this._parsedScriptSource, this);
+    CSInspector.debugModel.addEventListener(DebugModel.Events.ParsedScriptSource, this._parsedScriptSource, this);
 
     this._processedURLs = {};
 }
@@ -65,22 +66,7 @@ NetworkUISourceCodeProvider.prototype = {
                 this._resourceAdded({data:resources[i]});
         }
 
-        populateFrame.call(this, WebInspector.resourceTreeModel.mainFrame);
-    },
-
-    /**
-     * @param {Event} event
-     */
-    _parsedScriptSource: function(event)
-    {
-        var script = /** @type {Script} */ (event.data);
-        // Filter out embedder injected content scripts.
-        if (script.isContentScript && !script.hasSourceURL) {
-            var parsedURL = new ParsedURL(script.sourceURL);
-            if (!parsedURL.host)
-                return;
-        }
-        this._addFile(script.sourceURL, script, script.isContentScript);
+        populateFrame.call(this, ResourceTreeModel.mainFrame);
     },
 
     /**
@@ -93,14 +79,32 @@ NetworkUISourceCodeProvider.prototype = {
         this._addFile(resource.url, resource);
     },
 
+    /**
+     * @param {Event} event
+     */
+    _parsedScriptSource: function(event)
+    {
+        var script = /** @type {Script} */ (event.data);
+        // Filter out embedder injected content scripts.
+        /*x
+        if (script.isContentScript && !script.hasSourceURL) {
+            var parsedURL = new ParsedURL(script.sourceURL);
+            if (!parsedURL.host)
+                return;
+        }*/
+        this._addFile(script.sourceURL, script, script.isContentScript);
+    },
+
+    /*
     _fileResourcesAdded: function(event) {
         var fileResources = event.data;
         for(var i = 0, l = fileResources.length; i < l; i++) {
             var fileResourceItem = fileResources[i];
-            var resourceProvider = new Resource(fileResourceItem.url, fileResourceItem.name, "");
+            var resourceProvider = new Resource(fileResourceItem.url, fileResourceItem.mimeType, ResourceTypes.Script, fileResourceItem.content);
             this._addFile(fileResourceItem.url, resourceProvider, true);
         }
     },
+    */
 
     /**
      * @param {string} url

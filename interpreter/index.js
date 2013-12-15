@@ -18,13 +18,13 @@ function Engine(csString){
     this._debugMode = false;
     this._debugConfig = {};
 
-    this.executer = new Executer();
+    this.executer = new Executer(this);
 
     this.csparser = new ClearSilverParser();
 
     this.csparser.yy.filename = this._entryPathname = "[main]";
     this._entryPathIsDefault = true;
-    this._includeParentBase = "";
+    this._includeParentBase = "$(root)";
 
     if (typeof csString == 'string') this.initEntrySource(csString);
 
@@ -109,8 +109,8 @@ Engine.prototype._onEnd = function(){
 Engine.prototype._saveSource = function(name, source){
     var id = this._sources.length + 1;
     var sourceInfo = {
-        "internal": false,
-        "parent": "",
+        "isEntryDefaultPath": false,
+        "rootPath": "",
         "name": name,
         "source": source,
         "id": id
@@ -118,10 +118,10 @@ Engine.prototype._saveSource = function(name, source){
 
     if (id != 1) {
         //说明这是子模板
-        sourceInfo.parent = this._includeParentBase;
+        sourceInfo.rootPath = this._includeParentBase;
     } else {
         if (this._entryPathIsDefault){
-            sourceInfo.internal = true;
+            sourceInfo.isEntryDefaultPath = true;
         }
     }
 
@@ -136,7 +136,7 @@ Engine.prototype.onRender = function(cb){
 Engine.prototype.initEntrySource = function(csString, pathname){
     if (pathname !== undefined) {
         this._entryPathIsDefault = false;
-        this.csparser.yy.name = this._entryPathname = pathname;
+        this.csparser.yy.name = this._entryPathname = pathname + " [main]";
     }
     var fileid = this._saveSource(this._entryPathname, csString);
 
@@ -154,6 +154,24 @@ Engine.prototype.getSources = function(name){
         }
     }
     return this._sources;
+};
+
+Engine.prototype.getSourceObjectById = function (id) {
+    var astTree, source;
+    for(var i = 0; i < this._sources.length; i++){
+        if (this._sources[i].id == id) {
+            source = this._sources[i];
+            break;
+        }
+    }
+
+    if (id == 1) astTree = this.astInstance;
+    else astTree = this.subAsts[source.name];
+
+    return {
+        "astTree": astTree,
+        "source": source
+    }
 };
 
 //設定一個Include處理器，用於返回include的源碼

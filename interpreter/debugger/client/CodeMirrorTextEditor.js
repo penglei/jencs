@@ -52,10 +52,6 @@ define(function(require) {
         this._setupSelectionColor();
     }
 
-    CodeMirrorTextEditor.Events = {
-        GutterClick: "gutterClick"
-    };
-
     CodeMirrorTextEditor.prototype = {
         wasShown: function()
         {

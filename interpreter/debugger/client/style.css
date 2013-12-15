@@ -1,3 +1,8 @@
 .source-code {
     font-size: 16px !important;
 }
+
+.cm-breakpoint .CodeMirror-linenumber {
+    height: 16px;
+    line-height: 16px !important;
+}

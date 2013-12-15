@@ -29,21 +29,9 @@
  */
 define(function(require){
 
-var ProjectDelegate = require("ProjectDelegate");
-
-function FileDescriptor(parentPath, name, originURL, url, contentType, isEditable, isContentScript)
-{
-    this.parentPath = parentPath;
-    this.name = name;
-    this.originURL = originURL;
-    this.url = url;
-    this.contentType = contentType;
-    this.isEditable = isEditable;
-    this.isContentScript = isContentScript || false;
-}
-
 var EventObjectEmitter = require("events").EventObjectEmitter;
 var ProjectDelegate = require("ProjectDelegate");
+var FileDescriptor = require("FileDescriptor");
 
  /**
  * @constructor

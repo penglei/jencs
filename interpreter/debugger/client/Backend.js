@@ -9,6 +9,9 @@ define(function(require){
 
         this._requests = {};
         this._requests._count = 0;
+        this._replyArgs = {
+            "setBreakpointBySourceId": ["breakpointId", "locations"]
+        };
 
         conn.on('message', this._dispatchHandler.bind(this));
         conn.on('connect', this._connectedHandler.bind(this));
@@ -24,6 +27,10 @@ define(function(require){
     }
     Backend.prototype.sendMessage = function(message){
         if (!this._connected) return false;
+        var request = this._requests[message.id];
+        if (request.callback && message.method && this._replyArgs[message.method]){
+            request.replyArg = this._replyArgs[message.method];
+        }
         var payload = typeof message == 'string' ? message : JSON.stringify(message);
         this._conn.send(payload);
     };
@@ -55,12 +62,21 @@ define(function(require){
     Backend.prototype._dispatchHandler = function(message){
         var messageObject = (typeof message === "string") ? JSON.parse(message) : message;
         if ("id" in messageObject){//confirm request
-            console.log(message);
+            //console.log(message);
             var request = this._requests[messageObject.id];
             delete this._requests[messageObject.id];
             this._requests._count--;
-            if (request.callback){
-                request.callback.call(request.that);
+            if (messageObject.error){
+            } else {
+                if (request.callback){
+                    var argumentsArray = [ null ];
+                    var paramNames = request.replyArg;
+                    if (paramNames && messageObject.result){
+                        for(var i = 0; i < paramNames.length; i++)
+                            argumentsArray.push(messageObject.result[paramNames[i]]);
+                    }
+                    request.callback.apply(request.that, argumentsArray);
+                }
             }
         } else {
             var methodName = messageObject.method;

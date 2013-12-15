@@ -3,6 +3,7 @@ define(function(require){
 var EventObjectEmitter = require("events").EventObjectEmitter;
 var TabbedPane = require("TabbedPane");
 var UISourceCode = require("UISourceCode");
+var SourceFrame = require("SourceFrame");
 
 /**
  * @interface
@@ -90,6 +91,58 @@ TabbedEditorContainer.prototype = {
     },
 
     /**
+     * @return {Array.<UISourceCode>}
+     */
+    historyUISourceCodes: function()
+    {
+        // FIXME: there should be a way to fetch UISourceCode for its uri.
+        var uriToUISourceCode = {};
+        for (var id in this._files) {
+            var uiSourceCode = this._files[id];
+            uriToUISourceCode[uiSourceCode.uri()] = uiSourceCode;
+        }
+
+        var result = [];
+        var uris = this._history._urls();
+        for (var i = 0; i < uris.length; ++i) {
+            var uiSourceCode = uriToUISourceCode[uris[i]];
+            if (uiSourceCode)
+                result.push(uiSourceCode);
+        }
+        return result;
+    },
+
+    _addScrollAndSelectionListeners: function()
+    {
+        if (!this._currentView)
+            return;
+        this._currentView.addEventListener(SourceFrame.Events.ScrollChanged, this._scrollChanged, this);
+        this._currentView.addEventListener(SourceFrame.Events.SelectionChanged, this._selectionChanged, this);
+    },
+
+    _removeScrollAndSelectionListeners: function()
+    {
+        if (!this._currentView)
+            return;
+        this._currentView.removeEventListener(SourceFrame.Events.ScrollChanged, this._scrollChanged, this);
+        this._currentView.removeEventListener(SourceFrame.Events.SelectionChanged, this._selectionChanged, this);
+    },
+
+    _scrollChanged: function(event)
+    {
+        var lineNumber = /** @type {number} */ (event.data);
+        this._history.updateScrollLineNumber(this._currentFile.uri(), lineNumber);
+        this._history.save(this._previouslyViewedFilesSetting);
+    },
+
+    _selectionChanged: function(event)
+    {
+        var range = /** @type {TextRange} */ (event.data);
+        this._history.updateSelectionRange(this._currentFile.uri(), range);
+        this._history.save(this._previouslyViewedFilesSetting);
+    },
+
+    /**
      * @param {UISourceCode} uiSourceCode
      * @param {boolean=} userGesture
      */
@@ -97,7 +150,7 @@ TabbedEditorContainer.prototype = {
     {
         if (this._currentFile === uiSourceCode)
             return;
-
+        this._removeScrollAndSelectionListeners();
         this._currentFile = uiSourceCode;
 
         var tabId = this._tabIds.get(uiSourceCode) || this._appendFileTab(uiSourceCode, userGesture);
@@ -107,6 +160,7 @@ TabbedEditorContainer.prototype = {
             this._editorSelectedByUserAction();
 
         this._currentView = this.visibleView;
+        this._addScrollAndSelectionListeners();
 
         this.dispatchEventToListeners(TabbedEditorContainer.Events.EditorSelected, this._currentFile);
     },
@@ -163,7 +217,7 @@ TabbedEditorContainer.prototype = {
         /*
         var currentProjectType = this._currentFile.project().type();
         var addedProjectType = uiSourceCode.project().type();
-        var snippetsProjectType = WebInspector.projectTypes.Snippets;
+        var snippetsProjectType = Workspace.ProjectTypes.Snippets;
         if (this._history.index(this._currentFile.uri()) && currentProjectType === snippetsProjectType && addedProjectType !== snippetsProjectType)
             this._innerShowFile(uiSourceCode, false);
         */
@@ -198,11 +252,27 @@ TabbedEditorContainer.prototype = {
     _editorClosedByUserAction: function(uiSourceCode)
     {
         this._userSelectedFiles = true;
+        this._history.remove(uiSourceCode.uri());
+        this._updateHistory();
     },
 
     _editorSelectedByUserAction: function()
     {
         this._userSelectedFiles = true;
+        this._updateHistory();
+    },
+
+    _updateHistory: function()
+    {
+        var tabIds = this._tabbedPane.lastOpenedTabIds(TabbedEditorContainer.maximalPreviouslyViewedFilesCount);
+
+        function tabIdToURI(tabId)
+        {
+            return this._files[tabId].uri();
+        }
+
+        this._history.update(tabIds.map(tabIdToURI.bind(this)));
+        this._history.save(this._previouslyViewedFilesSetting);
     },
 
     /**
@@ -250,6 +320,7 @@ TabbedEditorContainer.prototype = {
 
         var uiSourceCode = this._files[tabId];
         if (this._currentFile === uiSourceCode) {
+            this._removeScrollAndSelectionListeners();
             delete this._currentView;
             delete this._currentFile;
         }

@@ -47,8 +47,12 @@ function Context(){
 
 Context.prototype = {
     constructor: Context,
+    get scopeStack() {
+        return this._scopeStack;
+    },
     "enterScope": function(astNode){
         var scope = {
+            "caller": null,//只有宏调用时才会有的属性
             "astNode": astNode,
             "nonExistParams":{},
             "symbolAlias": {}
@@ -156,7 +160,7 @@ Context.prototype = {
                 dotAccessAst = _scope.nonExistParams[name];
                 return true
             }
-        }, this);
+        });
         return dotAccessAst;
     },
     "createHNode": function(_parent, key){
@@ -234,7 +238,8 @@ function initScopeLayer(astTree){
                 }
                 node.refMacro = macro;
             } else {
-                var errMsg = 'call macro:"' + node.id + '" that was not been defined';
+                var errMsg = 'call macro:"' + node.id + '" that was not been defined.';
+                //console.log(node.pos);
                 throw new Error(errMsg);
             }
         }

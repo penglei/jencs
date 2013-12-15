@@ -172,8 +172,9 @@ def_execute(ast.AST_Loop, function(context){
 });
 
 
-ast.AST_MacroDef.proto("execJump", function(context, _symbolAlias) {
+ast.AST_MacroDef.proto("execJump", function(context, _symbolAlias, caller) {
     var scope = context.enterScope(this);
+    scope.caller = caller;
 
     //初始化实参
     for (var name in _symbolAlias){

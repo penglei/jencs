@@ -56,7 +56,7 @@ def_execute(ast.AST_MacroCall, function(context) {
         _symbolAlias[param.name] = argValue;
     }
 
-    macro.execJump(context, _symbolAlias);
+    macro.execJump(context, _symbolAlias, this);
 });
 
 def_execute(ast.AST_Include, function(context){

@@ -35,8 +35,8 @@ Session.prototype._onMessage = function(message){
         var type = messageObject.type;
         if (type == "ready") {
             if (messageObject.resume) {
-                if (this.executer.allowPaused()){
-                    //如果第一行是可以执行中断的，直接debugbreak
+                if (this.executer.allowPaused()) {
+                    //如果第一行是可以执行中断的(debug指令)，直接debugbreak
                     this.debugBreak(messageObject);
                 } else {
                     this.executer.resume();
@@ -77,23 +77,16 @@ Session.prototype.emitInitStatus = function(){
 
 Session.prototype._fileResourcesDescriptor = function(v){
     if (this._sourcesDescriptor[v.id]) return this._sourcesDescriptor[v.id];
-    var sourcePathname = path.join(v.parent, v.name);
+    var url = path.join(v.rootPath, v.name);//url要保证唯一的
 
-    var sourceName = path.basename(sourcePathname),
-        sourceParent = "",
-        url = sourceName;//url要保证唯一的
-
-    if (!v.internal){//默认无名的入口文件不做任何处理
-        sourceParent = path.dirname(sourcePathname);
-        if (sourceParent == ".") sourceParent = "";
-        url = 'file://' + sourcePathname;
+    if (v.isEntryDefaultPath){//默认无名的入口文件不做任何处理
+    } else {
+        url = 'file://' + url;
     }
 
     var _source = {
         "id": v.id,
         "mimeType":"text/clearsilver",
-        "name": sourceName,
-        "parentPath": sourceParent,
         "content": v.source,
         "url":url
     };
@@ -111,11 +104,9 @@ Session.prototype.debugBreak = function(requstParam){
     var socket = this.socket;
     if (this.executer.isRunning()) {
         //说明还在执行
-        var lineInfo = this.executer.getExecutePos();
         var params = {
-            "executeLine": lineInfo,
             "watchExpressions": null, //TODO 获得所有需要查看的表达值
-            "scopeChain": null //TODO 获得当前的调用堆栈
+            "callFrames":this.executer.getCallFrames()
         };
         this.sendEvent("DebugPaused", params);
     } else {
@@ -131,6 +122,18 @@ Session.prototype.debugBreak = function(requstParam){
             "result": "success"
         });
     }
+};
+
+Session.prototype.breakpoint = function(requstParam){
+    //TODO
+    var id = this.executer.requestBreakpoint(requstParam.rawLocation);
+    this.sendMessage({
+        "id": requstParam.id,
+        "result": {
+            "breakpointId": 1,
+            "locations": requstParam.rawLocation
+        }
+    });
 };
 
 Session.prototype.disconnect = function() {
@@ -156,6 +159,16 @@ MessageDispatcher.prototype = {
     "resume": function(msg){
         this._executer.resume();
         this._session.debugBreak(msg);
+    },
+    "stepOut": function (msg) {
+        this._executer.resume(2);
+        this._session.debugBreak(msg);
+    },
+    "toggleBreakpointsActive": function (msg) {
+        this._executer.setBreakpointsActive(msg.active);
+    },
+    "setBreakpointBySourceId": function(msg) {
+        this._session.breakpoint(msg);
     }
 };
 

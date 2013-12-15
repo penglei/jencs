@@ -49,7 +49,11 @@
 %% /* language grammar */
 
 cs:
-      inner_statement_list EOF { return new ast.AST_Program($1) }
+      inner_statement_list EOF { 
+        var program = new ast.AST_Program($1);
+        program.pos = pos(@1 || {}, yy);
+        return program;
+      }
     ;
 
 statement:
@@ -213,6 +217,12 @@ def_formal_parameter:
     | def_formal_parameter ',' t_variable_one
     ;
 */
+
+single_stmt_complete:
+    TAG_START single_stmt TAG_END {
+        $$ = $2;
+    }
+    ;
 
 /*单句表达式*/
 single_stmt:

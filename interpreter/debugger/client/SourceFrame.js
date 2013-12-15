@@ -109,13 +109,10 @@ define(function(require){
 
         _ensureContentLoaded: function()
         {
-            /*可实现动态获取文件内容
             if (!this._contentRequested) {
                 this._contentRequested = true;
                 this._contentProvider.requestContent(this.setContent.bind(this));
             }
-            */
-            this.setContent(this._contentProvider.content());
         },
 
         addMessage: function(msg)
@@ -282,9 +279,10 @@ define(function(require){
 
         /**
          * @param {?string} content
+         * @param {boolean} contentEncoded
          * @param {string} mimeType
          */
-        setContent: function(content, mimeType)
+        setContent: function(content, contentEncoded, mimeType)
         {
             if (!this._loaded) {
                 this._loaded = true;

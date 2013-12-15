@@ -69,7 +69,7 @@ SimpleWorkspaceProvider.prototype = {
         var splitURL = ParsedURL.splitURL(url);
         var projectName = splitURL[0];
         var parentPath = splitURL.slice(1, splitURL.length - 1).join("/");
-        var name = ParsedURL.splitURL[splitURL.length - 1];
+        var name = splitURL[splitURL.length - 1];
         var projectDelegate = this._projectDelegate(projectName);
         var path = projectDelegate.addFile(parentPath, name, forceUnique, url, contentProvider, isEditable, isContentScript);
         return this._workspace.uiSourceCode(projectDelegate.id(), path);

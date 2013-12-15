@@ -148,7 +148,7 @@ ast.AST_VariableAccess.proto("getOrCreateNodeObject", function(){
             hdfnode.setValue(symbolValue.value);//把一个Local variable转成hdf后，要操持它的值
             return hdfnode;
         } else {//undefined, so create it
-            //用原来的与法树名字创建
+            //用原来的语法树名字创建
             var hdfNodeAst = this.context.getParamSymbolNonExistAst(this.target.name);
             //TODO 还有好下面两个地方需要修改
             if (hdfNodeAst){

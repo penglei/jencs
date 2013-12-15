@@ -85,13 +85,13 @@ ResourceType.prototype = {
 var ResourceTypes = {};
 ResourceTypes.Script = new ResourceType("script", "Script", "Scripts", "rgb(255,121,0)", true);
 
-function Resource(url, mimeType, type)
+function Resource(url, mimeType, type, content)
 {
     this.url = url;
     this._mimeType = mimeType;
-    this._type = type;
+    this._type = type || ResourceTypes.Script;
 
-    /** @type {?string} */ this._content = "";
+    /** @type {?string} */ this._content = content;
     /** @type {boolean} */ this._contentEncoded = "utf-8";
     this._pendingContentCallbacks = [];
 }
@@ -334,6 +334,15 @@ Resource.prototype = {
             return;
         }
         PageAgent.getResourceContent(this.frameId, this.url, resourceContentLoaded.bind(this));
+    },
+
+    /**
+     * @return {string}
+     */
+    canonicalMimeType: function()
+    {
+        //return this.contentType().canonicalMimeType() || this._mimeType;
+        return this._mimeType;
     },
 
     __proto__: EventObjectEmitter.prototype

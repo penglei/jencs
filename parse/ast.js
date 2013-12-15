@@ -92,7 +92,7 @@ var AST_Node = exports.AST_Node = declare('Node', {
     }
 });
 
-var AST_Statement = declare("Statement", null, AST_Node);
+var AST_Statement = exports.AST_Statement = declare("Statement", null, AST_Node);
 
 var AST_Expression = exports.AST_Expression = declare("Expression", null, AST_Node);
 
@@ -258,7 +258,7 @@ var AST_Include = exports.AST_Include = declare("include", {
             }
         });
     }
-}, AST_Node);
+}, AST_Statement);
 
 //扩展支持debug
 var AST_CSDebugger = exports.AST_CSDebugger = declare("CSDebugger", null , AST_Statement);

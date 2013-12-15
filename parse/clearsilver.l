@@ -31,6 +31,7 @@ COMMANDS ("var"|"evar"|"lvar"|"set"|"name"|"include"|"if"|"elif"|"elseif"|"alt"|
 <INITIAL>{CS_TAG_START}([ \t]|{NEWLINE})? {
     print(yytext)
     this.begin("ST_CS_START");
+    //return "TAG_START";
 }
 
 <ST_CS_START>"#debugger" {
