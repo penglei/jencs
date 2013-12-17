@@ -722,7 +722,7 @@ define(function(require){
      * @implements {TextEditorDelegate}
      * @constructor
      */
-    TextEditorDelegateForSourceFrame = function(sourceFrame)
+    function TextEditorDelegateForSourceFrame(sourceFrame)
     {
         this._sourceFrame = sourceFrame;
     }

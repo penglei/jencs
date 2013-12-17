@@ -50,6 +50,8 @@ Context.prototype = {
     get scopeStack() {
         return this._scopeStack;
     },
+    "changeScope": function(){
+    },
     "enterScope": function(astNode){
         var scope = {
             "caller": null,//只有宏调用时才会有的属性

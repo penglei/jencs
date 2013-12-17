@@ -8,7 +8,7 @@ define(function(require, exports){
     function Panel(name){
         View.call(this);
 
-        this.name = name;
+        this._panelName = name;
         this.element.addStyleClass("panel");
         this.element.addStyleClass(name);
 

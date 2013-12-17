@@ -20,6 +20,7 @@ define(function(require) {
 
     var SidebarPaneStack = require("SidebarPane").SidebarPaneStack;
 
+    var WatchExpressionsSidebarPane = require("WatchExpressionsSidebarPane");
     var CallStackSidebarPane = require("CallStackSidebarPane");
     var BreakpointsSidebarPane = require("BreakpointsSidebarPane");
 
@@ -69,7 +70,7 @@ define(function(require) {
 
 
         this.sidebarPanes = {};
-        //this.sidebarPanes.watchExpressions = /*new WatchExpressionsSidebarPane();*/null;
+        this.sidebarPanes.watchExpressions = new WatchExpressionsSidebarPane();
         this.sidebarPanes.callstack = new CallStackSidebarPane();
         this.sidebarPanes.callstack.addEventListener(CallStackSidebarPane.Events.CallFrameSelected, this._callFrameSelectedInSidebar.bind(this));
 
@@ -175,11 +176,11 @@ define(function(require) {
             this.sidebarPaneView.show(this.splitView.sidebarElement);
 
             //x this.sidebarPanes.scopechain.expand();
-            //x this.sidebarPanes.jsBreakpoints.expand();
+            this.sidebarPanes.breakpoints.expand();
             this.sidebarPanes.callstack.expand();
 
-            //x if (CSInspector.settings.watchExpressions.get().length > 0)
-                //x this.sidebarPanes.watchExpressions.expand();
+            if (CSInspector.settings.watchExpressions.get().length > 0)
+                this.sidebarPanes.watchExpressions.expand();
         },
 
         _clearCurrentExecutionLine: function()
@@ -222,7 +223,7 @@ define(function(require) {
                 return;
 
             //this.sidebarPanes.scopechain.update(callFrame);
-            //this.sidebarPanes.watchExpressions.refreshExpressions();
+            this.sidebarPanes.watchExpressions.refreshExpressions();
             this.sidebarPanes.callstack.setSelectedCallFrame(callFrame);
             callFrame.createLiveLocation(this._executionLineChanged.bind(this));
         },

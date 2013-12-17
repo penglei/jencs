@@ -107,7 +107,7 @@ Settings.prototype = {
  * @param {!WebInspector.Object} eventSupport
  * @param {?Storage} storage
  */
-Setting = function(name, defaultValue, eventSupport, storage)
+function Setting(name, defaultValue, eventSupport, storage)
 {
     this._name = name;
     this._defaultValue = defaultValue;

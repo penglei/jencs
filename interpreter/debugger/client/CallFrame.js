@@ -4,7 +4,7 @@ define(function(){
      * @param {Script} script
      * @param {DebuggerAgent.CallFrame} payload
      */
-    CallFrame = function(script, payload)
+    function CallFrame(script, payload)
     {
         this._script = script;
         this._payload = payload;
@@ -95,7 +95,7 @@ define(function(){
                 }
                 callback(result, wasThrown);
             }
-            DebuggerAgent.evaluateOnCallFrame(this._payload.callFrameId, code, objectGroup, includeCommandLineAPI, doNotPauseOnExceptionsAndMuteConsole, returnByValue, generatePreview, didEvaluateOnCallFrame.bind(this));
+            CSInspector.debugAgent.evaluateOnCallFrame(this._payload.callFrameId, code, objectGroup, includeCommandLineAPI, doNotPauseOnExceptionsAndMuteConsole, returnByValue, generatePreview, didEvaluateOnCallFrame.bind(this));
         },
 
         /**

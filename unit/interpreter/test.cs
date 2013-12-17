@@ -10,7 +10,19 @@
 <?cs #include:"test_d_if.cs"
 
 ?>
-<?cs #include:"test_d_macrodef.cs"?>
+<?cs if:aaa?>
+    aaa
+    yyy
+<?cs else ?>
+    .....
+<?cs /if?>
+  
+-----each--------
+<?cs def:foo_if()?>
+    <?cs var:333?>
+    <?cs #debugger?>
+<?cs /def?>
+<?cs include:"test_d_macrodef.cs"?>
 -----if-------
 <?cs var:'aaa'?>
 

@@ -2,6 +2,7 @@ define(function(require){
     var EventEmitter = require("events").EventEmitter;
     var DebuggerPausedDetails = require("DebuggerPausedDetails");
     var Script = require("Script");
+    var RemoteObject = require("RemoteObject").RemoteObject;
 
     /**
      * @constructor
@@ -440,12 +441,12 @@ define(function(require){
          * @param {boolean} doNotPauseOnExceptionsAndMuteConsole
          * @param {boolean} returnByValue
          * @param {boolean} generatePreview
-         * @param {function(?RemoteObject, boolean, RuntimeAgent.RemoteObject=)} callback
+         * @param {function(?RemoteObject, boolean, RemoteObject=)} callback
          */
         evaluateOnSelectedCallFrame: function(code, objectGroup, includeCommandLineAPI, doNotPauseOnExceptionsAndMuteConsole, returnByValue, generatePreview, callback)
         {
             /**
-             * @param {?RuntimeAgent.RemoteObject} result
+             * @param {?RemoteObject} result
              * @param {boolean=} wasThrown
              */
             function didEvaluate(result, wasThrown)
@@ -536,6 +537,7 @@ define(function(require){
         DebuggerPaused: "debuggerPaused",
         DebugFinished: "debugFinished",
         ParsedScriptSource: "ParsedScriptSource",
+        CallFrameSelected: "CallFrameSelected",
 
         /*
         DebuggerWasEnabled: "DebuggerWasEnabled",
@@ -545,7 +547,6 @@ define(function(require){
         /*
         FailedToParseScriptSource: "FailedToParseScriptSource",
         BreakpointResolved: "BreakpointResolved",
-        CallFrameSelected: "CallFrameSelected",
         ConsoleCommandEvaluatedInSelectedCallFrame: "ConsoleCommandEvaluatedInSelectedCallFrame",
         */
         BreakpointsActiveStateChanged: "BreakpointsActiveStateChanged"
@@ -562,7 +563,6 @@ define(function(require){
         },
         "DebugPaused": function(callFrames, watchExpressions, breakpointIds){
             this._model._pausedScript(callFrames, 0, null, breakpointIds || [])
-            //this._model.dispatchEventToListeners(DebuggerModel.Events.DebuggerPaused, data);
         },
         "DebugFinished": function(exit){
             this._model.emit(DebuggerModel.Events.DebugFinished, exit);

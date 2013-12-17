@@ -4,6 +4,9 @@ define(function(){
         this._backend = backend;
         this._closed = false;
         this._backend.on("close", this._backendCloseHandler.bind(this));
+
+        this._backend.replyArgs["setBreakpointBySourceId"] = ["breakpointId", "locations"];
+        this._backend.replyArgs["evaluate"] = ["result", "wasThrown"];
     }
 
     DebugAgent.prototype = {
@@ -34,7 +37,32 @@ define(function(){
                 "breakpointId": breakpointId
             };
             this.sendMessageToBackend(message);
+        },
+        evaluate: function() {
+            if (CSInspector.debugModel.selectedCallFrame()){
+                CSInspector.debugModel.evaluateOnSelectedCallFrame.apply(CSInspector.debugModel, Array.prototype.slice.call(arguments, 0));
+            } else {
+                //console.error("can't evalute expresss, because of no callFrame selected");
+            }
+        },
+        evaluateOnCallFrame: function(
+                                callFrameId,
+                                code,
+                                objectGroup,
+                                includeCommandLineAPI,
+                                doNotPauseOnExceptionsAndMuteConsole,
+                                returnByValue,
+                                generatePreview,
+                                callback)
+        {
+            var message = {
+                "method":"evaluate",
+                "callFrameId": callFrameId,
+                "expresss": code
+            };
+            this.sendMessageToBackend(message, callback);
         }
+
     };
 
     DebugAgent.prototype._backendCloseHandler = function(){

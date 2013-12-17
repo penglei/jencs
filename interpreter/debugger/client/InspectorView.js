@@ -37,11 +37,11 @@ define(function(require, exports){
                 x.show();
                 this.dispatchEventToListeners(InspectorView.Events.PanelSelected);
             }
-            for (var panelName in WebInspector.panels) {
+            for (var panelName in CSInspector.panels) {
                 if (CSInspector.panels[panelName] === x) {
                     CSInspector.settings.lastActivePanel.set(panelName);
                     this._pushToHistory(panelName);
-                    CSInspector.userMetrics.panelShown(panelName);
+                    //x没什么用 CSInspector.userMetrics.panelShown(panelName);
                 }
             }
         },

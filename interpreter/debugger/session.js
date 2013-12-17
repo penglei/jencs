@@ -69,6 +69,7 @@ Session.prototype.emitInitStatus = function(){
     }
 
     var data = {
+        "mainFrame":this.executer.getCallFrames(),
         "resources": resources,
         "resumeEvaluate": this.config.breakFirst ? true : false
     };
@@ -129,8 +130,6 @@ Session.prototype.breakpoint = function(requstParam){
     var result = this.executer.requestBreakpoint(requstParam.rawLocation);
     if (!result) return;//断点设失败了
 
-    console.log(requstParam);
-    console.log(result);
     var breakRawLocation = {
         "lineNumber": result.pos.first_line,
         "columnNumber": 0, //result.pos.first_column,
@@ -185,6 +184,21 @@ MessageDispatcher.prototype = {
             "id": msg.id,
             "result": "success"
         });
+    },
+    "evaluate": function (msg) {
+        this._session.sendMessage({
+            "id":msg.id,
+            "result":{
+                "result":{
+                    "type":"function",
+                    "objectId":"15",
+                    "className":"Function",
+                    "description":"function createApplication() "
+                },
+                "wasThrown":false
+            }
+        });
+        //var object = this._session.engine.evaluateExpr(msg.code);
     }
 };
 

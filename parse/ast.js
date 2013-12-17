@@ -143,7 +143,7 @@ var AST_VariableAccess = exports.AST_VariableAccess = declare("VariabelAccess", 
             this.target.walk(visitor);
         });
     }
-}, AST_Node);
+}, AST_Expression);
 
 var AST_Prop = exports.AST_Prop = declare("Prop", {
     initialize: function(right) {

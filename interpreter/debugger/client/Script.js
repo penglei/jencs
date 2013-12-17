@@ -27,6 +27,7 @@ define(function(require){
 var ResourceTypes = require("Resource").ResourceTypes;
 var LiveLocation = require("LiveLocation");
 var UILocation = require("UILocation");
+var EventObjectEmitter = require("events").EventObjectEmitter;
 
 /**
  * @constructor

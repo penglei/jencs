@@ -139,15 +139,13 @@ else_single:
       /* empty */
     | T_ELSE TAG_END inner_statement_list {
         $$ = new ast.AST_Block($3);
-        /*
         if ($3){
             var firstStmt = $3[0];
             var lastStmt = $3[$3.length - 1];
-            $$.endPos = pos(yy, firstStmt.pos);
+            $$.pos = pos(yy, firstStmt.pos);
         } else {
             $$.pos = pos(yy, @1, @2);
         }
-        */
     }
     ;
 

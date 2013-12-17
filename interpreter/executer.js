@@ -1,6 +1,7 @@
 var util = require("util");
 var events = require("events");
 var ast = require("../parse/ast");
+var ClearSilverParser = require("../parse/clearsilver").Parser;
 var Walker = require("./walker").Walker;
 
 function Empty(){}
@@ -332,7 +333,7 @@ Executer.prototype._canBreak = function(node) {
 };
 
 Executer.prototype.setBreakpointsActive = function(active){
-    console.log("setBreakpointsActive:" + active);
+    //console.log("setBreakpointsActive:" + active);
     this._active = !!active;
 };
 
@@ -362,7 +363,7 @@ Executer.prototype.requestBreakpoint = function (rawPosition) {
     if (!sourceObj || !sourceObj.astTree) return;
 
     var line = rawPosition.lineNumber + 1;
-    console.log("To find line:" + line);
+    //console.log("To find line:" + line);
     var pos, brkpos, brkNode;
     sourceObj.astTree.walk(new Walker(function(node, descend){
         if (!node.pos) return;//AST_Program需要继续访问body部分
@@ -382,7 +383,7 @@ Executer.prototype.requestBreakpoint = function (rawPosition) {
                     点击的是block的body内的
                 }
                 */
-                console.log("BlockLineRange:" + node.pos.first_line + "->" + node.pos.last_line);
+                //console.log("BlockLineRange:" + node.pos.first_line + "->" + node.pos.last_line);
                 //断点暂时属于该block
                 brkpos = pos;
                 brkNode = node;
@@ -398,7 +399,7 @@ Executer.prototype.requestBreakpoint = function (rawPosition) {
         } */else if (node instanceof ast.AST_Statement){
             pos = node.pos;
             if (line >= pos.first_line && line <= pos.last_line){
-                console.log("StmtLineRange:" + node.pos.first_line + "->" + node.pos.last_line);
+                //console.log("StmtLineRange:" + node.pos.first_line + "->" + node.pos.last_line);
                 brkpos = pos;
                 brkNode = node;
             }
@@ -423,6 +424,26 @@ Executer.prototype.removeBreakpoint = function(breakpointId){
         }
     }
 };
+
+Executer.prototype.evaluateExpr = function (codes, callStackId) {
+    var tempCsParser = new ClearSilverParser();
+    try{
+        var astProgram = tempCsParser.parse("<?cs var:" + codes + " ?>");
+        var exprStmt, expr;
+        if (astProgram.body && (exprStmt = astProgram.body[0])){
+            expr = exprStmt.argument;
+            //if (exprStmt instanceof ast.AST_Expression){
+                //执行
+                //先把scope切换到指定的状态，以获取正确的变量值
+                this.context.changeScope(callStackId);
+                var result = exprStmt.calc();//对于 VariabelAccess可以不用calc，而是获得它的节点
+                return result;
+            //}
+        }
+    } catch (e){
+        return new Error("parse and evalue error");
+    }
+}
 
 exports.Executer = Executer;
 exports.def_execute = def_execute;

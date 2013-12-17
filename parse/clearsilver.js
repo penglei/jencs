@@ -130,15 +130,13 @@ case 13:
 break;
 case 18:
         this.$ = new ast.AST_Block($$[$0]);
-        /*
         if ($$[$0]){
             var firstStmt = $$[$0][0];
             var lastStmt = $$[$0][$$[$0].length - 1];
-            this.$.endPos = pos(yy, firstStmt.pos);
+            this.$.pos = pos(yy, firstStmt.pos);
         } else {
             this.$.pos = pos(yy, _$[$0-2], _$[$0-1]);
         }
-        */
     
 break;
 case 19:

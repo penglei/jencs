@@ -1,7 +1,7 @@
 define(function(require, exports, module) {
     var inherits = require("util").inherits;
 
-    EventObjectEmitter = function() {
+    function EventObjectEmitter() {
         this._listeners = {};
     }
 

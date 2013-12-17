@@ -8,7 +8,7 @@ var SourceFrame = require("SourceFrame");
 /**
  * @interface
  */
-TabbedEditorContainerDelegate = function() { }
+function TabbedEditorContainerDelegate(){ }
 
 TabbedEditorContainerDelegate.prototype = {
     /**
