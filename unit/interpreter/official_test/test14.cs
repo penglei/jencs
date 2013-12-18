@@ -31,7 +31,7 @@ Existence Tests
   ERROR
 <?cs /if ?>
 
-<?cs #debugger?><?cs if:?Blooey ?>
+<?cs if:?Blooey ?>
   ERROR
 <?cs else ?>
   Blooey doesn't exist

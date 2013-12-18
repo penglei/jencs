@@ -46,6 +46,11 @@ function Executer(engine){
     this._active = true;
     this._breakpoints = [];
     this._breakpiontIdUpper = 1;
+    this._watchExpressions = {};
+    this._watchObjectIdUpper = 1;
+
+    /** @type {!Object.<Integer, Object>} */
+    this._callFramesScope = {};
 }
 
 util.inherits(Executer, events.EventEmitter);
@@ -70,10 +75,12 @@ Executer.prototype.getCallFrames = function(){
 
     var callDeep = callStack.length;
     if (callDeep == 1) {
+        var scope = callStack[0];
         //顶层program
         var posInfo = this.getExecutePos();
+        var callFrameId = 1;
         var frameInfo = {
-            "callFrameId": 0,
+            "callFrameId": callFrameId,
             "functionName": "(Program)",
             "location":{
                 "columnNumber":posInfo.column,
@@ -86,6 +93,7 @@ Executer.prototype.getCallFrames = function(){
             }*/]
         };
         callFrames.push(frameInfo);
+        this._callFramesScope[callFrameId] = scope;
         return callFrames;
     }
 
@@ -114,8 +122,9 @@ Executer.prototype.getCallFrames = function(){
             }
         }
 
+        var callFrameId = id + 1;
         var frameInfo = {
-            "callFrameId": id,
+            "callFrameId": callFrameId,
             "functionName": functionName,
             "location": {
                 "columnNumber":columnNumber,
@@ -127,6 +136,7 @@ Executer.prototype.getCallFrames = function(){
                 objectId: "scope:0:0",
             }*/]
         };
+        this._callFramesScope[callFrameId] = scope;
         callFrames.unshift(frameInfo);
     }
 
@@ -425,20 +435,39 @@ Executer.prototype.removeBreakpoint = function(breakpointId){
     }
 };
 
-Executer.prototype.evaluateExpr = function (codes, callStackId) {
+Executer.prototype.evaluateExpr = function (expression, callFrameId) {
     var tempCsParser = new ClearSilverParser();
     try{
-        var astProgram = tempCsParser.parse("<?cs var:" + codes + " ?>");
+        var astProgram;
+        if (!this._watchExpressions[expression]){
+            astProgram = tempCsParser.parse("<?cs var:" + expression + " ?>");
+        } else {
+            astProgram = this._watchExpressions[expression];
+        }
+
+        //var objectId = this._watchObjectIdUpper++;
+
         var exprStmt, expr;
         if (astProgram.body && (exprStmt = astProgram.body[0])){
             expr = exprStmt.argument;
-            //if (exprStmt instanceof ast.AST_Expression){
-                //执行
-                //先把scope切换到指定的状态，以获取正确的变量值
-                this.context.changeScope(callStackId);
-                var result = exprStmt.calc();//对于 VariabelAccess可以不用calc，而是获得它的节点
-                return result;
-            //}
+            //先把scope切换到指定的状态，以获取正确的变量值
+            var scope = this._callFramesScope[callFrameId];
+            if (!scope){
+                //TODO throw Error
+            } else {
+                this.context.setStartfromScope(scope);
+
+                /*
+                if (expr instanceof ast.AST_VariableAccess){
+                    //对于 VariabelAccess可以不用calc，而是获得它的节点
+                } else {
+                }
+                */
+
+                var result = expr.calc();
+                this.context.resetStartfromScope();
+            }
+            return result.value;
         }
     } catch (e){
         return new Error("parse and evalue error");

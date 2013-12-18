@@ -1,4 +1,4 @@
-<?cs def:fooa()?>
+<?cs def:fooa(a)?>
 
     <?cs var:11111111?>
     <?cs #debugger?>
@@ -22,13 +22,15 @@
     <?cs var:333?>
     <?cs #debugger?>
 <?cs /def?>
-<?cs include:"test_d_macrodef.cs"?>
+<?cs #include:"test_d_macrodef.cs"?>
 -----if-------
-<?cs var:'aaa'?>
-
-<?cs call:fooa()?>
 
 <?cs set:a = 333?>
+
+<?cs var:a?>
+
+<?cs call:fooa(444)?>
+
 
 
 <?cs var:b?>

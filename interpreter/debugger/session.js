@@ -186,6 +186,7 @@ MessageDispatcher.prototype = {
         });
     },
     "evaluate": function (msg) {
+        /*
         this._session.sendMessage({
             "id":msg.id,
             "result":{
@@ -198,7 +199,21 @@ MessageDispatcher.prototype = {
                 "wasThrown":false
             }
         });
-        //var object = this._session.engine.evaluateExpr(msg.code);
+        */
+        console.log(msg);
+        var resultVal = this._executer.evaluateExpr(msg.expression, msg.callFrameId);
+        console.log(resultVal);
+        this._session.sendMessage({
+            id:msg.id,
+            "result": {
+                "result": {
+                    "type": "",
+                    "objectId": msg.expression,
+                    "description": resultVal
+                }
+            },
+            "wasThrown": false
+        });
     }
 };
 

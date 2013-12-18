@@ -58,7 +58,7 @@ define(function(){
             var message = {
                 "method":"evaluate",
                 "callFrameId": callFrameId,
-                "expresss": code
+                "expression": code
             };
             this.sendMessageToBackend(message, callback);
         }

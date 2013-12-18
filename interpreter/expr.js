@@ -71,7 +71,7 @@ ast.AST_VariableAccess.proto("calc", function(opts){//opts可以用来确定究�
 
 /**
  * 获得一个表达式的结果，与calc的区别是，对于hdfnode，它会返回节点，而不是值
- * 并且，它也可能返回undefined，而不是(CSValue)
+ * 并且，它也可能返回null，而不是(CSValue)
  * @return NULL || CSValue || HNode
  */
 ast.AST_VariableAccess.proto("getSymbolValueNode", function(){

@@ -16,6 +16,7 @@ def_execute(ast.AST_If, function(context){
     if (testExpr.isTrue()){
         this.gen_body(context);
     } else if (this.alternate) {
+        //在else处暂停一下
         this.executer.command(this.alternate.execute, this.alternate);
         //this.alternate.execute(context);
     }
