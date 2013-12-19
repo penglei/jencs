@@ -29,6 +29,7 @@ var PropertiesSection = require("PropertiesSection");
 var TreeElement = require("treeoutline").TreeElement;
 var TextPrompt = require("TextPrompt");
 var UIUtils = require("UIUtils");
+var RemoteObject = require("RemoteObject").RemoteObject;
 
 /**
  * @constructor
@@ -206,8 +207,10 @@ ObjectPropertyTreeElement.prototype = {
             } else if (this.property.value.type === "function" && typeof description === "string") {
                 this.valueElement.textContent = /.*/.exec(description)[0].replace(/ +$/g, "");
                 this.valueElement._originalTextContent = description;
-            } else if (this.property.value.type !== "object" || this.property.value.subtype !== "node")
-                this.valueElement.textContent = description;
+            } else if (this.property.value.type !== "object" || this.property.value.subtype !== "node") {
+                //用description来描述hdf节点的值
+                this.valueElement.textContent = "\"" + description + "\"";
+            }
 
             if (this.property.wasThrown)
                 this.valueElement.addStyleClass("error");

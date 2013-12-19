@@ -217,7 +217,7 @@ RemoteObject.prototype = {
             }
             callback(result, internalPropertiesResult);
         }
-        RuntimeAgent.getProperties(this._objectId, ownProperties, accessorPropertiesOnly, remoteObjectBinder);
+        CSInspector.debugAgent.getProperties(this._objectId, ownProperties, accessorPropertiesOnly, remoteObjectBinder);
     },
 
     /**
@@ -395,10 +395,10 @@ RemoteObject.loadFromObject = function(object, flattenProtoChain, callback)
 RemoteObject.loadFromObjectPerProto = function(object, callback)
 {
     // Combines 2 asynch calls. Doesn't rely on call-back orders (some calls may be loop-back).
-    var savedOwnProperties;
+    var savedOwnProperties = []; //hdf没有ownProperties的区分
     var savedAccessorProperties;
     var savedInternalProperties;
-    var resultCounter = 2;
+    var resultCounter = 1; //hdf没有ownProperties的区分
 
     function processCallback()
     {
@@ -439,7 +439,7 @@ RemoteObject.loadFromObjectPerProto = function(object, callback)
     }
 
     object.getAllProperties(true, allAccessorPropertiesCallback);
-    object.getOwnProperties(ownPropertiesCallback);
+    //x 重复了(对hdf来说) object.getOwnProperties(ownPropertiesCallback);
 };
 
 

@@ -1,6 +1,8 @@
 var util = require("util");
 var events = require("events");
 var ast = require("../parse/ast");
+var CSValue = require("./types").CSValue;
+var HNode = require("./types").HNode;
 var ClearSilverParser = require("../parse/clearsilver").Parser;
 var Walker = require("./walker").Walker;
 
@@ -51,6 +53,7 @@ function Executer(engine){
 
     /** @type {!Object.<Integer, Object>} */
     this._callFramesScope = {};
+    this._watchObjects = {};
 }
 
 util.inherits(Executer, events.EventEmitter);
@@ -441,11 +444,10 @@ Executer.prototype.evaluateExpr = function (expression, callFrameId) {
         var astProgram;
         if (!this._watchExpressions[expression]){
             astProgram = tempCsParser.parse("<?cs var:" + expression + " ?>");
+            this._watchExpressions[expression] = astProgram;
         } else {
             astProgram = this._watchExpressions[expression];
         }
-
-        //var objectId = this._watchObjectIdUpper++;
 
         var exprStmt, expr;
         if (astProgram.body && (exprStmt = astProgram.body[0])){
@@ -456,23 +458,98 @@ Executer.prototype.evaluateExpr = function (expression, callFrameId) {
                 //TODO throw Error
             } else {
                 this.context.setStartfromScope(scope);
-
-                /*
+                var exprResult;
                 if (expr instanceof ast.AST_VariableAccess){
-                    //对于 VariabelAccess可以不用calc，而是获得它的节点
-                } else {
-                }
-                */
+                    //对于VariabelAccess获得它的数据节点
+                    var result = expr.getSymbolValueNode();
+                    if (!result){//undefined
+                        exprResult = {
+                            "type":"undefined",
+                            "value":"undefined"
+                        };
+                    } else if (result instanceof CSValue){//string
+                        exprResult = {
+                            "type":"string",
+                            "value":result.getString()
+                        };
+                    } else {//object(hdf node)
 
-                var result = expr.calc();
+                        var objectId = this.getWatchObjectId(result);
+
+                        exprResult = {
+                            "type":"object",
+                            "subtype":"string",//样式上和string一样
+                            "objectId":objectId,
+                            "description":result.getValue()
+                        }
+                    }
+                } else {
+                    var resultVal = expr.calc();
+                    exprResult = {
+                        "type":"string",
+                        "value":resultVal.getString()
+                    }
+                }
+
                 this.context.resetStartfromScope();
+                return exprResult;
             }
-            return result.value;
         }
     } catch (e){
-        return new Error("parse and evalue error");
+        //Error
+        return {
+            "error":true,
+            "type":"object",
+            "objectId": "ERROR",
+            "description":"expression parse or execute error"
+        };
     }
-}
+};
+
+Executer.prototype.getWatchObjectId = function(hdfObj){
+    var objectId;
+    for(var i in this._watchObjects){
+        if (this._watchObjects[i] == hdfObj){
+            objectId = i;
+            break;
+        }
+    }
+    if (!objectId){
+        objectId = this._watchObjectIdUpper++;
+        this._watchObjects[objectId] = hdfObj;
+    }
+    return objectId;
+};
+
+Executer.prototype.getProperties = function(objectId) {
+    var hdfObj = this._watchObjects[objectId], result = [];
+    if (hdfObj){
+        hdfObj.eachChild(function(hobj){
+            if (hobj.childrenSize()){
+                var objectId = this.getWatchObjectId(hobj);
+                var property = {
+                    "name":hobj.name,
+                    "value":{
+                        "type": "object",
+                        "subtype":"string",
+                        "objectId": objectId,
+                        "description": hobj.getValue()
+                    }
+                };
+            } else {
+                var property = {
+                    "name":hobj.name,
+                    "value":{
+                        "type": "string",
+                        "value": hobj.getValue()
+                    }
+                };
+            }
+            result.push(property);
+        }, this);
+    }
+    return result;
+};
 
 exports.Executer = Executer;
 exports.def_execute = def_execute;

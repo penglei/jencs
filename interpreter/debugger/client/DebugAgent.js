@@ -7,6 +7,7 @@ define(function(){
 
         this._backend.replyArgs["setBreakpointBySourceId"] = ["breakpointId", "locations"];
         this._backend.replyArgs["evaluate"] = ["result", "wasThrown"];
+        this._backend.replyArgs["getObjectProperties"] = ["result", "wasThrown"];
     }
 
     DebugAgent.prototype = {
@@ -61,6 +62,14 @@ define(function(){
                 "expression": code
             };
             this.sendMessageToBackend(message, callback);
+        },
+        getProperties: function(objectId, ownProperties, accessorPropertiesOnly, cb){debugger
+            var message = {
+                "method": "getObjectProperties",
+                "objectId": objectId
+            };
+
+            this.sendMessageToBackend(message, cb);
         }
 
     };

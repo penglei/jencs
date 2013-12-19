@@ -2,6 +2,7 @@ qz_metadata.meta.appid=4
 bar.2 = 222
 bar.1 = 111
 bar.3 = 333
+Page.Menu = page.menu
 Page {
   Menu {
       Name = Home

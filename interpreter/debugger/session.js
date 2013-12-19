@@ -200,17 +200,23 @@ MessageDispatcher.prototype = {
             }
         });
         */
-        console.log(msg);
-        var resultVal = this._executer.evaluateExpr(msg.expression, msg.callFrameId);
-        console.log(resultVal);
+        var result = this._executer.evaluateExpr(msg.expression, msg.callFrameId);
+
         this._session.sendMessage({
-            id:msg.id,
+            "id":msg.id,
             "result": {
-                "result": {
-                    "type": "",
-                    "objectId": msg.expression,
-                    "description": resultVal
-                }
+                "result": result,
+                "wasThrown": result.error ? true : false
+            }
+        });
+    },
+    "getObjectProperties": function(msg){
+        var objectId = msg.objectId;
+        var result = this._executer.getProperties(objectId);
+        this._session.sendMessage({
+            "id":msg.id,
+            "result": {
+                "result": result
             },
             "wasThrown": false
         });
