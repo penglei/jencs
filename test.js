@@ -27,7 +27,7 @@ function ContentWhiteFilter(valueStr, astNode){
     return astNode instanceof AST.AST_Content ? valueStr.replace(/[\r\n\t]/g, '') : valueStr;
 }
 
-if (0){
+if (1){
     var _csRoot = path.resolve(__dirname, './resource/cs/');
     var csIncludeRoot = path.resolve(_csRoot, 'module/');
     var entryCsFile = path.resolve(_csRoot, "wupmain.cs");

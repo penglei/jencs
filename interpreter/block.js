@@ -175,6 +175,7 @@ def_execute(ast.AST_Loop, function(context){
 
 ast.AST_MacroDef.proto("execJump", function(context, _symbolAlias, caller) {
     var scope = context.enterScope(this);
+    context.currentMacro = this;
     scope.caller = caller;
 
     //初始化实参

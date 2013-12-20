@@ -21,6 +21,7 @@
 <?cs def:foo_if()?>
     <?cs var:333?>
     <?cs #debugger?>
+    <?cs call:fooa(444)?>
 <?cs /def?>
 <?cs #include:"test_d_macrodef.cs"?>
 -----if-------
@@ -29,8 +30,8 @@
 
 <?cs var:a?>
 
-<?cs call:fooa(444)?>
 
+<?cs call:foo_if()?>
 
 
 <?cs var:b?>

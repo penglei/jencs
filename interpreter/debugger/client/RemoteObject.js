@@ -395,8 +395,8 @@ RemoteObject.loadFromObject = function(object, flattenProtoChain, callback)
 RemoteObject.loadFromObjectPerProto = function(object, callback)
 {
     // Combines 2 asynch calls. Doesn't rely on call-back orders (some calls may be loop-back).
-    var savedOwnProperties = []; //hdf没有ownProperties的区分
-    var savedAccessorProperties;
+    var savedOwnProperties; //hdf没有ownProperties的区分
+    var savedAccessorProperties = [];
     var savedInternalProperties;
     var resultCounter = 1; //hdf没有ownProperties的区分
 
@@ -438,8 +438,8 @@ RemoteObject.loadFromObjectPerProto = function(object, callback)
         processCallback();
     }
 
-    object.getAllProperties(true, allAccessorPropertiesCallback);
-    //x 重复了(对hdf来说) object.getOwnProperties(ownPropertiesCallback);
+    //x 重复了(对hdf来说) object.getAllProperties(true, allAccessorPropertiesCallback);
+    object.getOwnProperties(ownPropertiesCallback);//hdf所以child相当于ownProperties
 };
 
 

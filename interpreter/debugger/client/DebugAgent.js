@@ -63,7 +63,7 @@ define(function(){
             };
             this.sendMessageToBackend(message, callback);
         },
-        getProperties: function(objectId, ownProperties, accessorPropertiesOnly, cb){debugger
+        getProperties: function(objectId, ownProperties, accessorPropertiesOnly, cb){
             var message = {
                 "method": "getObjectProperties",
                 "objectId": objectId

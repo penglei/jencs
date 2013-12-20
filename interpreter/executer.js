@@ -217,20 +217,24 @@ Executer.prototype.forward = function(stepin){
 //恢复执行:从当前断点处继续执行，直接遇到下一个断点
 //标准的作法是不断调用forward直到遇到debug，但那样效率比较低，在这用一个循环代替
 Executer.prototype.resume = function(flag){
-    var curcmd = this.cmdHead;
+    var curcmd = this.cmdHead,
+        startCmd = curcmd;
+    var currentMacro = this.context.currentMacro;
     while (curcmd) {
         this.cmdHead = curcmd.next;
         curcmd.go();
 
         curcmd = this.cmdHead;
 
-        if (curcmd && curcmd.node && this._canBreak(curcmd.node)) break;
+        if (!curcmd) break;
+
+        if (curcmd.node && this._canBreak(curcmd.node)) break;
         //这里保证debug cmd还没有执行
         //if (curcmd && curcmd.node instanceof ast.AST_CSDebugger && this._active) break;
 
-        if (flag == 2){//运行到宏后面的语句
-            //TODO 需要运行到当前哨兵位置
-            if (curcmd && curcmd.type != "MacroReturn"){
+        if (flag == 2){
+            if (startCmd.type == "MacroReturn") break;//如果是在macro的<?cs /def?>上面，前面的go已经运行过，直接返回
+            if (currentMacro == curcmd.node){//运行到宏后面的语句
                 this.forward(true);
                 break;
             }
@@ -529,6 +533,7 @@ Executer.prototype.getProperties = function(objectId) {
                 var objectId = this.getWatchObjectId(hobj);
                 var property = {
                     "name":hobj.name,
+                    "enumerable": true,
                     "value":{
                         "type": "object",
                         "subtype":"string",

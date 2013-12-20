@@ -209,7 +209,8 @@ ObjectPropertyTreeElement.prototype = {
                 this.valueElement._originalTextContent = description;
             } else if (this.property.value.type !== "object" || this.property.value.subtype !== "node") {
                 //用description来描述hdf节点的值
-                this.valueElement.textContent = "\"" + description + "\"";
+                description = description + "";
+                this.valueElement.textContent = description.length ? "\"" + description + "\"" : description;
             }
 
             if (this.property.wasThrown)
