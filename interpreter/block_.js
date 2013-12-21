@@ -144,8 +144,9 @@ def_execute(ast.AST_Loop, function(context){
     context.leaveScope();
 });
 
-ast.AST_MacroDef.proto("execJump", function(context, _symbolAlias) {
+ast.AST_MacroDef.proto("execJump", function(context, _symbolAlias, caller) {
     var scope = context.enterScope(this);
+    scope.caller = caller;
 
     //初始化实参
     for(var name in _symbolAlias){
@@ -172,10 +173,10 @@ def_execute(ast.AST_Escape, function(context){
 
 
 def_execute(ast.AST_Program, function(context){
-    context.enterScope(this);
+    //context.enterScope(this);
 
     this.gen_body(context);
 
-    context.leaveScope();
+    //context.leaveScope();
     this.executer.emit("end");
 });

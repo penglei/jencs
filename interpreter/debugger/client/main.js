@@ -1,44 +1,66 @@
 define(function(require) {
-    var $ = require('jquery');
 
-    var Panel = require("Panel");
+    //global constroller
+    CSInspector = {
+        useLowerCaseMenuTitles:function(){}
+    };
+
     var Backend = require("Backend");
     var DebugModel = require("DebugModel");//接受数据
     var DebugAgent = require("DebugAgent");//发送请求
-    //var VariabelPanel = require("VariablePanel");
-    var DebugToolbar = require("DebugToolbar");
-    var CodeEditor = require("CodeCMEditor");
+    var Workspace = require("Workspace").Workspace;
+
+    var BreakpointManager = require("BreakpointManager");
+    var NetworkUISourceCodeProvider = require("NetworkUISourceCodeProvider");
+    var SimpleWorkspaceProvider = require("SimpleWorkspaceProvider");
+    var Settings = require("Settings").Settings;
+
+    var InspectorView = require("InspectorView");
+    var ScriptsPanel = require("ScriptsPanel");
+    var ConsolePanel = require("ConsolePanel");
 
     var backend = new Backend(io.connect('http://localhost', {
         'reconnect': false
     }));
 
-    //global variable DebugAgent
-    this.DebugAgent = new DebugAgent(backend);
+backend.on("connected", function(){
+    CSInspector.settings = new Settings();
+    CSInspector.debugAgent = new DebugAgent(backend);
+    CSInspector.debugModel = new DebugModel(backend);
+    CSInspector.workspace = new Workspace();
 
-    var debugModel = new DebugModel(backend);
+    CSInspector.breakpointManager = new BreakpointManager(CSInspector.settings.breakpoints, CSInspector.debugModel, CSInspector.workspace);
 
-    Panel.toolbar = new DebugToolbar();
-    Panel.codeEditor = new CodeEditor(debugModel);
-
-
-    debugModel.on(DebugModel.EventTypes.SessionInit, Panel.setReSources.bind(Panel));//main
-
-    debugModel.on(DebugModel.EventTypes.DebuggerPaused, Panel.debuggerPaused.bind(Panel));
-    debugModel.on(DebugModel.EventTypes.DebugFinished, onFinish);
-
-    /*
-    debugModel.on(DebugModel.EventTypes.RenderSnippet, function (str) {
-        console.log(str);
+    CSInspector.debugModel.on(DebugModel.Events.DebugPaused, function(){
+        CSInspector.inspectorView.showPanel("scripts");
     });
-    */
 
-    function onFinish(exit){
-        Panel.codeEditor.unActiveExecutionLine();
-        Panel.toolbar.disable();
-        if (exit){
-            backend.close();
-        }
-    }
+    CSInspector.debugModel.on(DebugModel.Events.DebugFinished, function(exit){
+        if (exit) backend.close();
+    });
+
+    CSInspector.inspectedPageURL = "";//mainFramePayload.frame.url;
+    //初始化文件传输. file://也是network类型的(这里只有Network类型)
+    new NetworkUISourceCodeProvider(
+            new SimpleWorkspaceProvider(
+                CSInspector.workspace,
+                Workspace.ProjectTypes.Network),
+            CSInspector.workspace);
+
+
+
+    var inspectorView = new InspectorView();
+    CSInspector.inspectorView = inspectorView;
+    inspectorView.show(document.getElementById("main"));
+
+    var scriptsPanel = new ScriptsPanel();
+    inspectorView.addPanel(scriptsPanel);
+    inspectorView.showPanel("scripts");
+
+    window.addEventListener("resize", inspectorView.doResize.bind(inspectorView), true);
 
 });
+
+});
+
+//resourceReady -> mainFramePayload -> ready

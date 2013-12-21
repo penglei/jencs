@@ -9,7 +9,7 @@
 
 %}
 
-%x ST_CS_START ST_CS ST_END_BRACKET ST_END_VARIABEL ST_VARIABLE_PROP ST_CS_MACRO_SYMBOL ST_CS_INCLUDE ST_IGNORE
+%x ST_CS_START ST_CS ST_EXTEND_CS ST_END_BRACKET ST_END_VARIABEL ST_VARIABLE_PROP ST_CS_MACRO_SYMBOL ST_CS_INCLUDE
 
 %options flex
 
@@ -17,10 +17,8 @@ DNUM	([0-9]*\.[0-9]+)|([0-9]+\.[0-9]*)
 LNUM	[0-9]+
 HNUM	"0x"[0-9a-fA-F]+
 LABEL	[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*
-WHITESPACE [ \n\r\t]+
 TOKENS [\#,.\[\]()+-/\*=%!<>?$]
 ANY_CHAR [^]
-NEWLINE ("\r"|"\n"|"\r\n")
 MACRO_CHAR = [\w\d\-_\+\/\*%!@\$]
 CS_TAG_START "<?cs"
 CS_TAG_END "?>"
@@ -28,24 +26,20 @@ COMMANDS ("var"|"evar"|"lvar"|"set"|"name"|"include"|"if"|"elif"|"elseif"|"alt"|
 
 %%
 
-<INITIAL>{CS_TAG_START}([ \t]|{NEWLINE})? {
-    print(yytext)
+<INITIAL>{CS_TAG_START} {
     this.begin("ST_CS_START");
+    //return "TAG_START";//加入TAG_START token让语法分析会变得麻烦，LALR(1)只能向前查看一个token
 }
 
-<ST_CS_START>"#debugger" {
-    this.popState();
-    this.begin("ST_IGNORE");
-    return "T_DEBUGGER";
-}
-
-<ST_IGNORE>{ANY_CHAR}*?\?\> {
-    this.popState();
-}
-
-<ST_CS_START>\#(?!debugger\s*){ANY_CHAR}*?\?\> {
+<ST_CS_START>\s+\#(?!debugger\s*){ANY_CHAR}*?{CS_TAG_END} {
     //都是注释
     this.popState();
+}
+
+<ST_CS_START>\s+"#debugger"\s*{ANY_CHAR}*?(?={CS_TAG_END}) {
+    this.popState();
+    this.begin("ST_EXTEND_CS");
+    return "T_DEBUGGER";
 }
 
 <ST_CS_START>[^#] {
@@ -54,11 +48,7 @@ COMMANDS ("var"|"evar"|"lvar"|"set"|"name"|"include"|"if"|"elif"|"elseif"|"alt"|
     this.begin("ST_CS");
 }
 
-<ST_CS>\s*{CS_TAG_END}{NEWLINE}? {
-    this.popState();
-}
-
-<ST_CS>{COMMANDS}\s*\:\s* {
+<ST_CS>\s+{COMMANDS}\s*\:\s* {
     var index = yytext.indexOf(":");
     if (index >= 0){
         yytext = trim(yytext.substring(0, index));
@@ -205,11 +195,7 @@ COMMANDS ("var"|"evar"|"lvar"|"set"|"name"|"include"|"if"|"elif"|"elseif"|"alt"|
     } else {
         while(true){
             var ch = this._input[0];
-            /*
-            if (ch == "\\"){
-                this.showPosition();
-                throw new Error("不支持转义字符");
-            } else */if (ch == quote){
+            if (ch == quote){
                 this.input();//字符串结束
                 yytext = yytext.substring(0, yytext.length - 1);//吃进来的字符串要丢掉
                 break;
@@ -274,8 +260,19 @@ COMMANDS ("var"|"evar"|"lvar"|"set"|"name"|"include"|"if"|"elif"|"elseif"|"alt"|
     this.unput(yytext);
 }
 
-<ST_CS>{WHITESPACE} {
+<ST_CS>\s+ {
     //ignore whitespace
+}
+
+
+<ST_EXTEND_CS>{CS_TAG_END} {
+    this.popState();
+    return "TAG_END";
+}
+
+<ST_CS>{CS_TAG_END} {
+    this.popState();
+    return "TAG_END";
 }
 
 <INITIAL>(?!{CS_TAG_START}){ANY_CHAR}+?(?={CS_TAG_START}|$) {
@@ -309,8 +306,6 @@ COMMANDS ("var"|"evar"|"lvar"|"set"|"name"|"include"|"if"|"elif"|"elseif"|"alt"|
 <<EOF>> return "EOF";
 
 %%
-
-//console.log("start lex parse ...")
 
 /**
  * Local variables:

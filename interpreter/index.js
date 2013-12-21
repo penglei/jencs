@@ -7,7 +7,6 @@ var Executer = require("./executer").Executer;
 
 var DebugService = require("./debugger").DebugService;
 
-//放在这里而不是executer里面，是因为executer里的def_execute会被它们用到，这就会形成循环依赖
 require("./block");
 require("./statement");
 require("./expr");
@@ -26,12 +25,13 @@ function Engine(csString){
     this._debugMode = false;
     this._debugConfig = {};
 
-    this._lexIncludeSource  = Empty;
-    this.executer = new Executer();
+    this.executer = new Executer(this);
 
     this.csparser = new ClearSilverParser();
 
-    this.csparser.yy.filename = this._entryName = "[main]";
+    this.csparser.yy.filename = this._entryPathname = "[main]";
+    this._entryPathIsDefault = true;
+    this._includeParentBase = "$(root)";
 
     if (typeof csString == 'string') this.initEntrySource(csString);
 
@@ -55,19 +55,6 @@ function Engine(csString){
 
     this._onRenderListeners = [];
 }
-
-Engine.prototype.request = function(type, val, cb){/*
-    if (type == "fetchVarValue"){
-        var csSubParser = new ClearSilverParser();
-        val = "<?cs " + val + "?>";
-        try{
-            var valast = csSubParser.parse(source);
-        } catch(e){
-            if (cb();
-        }
-    }
-    */
-};
 
 //include在语法分析阶段就完成要方便得多
 Engine.prototype._lexInclude = function(includeName) {
@@ -115,11 +102,24 @@ Engine.prototype._onEnd = function(){
 
 Engine.prototype._saveSource = function(name, source){
     var id = this._sources.length + 1;
-    this._sources.push({
-        "name":name,
-        "source":source,
+    var sourceInfo = {
+        "isEntryDefaultPath": false,
+        "rootPath": "",
+        "name": name,
+        "source": source,
         "id": id
-    });
+    };
+
+    if (id != 1) {
+        //说明这是子模板
+        sourceInfo.rootPath = this._includeParentBase;
+    } else {
+        if (this._entryPathIsDefault){
+            sourceInfo.isEntryDefaultPath = true;
+        }
+    }
+
+    this._sources.push(sourceInfo);
     return id;
 };
 
@@ -127,13 +127,13 @@ Engine.prototype.onRender = function(cb){
     if (typeof cb == "function") insertArray(this._onRenderListeners, cb);
 };
 
-Engine.prototype.offRender = function (cb) {
-    // body...
-};
+Engine.prototype.initEntrySource = function(csString, pathname){
+    if (pathname !== undefined) {
+        this._entryPathIsDefault = false;
+        this.csparser.yy.name = this._entryPathname = pathname + " [main]";
+    }
+    var fileid = this._saveSource(this._entryPathname, csString);
 
-Engine.prototype.initEntrySource = function(csString, name){
-    if (name !== undefined) this.csparser.yy.name = this._entryName = name;
-    var fileid = this._saveSource(this._entryName, csString);
     this.csparser.yy.fileid = fileid;
     this.astInstance = this.csparser.parse(csString);
     Scope.initScopeLayer(this.astInstance);//XXX 虽然会修改ast，但它是没有什么副作用的.但最好还是用一份clone的ast来运行最好
@@ -150,6 +150,24 @@ Engine.prototype.getSources = function(name){
     return this._sources;
 };
 
+Engine.prototype.getSourceObjectById = function (id) {
+    var astTree, source;
+    for(var i = 0; i < this._sources.length; i++){
+        if (this._sources[i].id == id) {
+            source = this._sources[i];
+            break;
+        }
+    }
+
+    if (id == 1) astTree = this.astInstance;
+    else astTree = this.subAsts[source.name];
+
+    return {
+        "astTree": astTree,
+        "source": source
+    }
+};
+
 //設定一個Include處理器，用於返回include的源碼
 Engine.prototype.setLexerInclude = function(cb) {
     this._lexIncludeSource = cb;
@@ -161,15 +179,25 @@ Engine.prototype.setConfig = function(opts){
     if (opts.debug) {
         this._debugMode = true;
     }
+
     if (opts.debugBreakFirst){
         this._debugConfig.breakFirst = true;
     }
+
+    this._debugConfig.port = opts.port;
+
+    if (opts.includeBase){
+        this._includeParentBase = opts.includeBase;
+    }
+
     return this;
 };
 
 Engine.prototype.run = function(hdfData){
     if (typeof hdfData == "string"){
         hdfData = HDF.parse(hdfData);
+    } else {
+        hdfData = {};
     }
 
     this.result = "";

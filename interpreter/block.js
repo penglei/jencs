@@ -16,6 +16,7 @@ def_execute(ast.AST_If, function(context){
     if (testExpr.isTrue()){
         this.gen_body(context);
     } else if (this.alternate) {
+        //在else处暂停一下
         this.executer.command(this.alternate.execute, this.alternate);
         //this.alternate.execute(context);
     }
@@ -172,8 +173,10 @@ def_execute(ast.AST_Loop, function(context){
 });
 
 
-ast.AST_MacroDef.proto("execJump", function(context, _symbolAlias) {
+ast.AST_MacroDef.proto("execJump", function(context, _symbolAlias, caller) {
     var scope = context.enterScope(this);
+    context.currentMacro = this;
+    scope.caller = caller;
 
     //初始化实参
     for (var name in _symbolAlias){

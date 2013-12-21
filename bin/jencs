@@ -3,30 +3,86 @@
 var fs = require('fs');
 var path = require('path');
 
-var CSInterpreter = require('../interpreter');
-
+var CSInterpreter = require('jencs');
 var Engine = CSInterpreter.Engine;
+var AST = CSInterpreter.AST;
 
-var dataHdfFile;
-var entryCsFile;
+//内容\n\r\t过滤器
+function ContentWhiteFilter(valueStr, astNode){
+    return astNode instanceof AST.AST_Content ? valueStr.replace(/[\r\n\t]/g, '') : valueStr;
+}
 
-process.argv.forEach(function (val, index, array) {
-    if (/\.cs$/.test(val)){
-        entryCsFile = val;
-    } else if (/\.hdf$/.test(val)){
-        dataHdfFile = val;
-    }
+var opts  = require('nomnom')
+            .script("jencs")
+            .options({
+                "path": {
+                    position: 0,
+                    required: true,
+                    list: false,
+                    help: "clearsilver template file"
+                },
+                "data": {
+                    position: 1,
+                    required: false,
+                    help: "hdf data file"
+                },
+                "debug": {
+                    //flag: true,
+                    default: false,
+                    help: "enable debugger"
+                },
+                "debug-brk": {
+                    //flag: true,
+                    default: false,
+                    help: "enable debugger and break on first line."
+                },
+                "include":{
+                    default: '.',
+                    help: "the dir of include command <?cs include:... ?>"
+                },
+                "ignore-whitespace": {
+                    default: false,
+                    help: "ignore \\r\\n\\t of clearsilver template file"
+                },
+                "port": {
+                    default: "10080",
+                    help:"debugger web server listen port"
+                }
+            }).parse();
+
+if (opts["debug-brk"]) {
+    opts["debug"] = true;
+    opts.debugBreakFirst = true;
+}
+
+var mainCsSource = fs.readFileSync(opts.path, "utf8");
+var csIncludeRoot = path.resolve(opts.include || ".");
+
+if (opts.data){
+    var dataSource = fs.readFileSync(path.resolve(opts.data), "utf8");
+} else {
+    var dataSource = "";
+}
+
+var csEngine = new Engine();
+
+//必须先设置inlcude的回调，否者分析源码时会找不到包含的文件
+csEngine.setLexerInclude(function(filename){
+    return fs.readFileSync(path.resolve(csIncludeRoot, filename), "utf8");
 });
 
+if (opts["ignore-whitespace"]) csEngine.addOutputFilter(ContentWhiteFilter);
 
-var mainCsSource = fs.readFileSync(entryCsFile, "utf8");
-var dataSource = fs.readFileSync(dataHdfFile, "utf8");
+csEngine.setConfig({
+    "debug": opts.debug,
+    "port":opts.port,
+    "debugBreakFirst": opts.debugBreakFirst,
+    "includeBase": csIncludeRoot//包含文件的起始路径。暂时只给调试器使用这个选项
+});
 
-var TestCSEngine = new Engine();
-
-TestCSEngine.initEntrySource(mainCsSource);
-TestCSEngine.setEndListener(function(){
+csEngine.setEndListener(function(result){
     process.stdout.write(this.result);
 });
 
-TestCSEngine.run(dataSource);
+csEngine.initEntrySource(mainCsSource, opts.path);
+csEngine.run(dataSource);

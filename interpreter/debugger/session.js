@@ -1,11 +1,14 @@
 var EventEmitter = require("events").EventEmitter,
-    inherits = require('util').inherits;
+    inherits = require("util").inherits,
+    path = require("path");
 
 function Session(csengine, socket, config) {
     this.config = config;
     this.engine = csengine;
     this.executer = csengine.executer;
     this.socket = socket;
+
+    this._sourcesDescriptor = {};
 
     socket.on("disconnect", this.disconnect.bind(this));
     socket.on("message", this._onMessage.bind(this));
@@ -32,8 +35,8 @@ Session.prototype._onMessage = function(message){
         var type = messageObject.type;
         if (type == "ready") {
             if (messageObject.resume) {
-                if (this.executer.allowPaused()){
-                    //如果第一行是可以执行中断的，直接debugbreak
+                if (this.executer.allowPaused()) {
+                    //如果第一行是可以执行中断的(debug指令)，直接debugbreak
                     this.debugBreak(messageObject);
                 } else {
                     this.executer.resume();
@@ -60,12 +63,39 @@ Session.prototype.sendMessage = function(message){
 };
 
 Session.prototype.emitInitStatus = function(){
+    var _sources = this.engine.getSources(), resources = [];
+    for (var i = 0, l = _sources.length; i < l; i ++) {
+        resources.push(this._fileResourcesDescriptor(_sources[i]));
+    }
+
     var data = {
-        "sources": this.engine.getSources(),
-        "resumeEvaluate": this.config.breakFirst ? true : false
+        "mainFrame":this.executer.getCallFrames(),
+        "resources": resources,
+        "resumeEvaluate": !this.config.breakFirst
     };
     this.sendEvent("SessionInit", data);
 };
+
+Session.prototype._fileResourcesDescriptor = function(v){
+    if (this._sourcesDescriptor[v.id]) return this._sourcesDescriptor[v.id];
+    var url = path.join(v.rootPath, v.name);//url要保证唯一的
+
+    if (v.isEntryDefaultPath){//默认无名的入口文件不做任何处理
+    } else {
+        url = 'file://' + url;
+    }
+
+    var _source = {
+        "id": v.id,
+        "mimeType":"text/clearsilver",
+        "content": v.source,
+        "url":url
+    };
+
+    this._sourcesDescriptor[v.id] = _source;
+    return _source;
+};
+
 
 Session.prototype.emitSnippet = function(str){
     this.socket.emit("RenderSnippet", str);
@@ -75,11 +105,9 @@ Session.prototype.debugBreak = function(requstParam){
     var socket = this.socket;
     if (this.executer.isRunning()) {
         //说明还在执行
-        var lineInfo = this.executer.getExecutePos();
         var params = {
-            "executeLine": lineInfo,
             "watchExpressions": null, //TODO 获得所有需要查看的表达值
-            "scopeChain": null //TODO 获得当前的调用堆栈
+            "callFrames":this.executer.getCallFrames()
         };
         this.sendEvent("DebugPaused", params);
     } else {
@@ -97,9 +125,28 @@ Session.prototype.debugBreak = function(requstParam){
     }
 };
 
+Session.prototype.breakpoint = function(requstParam){
+    //TODO
+    var result = this.executer.requestBreakpoint(requstParam.rawLocation);
+    if (!result) return;//断点设失败了
+
+    var breakRawLocation = {
+        "lineNumber": result.pos.first_line,
+        "columnNumber": 0, //result.pos.first_column,
+        "scriptId":requstParam.rawLocation.scriptId
+    };
+    this.sendMessage({
+        "id": requstParam.id,
+        "result": {
+            "breakpointId": result.id,
+            "locations": breakRawLocation
+        }
+    });
+};
+
 Session.prototype.disconnect = function() {
     console.log("socket disconnected.");
-    process.exit();
+    //process.exit();
 };
 
 
@@ -120,6 +167,59 @@ MessageDispatcher.prototype = {
     "resume": function(msg){
         this._executer.resume();
         this._session.debugBreak(msg);
+    },
+    "stepOut": function (msg) {
+        this._executer.resume(2);
+        this._session.debugBreak(msg);
+    },
+    "toggleBreakpointsActive": function (msg) {
+        this._executer.setBreakpointsActive(msg.active);
+    },
+    "setBreakpointBySourceId": function(msg) {
+        this._session.breakpoint(msg);
+    },
+    "removeBreakpoint": function(msg){
+        var result = this._executer.removeBreakpoint(msg.breakpointId);
+        this._session.sendMessage({
+            "id": msg.id,
+            "result": "success"
+        });
+    },
+    "evaluate": function (msg) {
+        /*
+        this._session.sendMessage({
+            "id":msg.id,
+            "result":{
+                "result":{
+                    "type":"function",
+                    "objectId":"15",
+                    "className":"Function",
+                    "description":"function createApplication() "
+                },
+                "wasThrown":false
+            }
+        });
+        */
+        var result = this._executer.evaluateExpr(msg.expression, msg.callFrameId);
+
+        this._session.sendMessage({
+            "id":msg.id,
+            "result": {
+                "result": result,
+                "wasThrown": result.error ? true : false
+            }
+        });
+    },
+    "getObjectProperties": function(msg){
+        var objectId = msg.objectId;
+        var result = this._executer.getProperties(objectId);
+        this._session.sendMessage({
+            "id":msg.id,
+            "result": {
+                "result": result
+            },
+            "wasThrown": false
+        });
     }
 };
 

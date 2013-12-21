@@ -25,12 +25,23 @@ function Context(){
     this._renderSinppetsCallback = Empty;
     this._escapeFilters = [];//对输出进行过滤，后加入的filter会后运行
     this._externFilters = [];
+    this._startFromScope = null;
 }
 
 Context.prototype = {
     constructor: Context,
+    get scopeStack() {
+        return this._scopeStack;
+    },
+    "setStartfromScope": function(scope){
+        if (scope) this._startFromScope = scope;
+    },
+    "resetStartfromScope": function(){
+        this._startFromScope = null;
+    },
     "enterScope": function(astNode){
         var scope = {
+            "caller": null,//只有宏调用时才会有的属性
             "astNode": astNode,
             "nonExistParams":{},
             "symbolAlias": {}
@@ -42,7 +53,15 @@ Context.prototype = {
         this._scopeStack.pop();
     },
     "eachReverseScope": function(handler, that){
-        for(var i = this._scopeStack.length - 1; this._scopeStack[i]; i--){
+        var i = this._scopeStack.length - 1;
+        /*暂时不需要
+        if (this._startFromScope){
+            for(;this._scopeStack[i]; i--){
+                if (this._scopeStack[i] == this._startFromScope) break;
+            }
+        }
+        */
+        for(; this._scopeStack[i]; i--){
             if (handler.call(that, this._scopeStack[i])) break;
         }
     },
@@ -79,12 +98,12 @@ Context.prototype = {
     },
     "output": function(str, astNode){
         if (str === undefined) return;
-        try{
+        //try{
             str = this._runFilters(str, astNode);
             this._renderSinppetsCallback(str);
-        } catch(msg){
+        //} catch(msg){
             //do nothing
-        }
+        //}
     },
     "pushEscapeFilter": function(type){
         if (type == "html") this._escapeFilters.push(internalHtmlFilter);
@@ -119,8 +138,13 @@ Context.prototype = {
      * @return "" || HNode || CSValue  符号对应的变量(两种类型)
      */
     "querySymbol": function(key){
-        var _scope = null;
-        for(var i = this._scopeStack.length - 1; this._scopeStack[i]; i--){
+        var _scope = null, i = this._scopeStack.length - 1;
+        if (this._startFromScope){
+            for(;this._scopeStack[i]; i--){
+                if (this._scopeStack[i] == this._startFromScope) break;
+            }
+        }
+        for(;this._scopeStack[i]; i--){
             _scope = this._scopeStack[i];
             if (key in _scope.symbolAlias) {
                 //这里有可能返回CSValue，也有可能返回HNode(宏参数是已经存在的hdf节点), 也有可能是null
@@ -138,7 +162,7 @@ Context.prototype = {
                 dotAccessAst = _scope.nonExistParams[name];
                 return true
             }
-        }, this);
+        });
         return dotAccessAst;
     },
     "createHNode": function(_parent, key){
@@ -216,7 +240,8 @@ function initScopeLayer(astTree){
                 }
                 node.refMacro = macro;
             } else {
-                var errMsg = 'call macro:"' + node.id + '" that was not been defined';
+                var errMsg = 'call macro:"' + node.id + '" that was not been defined.';
+                //console.log(node.pos);
                 throw new Error(errMsg);
             }
         }

@@ -1,0 +1,66 @@
+a.b.c=a.b. c ? is ok?
+c << EOM
+hello, world,
+i love program
+EOM
+
+b=3
+
+Page {
+  Menu {
+      Name = Home
+
+affafa=         error, shouldn't see me
+    }
+}
+
+title=hello, world
+
+age.Name = My Index
+Page.URL = /myindex.html
+Page.Menu.0 = Home
+Page.Menu.1 = Preferences
+Page.Menu.2 = Help
+Page.Menu.3 = Support
+
+Page {
+  Menu.xx.yy {
+    0 {
+      Name = Home
+    }
+  }
+  Menu {
+      0 {
+          URL =www.google.com.hk
+      }
+  }
+}
+
+Page {
+  Menu {
+      0 {
+          name =google
+          URL =http://www.google.com.hk/
+      }
+    19 {
+      Name = Home
+      URL = /google.com
+    }
+    1 {
+      Name = Preferences
+      URL = /prefs
+    } 
+    2 {
+      Name = Help
+      URL = /help.html
+    }
+    3 {
+      Name = Support
+      URL = /feedback/
+    }
+  }
+  content << AAA
+  fffkslaf
+AAA
+}
+

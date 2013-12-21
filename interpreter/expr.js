@@ -71,7 +71,7 @@ ast.AST_VariableAccess.proto("calc", function(opts){//opts可以用来确定究�
 
 /**
  * 获得一个表达式的结果，与calc的区别是，对于hdfnode，它会返回节点，而不是值
- * 并且，它也可能返回undefined，而不是(CSValue)
+ * 并且，它也可能返回null，而不是(CSValue)
  * @return NULL || CSValue || HNode
  */
 ast.AST_VariableAccess.proto("getSymbolValueNode", function(){
@@ -148,7 +148,7 @@ ast.AST_VariableAccess.proto("getOrCreateNodeObject", function(){
             hdfnode.setValue(symbolValue.value);//把一个Local variable转成hdf后，要操持它的值
             return hdfnode;
         } else {//undefined, so create it
-            //用原来的与法树名字创建
+            //用原来的语法树名字创建
             var hdfNodeAst = this.context.getParamSymbolNonExistAst(this.target.name);
             //TODO 还有好下面两个地方需要修改
             if (hdfNodeAst){

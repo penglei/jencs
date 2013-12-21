@@ -92,7 +92,7 @@ var AST_Node = exports.AST_Node = declare('Node', {
     }
 });
 
-var AST_Statement = declare("Statement", null, AST_Node);
+var AST_Statement = exports.AST_Statement = declare("Statement", null, AST_Node);
 
 var AST_Expression = exports.AST_Expression = declare("Expression", null, AST_Node);
 
@@ -143,7 +143,7 @@ var AST_VariableAccess = exports.AST_VariableAccess = declare("VariabelAccess", 
             this.target.walk(visitor);
         });
     }
-}, AST_Node);
+}, AST_Expression);
 
 var AST_Prop = exports.AST_Prop = declare("Prop", {
     initialize: function(right) {
@@ -189,7 +189,7 @@ var AST_Invoke = declare('Invoke', {
         } while (paramTree);
         return result;
     }
-}, AST_Node);
+}, AST_Statement);
 
 //@deprecated
 var AST_Parameter = exports.AST_Parameter = declare("Parameter", function(prevParam, thisParam) {
@@ -258,7 +258,7 @@ var AST_Include = exports.AST_Include = declare("include", {
             }
         });
     }
-}, AST_Node);
+}, AST_Statement);
 
 //扩展支持debug
 var AST_CSDebugger = exports.AST_CSDebugger = declare("CSDebugger", null , AST_Statement);

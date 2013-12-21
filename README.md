@@ -5,18 +5,13 @@ clearsilver template engine with debugger
 
 ##usage
 
-1.安装依赖
+    Usage: jencs <path> [data] [options]
 
-    npm -g install express
-    npm -g install socket.io
-    npm -g install nomnom
+    path     clearsilver template file
+    data     hdf data file
 
-2.使用示例
-
-    git clone https://github.com/penglei/jencs
-    cd jencs
-    node test.js --enable-debugger
-
-使用chrome浏览器访问下面的地址:
-
-   http://127.0.0.1:10080/
+    Options:
+       --debug               enable debugger  [false]
+       --debug-brk           enable debugger and break on first line.  [false]
+       --include             the dir of include command <?cs include:... ?>  [.]
+       --ignore-whitespace   ignore \r\n\t of clearsilver template file  [false]

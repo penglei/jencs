@@ -1,0 +1,11 @@
+3:::{"method":"Runtime.releaseObjectGroup","params":{"objectGroup":"watch-group"},"id":54}
+3:::{"method":"Debugger.evaluateOnCallFrame","params":{"callFrameId":"0","expression":"express","objectGroup":"watch-group","includeCommandLineAPI":false,"doNotPauseOnExceptionsAndMuteConsole":true,"returnByValue":false,"generatePreview":false},"id":55}
+3:::{"id":54}
+3:::{"id":55,"result":{"result":{"type":"function","objectId":"15","className":"Function","description":"function createApplication() {\n  var app = connect();\n  utils.merge(app, proto);\n  app.request = { _â¦"},"wasThrown":false}}
+
+3:::{"method":"Runtime.getProperties","params":{"objectId":"15","ownProperties":false,"accessorPropertiesOnly":true},"id":56}
+3:::{"method":"Runtime.getProperties","params":{"objectId":"15","ownProperties":true,"accessorPropertiesOnly":false},"id":57}
+3:::{"id":56,"result":{"result":[]}}
+3:::{"id":46,"result":{"result":[{"name":"abc","writable":true,"enumerable":true,"value":{"type":"string","value":"ddd","description":"ddd"}},{"name":"aaa","writable":true,"enumerable":true,"value":{"type":"object","objectId":"45","className":"Object","description":"Object"}},{"name":"xyz","writable":true,"enumerable":true,"value":{"type":"number","value":1111111,"description":"1111111"}}]}}
+
+3:::{"id":70,"result":{"result":{"type":"string","value":"1ff","description":"1ff"},"wasThrown":false}}

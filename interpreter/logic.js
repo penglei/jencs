@@ -127,12 +127,12 @@ ast.AST_UnaryExist.proto("calc", function UnaryExist(){
     if (this.expression instanceof ast.AST_CommaExpr) {//因为CommaExpr也是表达式，所以要特殊处理
         //TODO 这个要看最后一个表达式是什么东西
     }
-    if (this.expression instanceof ast.AST_Expression) {
-        return new CSValue(CSValue.Number, 1);
-    }
     if (this.expression instanceof ast.AST_VariableAccess){
         var resultVal = this.expression.getSymbolValueNode();
         return new CSValue(CSValue.Number, resultVal ? 1 : 0);
+    }
+    if (this.expression instanceof ast.AST_Expression) {//普通表达式统一都为1吧 TODO 和官方引擎对比一下
+        return new CSValue(CSValue.Number, 1);
     }
 });
 

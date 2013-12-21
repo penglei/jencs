@@ -138,7 +138,7 @@
             r.push(module.id + "\n");
         }
         r.push(ringModule[0].id);
-        warn(str + r.join("-->"));
+        warn(str + r.join("-> "));
     }
 
     ///////////name parse/////////////////
@@ -251,8 +251,8 @@
                             t.mods[_id] = moduleSets[_id];
                         } else {
                             if (depModule = moduleRunners[_id]) { //is loading //TODO Module未被删除但是已经执行完
-                                if (!isCircular(depModule, t.parents, [t])) {
-                                    insertArray(depModule.parents, t) && t.wait++; //添加依赖关系(防重)
+                                if (!isCircular(depModule, t.parents, [t])) {//没有循环依赖才添加依赖关系，防止互相等待导致模块不执行
+                                    insertArray(depModule.parents, t) && t.wait++;//防重
                                 } else {
                                     t.mods[_id] = depModule.mod;
                                 }
@@ -287,7 +287,7 @@
                     fetch(t.meta.url, function(defs) {
                         //最终，segmentDef会调用update方法完成依赖的加载
                         //有些插件可能需要改变加载顺序：加载依赖->再加载自身模块
-                        //XXX fetched事件改成reuested事件更好
+                        //XXX fetched事件改成requested事件更好
                         if (!t.emit("fetched", defs)) {
                             var children = segmentDef([t], defs);
                             each(children, function(item) {
@@ -375,22 +375,23 @@
             return updates;
         }
 
+        function _checkCircular(child, parents, container) {
+            for (var module, i = 0; module = parents[i]; i++) {
+                container.push(module);
+                if (child == module) return true;
+                else {
+                    if (_checkCircular(child, module.parents, container)) return true;
+                    container.pop();
+                }
+            }
+            return false;
+        }
+
         /**
          *检查模块是否有循环依赖
          */
         function isCircular(childModule, depParents, container) {
-            function check(child, parents) {
-                for (var module, i = 0; module = parents[i]; i++) {
-                    container.push(module);
-                    if (child == module) return true;
-                    else {
-                        if (check(child, module.parents, container)) return true;
-                        container.pop();
-                    }
-                }
-                return false;
-            }
-            if (check(childModule, depParents)) {
+            if (_checkCircular(childModule, depParents, container) || childModule == container[0]) {//模块如果依赖自身也是循环依赖
                 noticeCircular(container);
                 return true;
             }
@@ -489,10 +490,11 @@
                             break;
                         }
                     }
-                    //循环依赖的模块已经包含在这里面
-                    if (depModuleList[id] || moduleSets[id]) return (depModuleList[id] || moduleSets[id]).exports;
                     //这个时候说明依赖的可能是本身
-                    if (id == thisModule.id) return thisModule.exports;
+                    //if (id == thisModule.id) return thisModule.exports;
+
+                    //循环依赖的模块已经包含在depModuleList(包括自己依赖自己)
+                    if (depModuleList[id] || moduleSets[id]) return (depModuleList[id] || moduleSets[id]).exports;
                 }
             }
 
