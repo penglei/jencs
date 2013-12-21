@@ -26,7 +26,7 @@
 <?cs #include:"test_d_macrodef.cs"?>
 -----if-------
 
-<?cs set:a = 333?>
+<?cs set:a = "<b>sss</b>"?>
 
 <?cs var:a?>
 

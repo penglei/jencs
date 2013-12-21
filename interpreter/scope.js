@@ -116,12 +116,12 @@ Context.prototype = {
     },
     "output": function(str, astNode){
         if (str === undefined) return;
-        try{
+        //try{
             str = this._runFilters(str, astNode);
             this._renderSinppetsCallback(str);
-        } catch(msg){
+        //} catch(msg){
             //do nothing
-        }
+        //}
     },
     "pushEscapeFilter": function(type){
         if (type == "html") this._escapeFilters.push(internalHtmlFilter);

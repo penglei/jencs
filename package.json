@@ -1,0 +1,27 @@
+{
+    "name": "jencs",
+    "version": "0.1.0",
+    "description": "clearsilver render engine, with a debugger",
+    "keywords": [
+        "clearsilver",
+        "debugger"
+    ],
+    "author": {
+        "name": "soulfree",
+        "email": "pengleihfut@gmail.com"
+    },
+    "dependencies": {
+        "nomnom": ">= 1.6.0",
+        "socket.io" : "~0.9.16",
+        "express": "~3.4"
+    },
+    "devDependencies": {
+    },
+    "main": "interpreter/index.js",
+    "bin": {
+        "jencs": "bin/jencs"
+    },
+    "engines": {
+      "node": ">= 0.7.0"
+    }
+}

@@ -1,6 +1,6 @@
-all: test test_my
+.PHONY: test
 
-#../../../bin/jencs test.hdf test.cs
+all: test
 
 #test13 lvar 
 #tet16 lvar and in each 
@@ -29,7 +29,7 @@ test: $(CS_TESTS)
 	@failed=0; \
 	for test in $(CS_TESTS); do \
 		echo "Parsing $$test" > $$test.out; \
-		../../../bin/jencs test.hdf $$test >> $$test.out; \
+		jencs $$test test.hdf >> $$test.out; \
 		diff $$test.out $$test.gold > $$test.diff; \
 		return_code=$$?; \
 		if [ $$return_code -ne 0 ]; then \
@@ -51,26 +51,3 @@ test: $(CS_TESTS)
 #可以先跑一遍拿到diff的返回值，再把有错的对比打出来
 #diff $$test.out $$test.gold 2>&1 > /dev/null; \
 #diff $$test.gold $$test.out > $$test.err; \
-
-MY_TESTS_DATA=wupdata-1.hdf wupdata-2.hdf
-test_my:
-	@echo "Running wup cs tests"
-	@cd ../../../resource/; \
-	failed=0;\
-	for wupdata in $(MY_TESTS_DATA); do \
-		node test.js $$wupdata cs/wupmain.cs > $$wupdata.out.html; \
-		diff $$wupdata.out.html $$wupdata.gold.html > $$wupdata.diff; \
-		return_code=$$?; \
-		if [ $$return_code -ne 0 ]; then \
-			echo "$$wupdata" test failed!; \
-			failed=1; \
-		else \
-			rm -rf $$wupdata.out.html; \
-			rm -rf $$wupdata.diff; \
-		fi; \
-	done; \
-	if [ $$failed -eq 1 ]; then \
-		echo "Test wupdata Failed!"; \
-	else \
-		echo "All wupdata test passed!"; \
-	fi;

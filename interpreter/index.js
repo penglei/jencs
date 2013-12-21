@@ -7,7 +7,6 @@ var Executer = require("./executer").Executer;
 
 var DebugService = require("./debugger").DebugService;
 
-//放在这里而不是executer里面，是因为executer里的def_execute会被它们用到，这就会形成循环依赖
 require("./block");
 require("./statement");
 require("./expr");
@@ -48,19 +47,6 @@ function Engine(csString){
 
     this._onRenderListeners = [];
 }
-
-Engine.prototype.request = function(type, val, cb){/*
-    if (type == "fetchVarValue"){
-        var csSubParser = new ClearSilverParser();
-        val = "<?cs " + val + "?>";
-        try{
-            var valast = csSubParser.parse(source);
-        } catch(e){
-            if (cb();
-        }
-    }
-    */
-};
 
 //include在语法分析阶段就完成要方便得多
 Engine.prototype._lexInclude = function(includeName) {
@@ -199,6 +185,8 @@ Engine.prototype.setConfig = function(opts){
 Engine.prototype.run = function(hdfData){
     if (typeof hdfData == "string"){
         hdfData = HDF.parse(hdfData);
+    } else {
+        hdfData = {};
     }
 
     this.result = "";

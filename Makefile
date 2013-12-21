@@ -8,7 +8,6 @@ parse:
 
 #jison clearsilver.y clearsilver.l -m amd
 
-
 parse-debug:
 	@cd parse && \
 	jison clearsilver.y clearsilver.l --debug true

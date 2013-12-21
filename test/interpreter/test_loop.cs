@@ -7,7 +7,7 @@
 <?cs loop:foo = 0, subcount(foo), foo?>
     <?cs set:foo[foo] = foo?>
     --------loop(<?cs var:foo?>)--------
-    <?cs var:subcount(foo)?>
+    <?cs #var:subcount(foo)?>
 <?cs /loop?>
 
 <?cs var:subcount(foo)?>
@@ -24,7 +24,7 @@
 
 <?cs loop:foo = 0, 3, 1?>
     3.--------loop(<?cs var:foo?>)--------
-    <?cs set:foo = foo + 2?>
+    <?cs #set:foo = foo + 2?><?cs #这是一个歧义语法，不做测试?>
 <?cs /loop?>
 
 ============negative step==============
