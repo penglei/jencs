@@ -369,7 +369,7 @@ define(function(require) {
         {
             this.sidebarPanes.callstack.update(null);
             //this.sidebarPanes.scopechain.update(null);
-            //this.sidebarPanes.jsBreakpoints.clearBreakpointHighlight();
+            this.sidebarPanes.breakpoints.clearBreakpointHighlight();
 
             this._clearCurrentExecutionLine();
             this._updateDebuggerButtons();
