@@ -71,7 +71,7 @@
     recoverable: (boolean: TRUE when the parser has a error recovery rule available for this particular error)
   }
 */
-
+var clearsilver = (function(){
 var parser = {trace: function trace() { },
 yy: {},
 symbols_: {"error":2,"cs":3,"inner_statement_list":4,"EOF":5,"statement":6,"block":7,"single_stmt":8,"if":9,"alt":10,"each":11,"loop":12,"with":13,"escape":14,"macro_def":15,"inner_statement_list_repetition0":16,"T_IF":17,"expr":18,"TAG_END":19,"elif_list":20,"else_single":21,"T_END_IF":22,"T_ELIF_TOKENS":23,"T_ELIF":24,"T_ELSEIF":25,"T_ELSE":26,"T_ALT":27,"T_END_ALT":28,"T_EACH":29,"t_variable_one":30,"=":31,"T_END_EACH":32,"T_WITH":33,"base_variable":34,"T_END_WITH":35,"T_ESCAPE":36,"STRING":37,"escape_end":38,"T_END_ESCAPE":39,"T_LOOP":40,"loop_init_expr":41,",":42,"loop_step":43,"T_END_LOOP":44,"T_DEF":45,"T_MACRO_NAME":46,"(":47,"def_formal_parameters":48,")":49,"T_END_MACRO_DEF":50,"def_formal_parameters_repetition_plus0":51,"more_parameter":52,"single_stmt_syntax":53,"CONTENT":54,"set_stmt":55,"var_stmt":56,"name_stmt":57,"macro_call":58,"include_stmt":59,"cs_debugger":60,"T_SET":61,"T_VAR":62,"T_NAME":63,"T_CALL":64,"parameter_list":65,"T_INCLUDE":66,"T_DEBUGGER":67,"variable":68,"expr_basic":69,"#":70,"const_variable":71,"function_call":72,"!":73,"?":74,"$":75,"T_BOOLEAN_OR":76,"T_BOOLEAN_AND":77,"T_IS_EQUAL":78,"T_IS_NOT_EQUAL":79,"<":80,">":81,"T_IS_SMALLER_OR_EQUAL":82,"T_IS_GREATER_OR_EQUAL":83,"+":84,"-":85,"*":86,"/":87,"%":88,"comma_expr":89,"comma_expr_repetition_plus0":90,"comma_expr_more":91,"t_properties":92,"t_property":93,".":94,"t_label":95,"[":96,"]":97,"PROP_NUMBER":98,"T_VARIABLE":99,"t_math_number":100,"NUMBER":101,"NUMBER_HEX":102,"T_FUN_NAME":103,"parameter_list_repetition_plus0":104,"more_parameter_list":105,"$accept":0,"$end":1},
@@ -1115,7 +1115,7 @@ case 37:console.log(yy_.yytext);
 break;
 }
 },
-rules: [/^(?:(<\?cs))/,/^(?:\s+#(?!debugger\s*)([^])*?(\?>))/,/^(?:\s+#debugger\s*([^])*?(?=(\?>)))/,/^(?:[^#])/,/^(?:\s+((var|evar|lvar|set|name|include|if|elif|elseif|alt|each|loop|with|def|call|escape|\/escape))\s*:\s*)/,/^(?:(['"]).*\1)/,/^(?:([\w\d\-_\+\/\*%!@\$])+(?:\.([\w\d\-_\+\/\*%!@\$])+)*\s*(?=\())/,/^(?:else)/,/^(?:\/if)/,/^(?:\/each)/,/^(?:\/loop)/,/^(?:\/alt)/,/^(?:\/with)/,/^(?:\/def)/,/^(?:\/escape)/,/^(?:([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*)(?:\.([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*))+(?=\s*\())/,/^(?:([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*))/,/^(?:([^]))/,/^(?:([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*))/,/^(?:([0-9]+))/,/^(?:[^0-9a-zA-Z_\x7f-\xff])/,/^(?:(0x[0-9a-fA-F]+))/,/^(?:(([0-9]*\.[0-9]+)|([0-9]+\.[0-9]*))|([0-9]+))/,/^(?:\B['"])/,/^(?:==)/,/^(?:!=)/,/^(?:>=)/,/^(?:<=)/,/^(?:\|\|)/,/^(?:&&)/,/^(?:([\#,.\[\]()+-/\*=%!<>?$]))/,/^(?:([^]))/,/^(?:\s+)/,/^(?:(\?>))/,/^(?:(\?>))/,/^(?:(?!(<\?cs))([^])+?(?=(<\?cs)|$))/,/^(?:$)/,/^(?:.)/],
+rules: [/^(?:(<\?cs))/,/^(?:\s+#(?!debugger\s*)([^])*?(\?>))/,/^(?:\s+#debugger\s*([^])*?(?=(\?>)))/,/^(?:[^#])/,/^(?:\s+((var|evar|lvar|set|name|include|if|elif|elseif|alt|each|loop|with|def|call|escape|\/escape))\s*:\s*)/,/^(?:(['"]).*?\1)/,/^(?:([\w\d\-_\+\/\*%!@\$])+(?:\.([\w\d\-_\+\/\*%!@\$])+)*\s*(?=\())/,/^(?:else)/,/^(?:\/if)/,/^(?:\/each)/,/^(?:\/loop)/,/^(?:\/alt)/,/^(?:\/with)/,/^(?:\/def)/,/^(?:\/escape)/,/^(?:([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*)(?:\.([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*))+(?=\s*\())/,/^(?:([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*))/,/^(?:([^]))/,/^(?:([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*))/,/^(?:([0-9]+))/,/^(?:[^0-9a-zA-Z_\x7f-\xff])/,/^(?:(0x[0-9a-fA-F]+))/,/^(?:(([0-9]*\.[0-9]+)|([0-9]+\.[0-9]*))|([0-9]+))/,/^(?:\B['"])/,/^(?:==)/,/^(?:!=)/,/^(?:>=)/,/^(?:<=)/,/^(?:\|\|)/,/^(?:&&)/,/^(?:([\#,.\[\]()+-/\*=%!<>?$]))/,/^(?:([^]))/,/^(?:\s+)/,/^(?:(\?>))/,/^(?:(\?>))/,/^(?:(?!(<\?cs))([^])+?(?=(<\?cs)|$))/,/^(?:$)/,/^(?:.)/],
 conditions: {"ST_CS_START":{"rules":[1,2,3],"inclusive":false},"ST_CS":{"rules":[4,7,8,9,10,11,12,13,14,15,16,21,22,23,24,25,26,27,28,29,30,32,34],"inclusive":false},"ST_EXTEND_CS":{"rules":[33],"inclusive":false},"ST_END_BRACKET":{"rules":[31],"inclusive":false},"ST_END_VARIABEL":{"rules":[17],"inclusive":false},"ST_VARIABLE_PROP":{"rules":[18,19,20],"inclusive":false},"ST_CS_MACRO_SYMBOL":{"rules":[6],"inclusive":false},"ST_CS_INCLUDE":{"rules":[5],"inclusive":false},"INITIAL":{"rules":[0,35,36,37],"inclusive":true}}
 };
 /**
@@ -1127,22 +1127,19 @@ conditions: {"ST_CS_START":{"rules":[1,2,3],"inclusive":false},"ST_CS":{"rules":
  */;
 return lexer;
 })();
-function Lexer(){}
-Lexer.prototype = lexer;
-
+parser.lexer = lexer;
 function Parser () {
-	this.yy = {};
-	this.lexer = new Lexer();
+  this.yy = {};
 }
-Parser.prototype = parser;
-var clearsilver = new Parser();
+Parser.prototype = parser;parser.Parser = Parser;
+return new Parser;
+})();
+
 
 if (typeof require !== 'undefined' && typeof exports !== 'undefined') {
-exports.parser = clearsilver;//default parser instance
-exports.Parser = Parser;//Parser construct function
-exports.parse = function () {
-    return clearsilver.parse.apply(clearsilver, arguments); 
-};//simple interface for default parser
+exports.parser = clearsilver;
+exports.Parser = clearsilver.Parser;
+exports.parse = function () { return clearsilver.parse.apply(clearsilver, arguments); };
 exports.main = function commonjsMain(args) {
     if (!args[1]) {
         console.log('Usage: '+args[0]+' FILE');

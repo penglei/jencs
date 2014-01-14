@@ -66,7 +66,7 @@ COMMANDS ("var"|"evar"|"lvar"|"set"|"name"|"include"|"if"|"elif"|"elseif"|"alt"|
     return "T_" + yytext.toUpperCase();
 }
 
-<ST_CS_INCLUDE>(['"]).*\1 {
+<ST_CS_INCLUDE>(['"]).*?\1 {
     //jison不能很好第支持include，这需要修改它（使用一个修改过的jison)
     this.popState();
     yytext = yytext.substring(1, yytext.length - 1);
