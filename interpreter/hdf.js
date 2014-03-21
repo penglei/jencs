@@ -78,7 +78,7 @@ HNode.prototype = {
         return node;
     },
     //直接根据key的排序遍历子节占，注意cs中不能使用这方法
-    //cs只能通过child指针遍历链表，否帽与官方的遍历顺序不同
+    //cs只能通过child指针遍历链表，否则与官方的遍历顺序不同
     eachChild: function(handler, that){
         if (typeof handler != "function") return;
         for (var i in this.children){
