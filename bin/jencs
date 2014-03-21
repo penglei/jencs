@@ -3,7 +3,7 @@
 var fs = require('fs');
 var path = require('path');
 
-var CSInterpreter = require('jencs');
+var CSInterpreter = require('../interpreter');
 var Engine = CSInterpreter.Engine;
 var AST = CSInterpreter.AST;
 
