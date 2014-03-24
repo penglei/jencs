@@ -20,6 +20,19 @@ function insertArray(arr, item){
     }
     arr.push(item);
 }
+
+function parseError(str, hash, engine){
+    var filepath = this.yy.fileid == 1 ? this.yy.filename : engine._includeParentBase + '/' + this.yy.filename;
+    str = 'Parse error on line : ' + (hash.line + 1) + ', in file --> ' + filepath + '\n' + this.lexer.showPosition();
+    if (hash.expected) {
+         str += '\nExpecting ' + hash.expected.join(', ') + ', got \'' + hash.token + '\'';
+    } else {//XXX only lex error go here?
+         str += '\nUnrecognized text.\n'
+    }
+    throw new Error(str);
+}
+
+
 function Engine(csString){
     this.result = "";
     this._debugMode = false;
@@ -30,6 +43,12 @@ function Engine(csString){
     this.csparser = new ClearSilverParser();
 
     this.csparser.yy.filename = this._entryPathname = "[main]";
+    this.csparser.yy.parseError = function(){
+        var args = Array.prototype.slice.call(arguments);
+        args.push(self);
+        parseError.apply(this, args);
+    };
+
     this._entryPathIsDefault = true;
     this._includeParentBase = "$(root)";
 
@@ -65,6 +84,11 @@ Engine.prototype._lexInclude = function(includeName) {
         //同一个文件只需要解析一次，语法树只允许读，每个地方不需要重新生成
         //TODO 检查循环依赖
         var csSubParser = new ClearSilverParser();
+        csSubParser.yy.parseError = function(){
+            var args = Array.prototype.slice.call(arguments);
+            args.push(self);
+            parseError.apply(this, args);
+        };
         csSubParser.lexer.include = function(name){
             self._lexInclude(name);
         };
@@ -130,7 +154,7 @@ Engine.prototype.onRender = function(cb){
 Engine.prototype.initEntrySource = function(csString, pathname){
     if (pathname !== undefined) {
         this._entryPathIsDefault = false;
-        this.csparser.yy.name = this._entryPathname = pathname + " [main]";
+        this.csparser.yy.filename = this._entryPathname = pathname + " [main]";
     }
     var fileid = this._saveSource(this._entryPathname, csString);
 
